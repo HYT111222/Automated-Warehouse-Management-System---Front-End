@@ -8,7 +8,7 @@ const service = axios.create({
   timeout: 5000 // request timeout
 })
 
-// response interceptor
+// 响应拦截器
 service.interceptors.response.use(
   // response => response,
   /**

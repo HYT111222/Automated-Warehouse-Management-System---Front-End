@@ -1,7 +1,7 @@
 <template>
     <el-container class="home-container">
     <!-- 页面主体区域 -->
-    <el-container>
+    <el-container class="all">
       <!-- 侧边栏 -->
       <el-aside width="200px">
         <!-- 侧边栏菜单区 -->
@@ -20,22 +20,10 @@
               <!-- 文本 -->
               <span>功能主页</span>
             </template>
-            <el-menu-item index="enter">
-                <template slot="title">
-                  <i class="el-icon-video-camera"></i>
-                  <span>入库</span>
-                </template>
-              </el-menu-item>
-              <el-menu-item index="out">
-                <template slot="title">
-                  <i class="el-icon-video-camera"></i>
-                  <span>出库</span>
-                </template>
-              </el-menu-item>
               <el-menu-item index="plan">
                 <template slot="title">
                   <i class="el-icon-video-camera"></i>
-                  <span>仓库实时平面图</span>
+                  <span>出库入库</span>
                 </template>
               </el-menu-item>
               <el-menu-item index="seek">
@@ -45,7 +33,7 @@
                 </template>
               </el-menu-item>
         </el-submenu>
-        <el-submenu>
+        <el-submenu >
             <template slot="title">
               <!-- 图标 -->
               <i class="el-icon-user"></i>
@@ -75,15 +63,10 @@
               </el-menu-item>
             </el-menu-item-group>
         </el-submenu>
-        <el-submenu index="userManagement" >
-            <!-- 一级菜单的模板区域 -->
-            <template slot="title">
-              <!-- 图标 -->
-              <i class="el-icon-place"></i>
-              <!-- 文本 -->
-              <span>数据统计</span>
-            </template>
-        </el-submenu>
+        <el-menu-item index="dataStatistics" class="test">
+        <i class="el-icon-place"></i>
+        <span slot="title">数据统计</span>
+      </el-menu-item>
         </el-menu>
       </el-aside>
       <el-main>
@@ -124,15 +107,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.all {
+  height: 900px;
+}
 .el-aside{
   background-color: #69a7e5;
-  height: 800px;
+  height: 100%;
 }
 .el-main{
   background-color: #e8f2fa;
   height: 100%;
 }
-.el-icon-s-home,.el-icon-video-camera,.el-icon-user,.el-icon-user-solid,.el-icon-user-solid,.el-icon-edit,.el-icon-place{
+.el-icon-s-home,.el-icon-video-camera,.el-icon-user,.el-icon-user-solid,.el-icon-edit,.el-icon-place,.test{
     color: #e8f2fa;
 }
 </style>

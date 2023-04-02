@@ -3,7 +3,7 @@
       <div class="login">
         <div class="login-form">
           <h2>登录</h2>
-  
+          <!--model数据对象，rules整体表单验证规则，ref用来引用整体表单，prop整体规则中的单项规则-->
           <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="70px">
             <el-form-item label="用户名" prop="username">
               <el-input prefix-icon="el-icon-user" placeholder="请填写用户名" maxlength="32" v-model="loginForm.username" ></el-input>
@@ -12,8 +12,6 @@
             <el-form-item label="密码" prop="password"  v-show="!isCode">
               <el-input prefix-icon="el-icon-lock" placeholder="请填写 6-18 位密码" type="password" maxlength="18" v-model="loginForm.password" show-password></el-input>
             </el-form-item>
-  
-            <div class="b"><span @click="dialogFormVisible = true">忘记密码？</span></div>
   
             <el-form-item class="btn-r" label-width="0px">
               <el-button type="primary" icon="el-icon-s-promotion" :loading="loading" @click="submitForm('loginForm')">登 录</el-button>
@@ -26,48 +24,31 @@
   
           </el-form>
         </div>
-       <!-- 找回密码 -->
-        <el-dialog @close="clearForm('findPasswordForm')" title="找回密码" :visible.sync="dialogFormVisible" width="40%" class="findPassword">
-          <el-form :model="findPasswordForm" ref="findPasswordForm" :rules="rules" label-width="60px">
-  
-            <el-form-item label="邮箱" prop="email">
-              <el-input prefix-icon="el-icon-message" placeholder="请填写邮箱" maxlength="32" v-model="findPasswordForm.email"></el-input>
-            </el-form-item>
-  
-            <el-form-item label="新密码" prop="password">
-              <el-input prefix-icon="el-icon-lock" placeholder="请填写 6-18 位密码" type="password" maxlength="18" v-model="findPasswordForm.password" show-password></el-input>
-            </el-form-item>
-  
-            <el-form-item label="验证码" prop="code">
-              <el-input prefix-icon="el-icon-key" placeholder="请填写6位数字验证码" type="number" maxlength="6" v-model="findPasswordForm.code">
-                <el-button slot="append" @click="sendEmailCode()" :disabled="disabled">{{ msg }}</el-button>
-              </el-input>
-            </el-form-item>
-          </el-form>
-  
-          <div slot="footer" class="dialog-footer">
-            <el-button type="danger" :loading="loading" @click="submitFindPassword('findPasswordForm')">提 交</el-button>
-          </div>
-        </el-dialog>
         <!--初始化仓库-->
         <el-dialog @close="clearForm('initStock')" title="仓库初始化设置" :visible.sync="initVisible" width="40%" class="initDialog">
-          <el-form :model="initStock" ref="initStock" :rules="initRules" label-width="100px">
-             <el-form-item label="仓库宽度：" prop="capacity">
+          <el-form :model="initStock" ref="initStock"  label-width="100px">
+
+             <el-form-item label="仓库宽度：" >
               <el-input-number v-model="initStock.capacity_x" controls-position="right" @change="handleChange" :min="20" :max="10000"></el-input-number>
             </el-form-item>
-            <el-form-item label="仓库长度：" prop="capacity">
+
+            <el-form-item label="仓库长度：">
               <el-input-number v-model="initStock.capacity_y" controls-position="right" @change="handleChange" :min="20" :max="10000"></el-input-number>
             </el-form-item>
-            <el-form-item label="Avg数量：" prop="avg">
+
+            <el-form-item label="Avg数量：" >
               <el-input-number v-model="initStock.avg" controls-position="right" @change="handleChange" :min="2" :max="200"></el-input-number>
             </el-form-item>
-            <el-form-item label="闸机数量：" prop="gate">
+
+            <el-form-item label="闸机数量：" >
               <el-input-number v-model="initStock.gateMachine" controls-position="right" @change="handleChange" :min="1" :max="40"></el-input-number>
             </el-form-item>
+
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button type="primary" :loading="loading" @click="intoHome('initStock')">开始使用</el-button>
           </div>
+
         </el-dialog>
       </div>
     </div>
@@ -86,79 +67,38 @@
           callback()
         }
       }
-      var email = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入邮箱'))
-        } else if (!/^([a-zA-Z0-9]+[-_]?)+@[a-zA-Z0-9]+\.[a-z]+$/.test(value)) {
-          return callback(new Error('请输入正确的邮箱'))
-        } else {
-          callback()
-        }
-      }
+
       var password = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('请输入密码'))
-        } else if (!/(?=.*[a-zA-Z])[a-zA-Z0-9]{6,18}/.test(value)) {
-          return callback(new Error('密码长度在6-18个字符，只能包含数字、大小写字母 且 至少包含一个字母'))
+        } else if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{3,16}$/.test(value)) {
+          return callback(new Error('密码长度在3-18个字符，只能包含数字、大小写字母'))
         } else {
           callback()
         }
       }
-      var code = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入6位验证码'))
-        } else if (value.length !== 6) {
-          return callback(new Error('请输入6位验证码'))
-        } else {
-          callback()
-        }
-      }
+
       return {
         isCode: false,
-        // 倒计时
-        disabled: false,
-        msg: '点击获取验证码',
-        count: 60,
-        timer: 0,
-        // 按钮加载
-        loading: false,
+        loading: false,//加载效果
         loginForm: {
           username: '',
           password: ''
-        },
-        // 找回密码
-        dialogFormVisible: false,
-        findPasswordForm: {
-          email: '',
-          password: '',
-          code: ''
         },
         //初始化仓库
         initVisible: false,
         initStock: {
           capacity_x: 100,
           capacity_y: 100,
-          avg: 20,
+          avg: 10,
           gateMachine: 5
-        },
-        //初始化仓库规则
-        initRules:{
-          capacity:[],
-          avg:[],
-          gate:[]
         },
         rules: {
           username: [
             { validator: username, trigger: 'blur' }
           ],
-          email: [
-            { validator: email, trigger: 'blur' }
-          ],
           password: [
             { validator: password, trigger: 'blur' }
-          ],
-          code: [
-            { validator: code, trigger: 'blur' }
           ]
         }
       }
@@ -171,17 +111,16 @@
       // 登录
       submitForm (formName) {
         if(true){
-          //账户密码正确后，跳到仓库初始化
+          //账户密码正确后，根据返回数据判断用户是否是新用户，若是则跳到仓库初始化
           this.initVisible= true
         }
-       // this.$router.push({ path: '/home' })
-        // this.$refs[formName].validate((valid) => {
+        // this.$refs[formName].validate((valid) => {//表单验证
         //   if (valid) {
-        //     this.loading = true
+        //     this.loading = true//当调用调用接口前开启
         //     // 登录请求
-        //     user.login(this.loginForm).then(res => {
+        //     user.login(this.loginForm).then(res => {//发送请求
         //       if (res) {
-        //         // 登录成功
+        //         // 登录成功（异步编程）
         //         setTimeout(() => {
         //           console.log(res.data.userList[0])
         //           // 定义常量，将获取到的数据赋值给它
@@ -191,7 +130,7 @@
         //             username: infoUsername,
         //             level: infoLevel
         //           }))
-        //           this.$router.push({ path: '/home' })
+        //          this.initVisible= true
         //         }, 500)
   
         //         this.$message({
@@ -200,70 +139,57 @@
         //         })
         //       }
         //     }).finally(_ => {
-        //       this.loading = false
+        //       this.loading = false//结束后关闭
         //     })
         //   }
         // })
       },
-      // 修改密码
-      submitFindPassword (formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.loading = true
-            // 请求
-            user.findPassword(this.findPasswordForm).then(_ => {
-              if (_) {
-                // 请求成功
-                this.$message({
-                  message: '密码修改成功',
-                  type: 'success'
-                })
-                this.dialogFormVisible = false
-              }
-            }).finally(_ => {
-              this.loading = false
-            })
-          }
-        })
-      },
-      // 获取验证码
-      sendEmailCode () {
-        this.$refs.findPasswordForm.validateField('email', result => {
-          if (!result) {
-            // 按钮倒计时
-            this.disabled = true
-            this.msg = this.count-- + 's后重新获取'
-            this.timer = setInterval(() => {
-              this.msg = this.count-- + 's后重新获取'
-              if (this.count < 0) {
-                this.msg = '点击获取验证码'
-                this.count = 60
-                this.disabled = false
-                clearInterval(this.timer)
-              }
-            }, 1000)
-  
-            // 发送验证码请求
-            common.getRequestCode(this.findPasswordForm.email).then(_ => {
-              common.getEmailCode(this.findPasswordForm.email, _.data.permissionCode).then(_ => {
-                if (_) {
-                  // 通知邮箱发送
-                  this.$notify({
-                    title: '邮箱验证码已发送',
-                    message: '验证码有效时长5分钟, 失效请重新发送',
-                    type: 'success',
-                    duration: 10 * 1000
-                  })
-                }
-              })
-            })
-          }
-        })
-      },
-      //初始化后跳转页面
-    intoHome(initStock){
-      console.log("跳")
-      this.$router.push({ path: '/home' })
+    
+      //初始化仓库（不需要后端返回数据）
+    intoHome(formName){
+     // console.log(this.initStock.avg)
+      // this.$refs[formName].validate((valid) => {
+      //   if(valid){
+      //     this.loading = true
+      //     //保存数据
+      //     sessionStorage.setItem('initData',JSON.stringify({
+      //       capacity_x: this.initStock.capacity_x,
+      //       capacity_y: this.initStock.capacity_y,
+      //       avg: this.initStock.avg,
+      //       gateMachine: this.initStock.gateMachine
+      //     }))
+          
+      //     this.$router.push({ path: '/home' })
+      //     this.loading = false
+      //     this.initVisible= false
+      //     // user.initStock(this.initStock).then(res=>{
+      //     //   if(res) {
+      //     //     this.$message({
+      //     //         message: '仓库初始化成功',
+      //     //         type: 'success'
+      //     //       })
+      //     //       this.$router.push({ path: '/home' })
+      //     //   }
+      //     // }).finally(_ => {
+      //     //     this.loading = false
+      //     //   })
+      //   }
+      // })
+      
+          this.loading = true
+          //保存数据
+          window.localStorage.setItem('initData',JSON.stringify({
+            capacity_x: this.initStock.capacity_x,
+            capacity_y: this.initStock.capacity_y,
+            avg: this.initStock.avg,
+            gateMachine: this.initStock.gateMachine
+          }))
+          var init = JSON.parse(window.localStorage.getItem('initData'))
+          console.log("接收到")
+          console.log(init.capacity_x)
+          this.$router.push({ path: '/home' })
+          this.loading = false
+          this.initVisible= false
     }
     }
   }
@@ -285,13 +211,13 @@
   }
   
   .login-form {
-    height: 350px;
-    width: 600px;
+    height: 300px;
+    width: 500px;
     box-sizing: border-box;
     background-color: #fff;
     border-radius: 10px;
     opacity: 0.8;
-    padding: 20px 50px;
+    padding: 10px 50px;
   }
   
   .login input::-webkit-outer-spin-button,
@@ -324,8 +250,8 @@
     padding: 0px 50px;
   }
 
-  .initDialog{
+  /* .initDialog{
 
-  }
+  } */
   </style>
   

@@ -38,6 +38,17 @@ export default {
       method: 'post',
       data: param
     })
+  },
+
+  /**
+   * 4.仓库初始化
+   */
+  initStock(param) {
+    return request({
+      url: '/user/initStock',
+      method: 'post',
+      data: param
+    })
   }
 
 }
