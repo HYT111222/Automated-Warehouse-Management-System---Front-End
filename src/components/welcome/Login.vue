@@ -150,7 +150,7 @@
         // })
       },
     
-      //初始化仓库（不需要后端返回数据?）
+      //初始化仓库（需要后端返回数据）
     intoHome(formName){
      // console.log(this.initStock.avg)
       // this.$refs[formName].validate((valid) => {
