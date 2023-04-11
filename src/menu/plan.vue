@@ -160,7 +160,7 @@ export default{
       }
     }
   },
-  //初始数据
+  //初始化数据
   created(){
     const _this = this
     // this.parcelIn.userName = JSON.parse(window.localStorage.getItem('user')).userName
