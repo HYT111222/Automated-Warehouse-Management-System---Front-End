@@ -29,7 +29,7 @@
     </template>
 
   <script>
-  import common from '@/api/common'
+  import other from '@/api/other.js'
   import user from '@/api/user'
 
   export default {
@@ -46,7 +46,7 @@
         if (!value) {
           return callback(new Error('请输入密码！'))
         } else if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{3,16}$/.test(value)) {
-          return callback(new Error('密码长度在3-16个字符，只能包含数字、大小写字母'))
+          return callback(new Error('密码长度在3-16个字符,只能包含数字、大小写字母'))
         } else if (this.registerForm.passwordConfirm !== '') {
           this.$refs.registerForm.validateField('passwordConfirm')
           return callback()
@@ -58,7 +58,7 @@
         if (!value) {
           return callback(new Error('请输入确认密码！'))
         } else if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{3,16}$/.test(value)) {
-          return callback(new Error('密码长度在3-16个字符，只能包含数字、大小写字母'))
+          return callback(new Error('密码长度在3-16个字符,只能包含数字、大小写字母'))
         } else if (value !== this.registerForm.password) {
           return callback(new Error('两次输入的密码不一致！'))
         } else {

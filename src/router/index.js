@@ -4,7 +4,7 @@ import Welcome from '@/components/welcome/welcome.vue'
 import Login from '@/components/welcome/Login.vue'
 import Home from '@/menu/Home.vue'
 import Plan from '@/menu/plan.vue'
-// import SVG from '@/menu/SVG_Test.vue'
+//https://registry.npm.taobao.org
 import Register from '@/components/welcome/Register.vue';
 import Seek from '@/menu/seekParcel.vue'
 import User from '@/menu/personalPage.vue'

@@ -1,5 +1,10 @@
 <template>
     <el-container class="home-container">
+      <!-- <el-header>
+        <div class="header">
+          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+        </div> 
+      </el-header> -->
     <!-- 页面主体区域 -->
     <el-container class="all">
       <!-- 侧边栏 -->
@@ -117,6 +122,13 @@ export default {
 .el-main{
   background-color: #e8f2fa;
   height: 100%;
+}
+.el-header {
+  height: 30px;
+  background-color: #d8e9f7;
+}
+.header {
+  top: 10px;
 }
 .el-icon-s-home,.el-icon-video-camera,.el-icon-user,.el-icon-user-solid,.el-icon-edit,.el-icon-place,.test{
     color: #e8f2fa;

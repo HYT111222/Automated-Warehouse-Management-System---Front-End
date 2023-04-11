@@ -27,21 +27,9 @@ export default {
     })
   },
 
-  /**
-   * 3.找回密码
-   * @param {*} param
-   * @returns
-   */
-  findPassword (param) {
-    return request({
-      url: '/user/findPassword',
-      method: 'post',
-      data: param
-    })
-  },
 
   /**
-   * 4.仓库初始化
+   * 3.仓库初始化
    */
   initStock(param) {
     return request({

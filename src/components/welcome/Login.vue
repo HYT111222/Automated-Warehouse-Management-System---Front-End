@@ -41,7 +41,7 @@
             </el-form-item>
 
             <el-form-item label="闸机数量：" >
-              <el-input-number v-model="initStock.gateMachine" controls-position="right" @change="handleChange" :min="1" :max="40"></el-input-number>
+              <el-input-number v-model="initStock.gateMachine" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
             </el-form-item>
 
           </el-form>
@@ -55,7 +55,7 @@
     </template>
   
   <script>
-  import common from '@/api/common'
+  import other from '@/api/other.js'
   import user from '@/api/user'
   
   export default {
@@ -72,7 +72,7 @@
         if (!value) {
           return callback(new Error('请输入密码'))
         } else if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{3,16}$/.test(value)) {
-          return callback(new Error('密码长度在3-18个字符，只能包含数字、大小写字母'))
+          return callback(new Error('密码长度在3-18个字符,只能包含数字、大小写字母'))
         } else {
           callback()
         }
@@ -91,7 +91,8 @@
           capacity_x: 100,
           capacity_y: 100,
           avg: 10,
-          gateMachine: 5
+          gateMachine: 1,
+          userName:''
         },
         rules: {
           username: [
@@ -112,7 +113,12 @@
       submitForm (formName) {
         if(true){
           //账户密码正确后，根据返回数据判断用户是否是新用户，若是则跳到仓库初始化
+          //若为旧用户，则读取并保存后端传输过来的仓库数据
           this.initVisible= true
+          window.localStorage.setItem('user',JSON.stringify({
+            userName:this.loginForm.username
+          }))
+          this.initStock.userName = this.loginForm.username
         }
         // this.$refs[formName].validate((valid) => {//表单验证
         //   if (valid) {
@@ -132,7 +138,6 @@
         //           }))
         //          this.initVisible= true
         //         }, 500)
-  
         //         this.$message({
         //           message: '登录成功',
         //           type: 'success'
@@ -145,7 +150,7 @@
         // })
       },
     
-      //初始化仓库（不需要后端返回数据）
+      //初始化仓库（不需要后端返回数据?）
     intoHome(formName){
      // console.log(this.initStock.avg)
       // this.$refs[formName].validate((valid) => {
@@ -175,7 +180,7 @@
       //     //   })
       //   }
       // })
-      
+      //表单验证-加载-发送请求-保存数据(仓库初始化数据)-跳转-加载取消
           this.loading = true
           //保存数据
           window.localStorage.setItem('initData',JSON.stringify({
@@ -184,9 +189,9 @@
             avg: this.initStock.avg,
             gateMachine: this.initStock.gateMachine
           }))
-          var init = JSON.parse(window.localStorage.getItem('initData'))
-          console.log("接收到")
-          console.log(init.capacity_x)
+          // window.localStorage.setItem('testCss',JSON.stringify({
+          //   colorCss: "red",
+          // }))
           this.$router.push({ path: '/home' })
           this.loading = false
           this.initVisible= false
@@ -250,8 +255,5 @@
     padding: 0px 50px;
   }
 
-  /* .initDialog{
-
-  } */
   </style>
   
