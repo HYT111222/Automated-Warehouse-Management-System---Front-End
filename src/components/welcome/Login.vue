@@ -10,7 +10,7 @@
             </el-form-item>
   
             <el-form-item label="密码" prop="password"  v-show="!isCode">
-              <el-input prefix-icon="el-icon-lock" placeholder="请填写 6-18 位密码" type="password" maxlength="18" v-model="loginForm.password" show-password></el-input>
+              <el-input prefix-icon="el-icon-lock" placeholder="请填写 3-18 位密码" type="password" maxlength="18" v-model="loginForm.password" show-password></el-input>
             </el-form-item>
   
             <el-form-item class="btn-r" label-width="0px">
@@ -37,11 +37,11 @@
             </el-form-item>
 
             <el-form-item label="Avg数量：" >
-              <el-input-number v-model="initStock.avg" controls-position="right" @change="handleChange" :min="2" :max="200"></el-input-number>
+              <el-input-number v-model="initStock.avg" controls-position="right" @change="handleChange" :min="2" :max="200" :step="2"></el-input-number>
             </el-form-item>
 
             <el-form-item label="闸机数量：" >
-              <el-input-number v-model="initStock.gateMachine" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
+              <el-input-number v-model="initStock.gateMachine" controls-position="right" @change="handleChange" :min="1" :max="5"></el-input-number>
             </el-form-item>
 
           </el-form>
@@ -91,8 +91,7 @@
           capacity_x: 100,
           capacity_y: 100,
           avg: 10,
-          gateMachine: 1,
-          userName:''
+          gateMachine: 1
         },
         rules: {
           username: [
@@ -111,90 +110,66 @@
       },
       // 登录
       submitForm (formName) {
-        if(true){
-          //账户密码正确后，根据返回数据判断用户是否是新用户，若是则跳到仓库初始化
-          //若为旧用户，则读取并保存后端传输过来的仓库数据
-          this.initVisible= true
-          window.localStorage.setItem('user',JSON.stringify({
-            userName:this.loginForm.username
-          }))
-          this.initStock.userName = this.loginForm.username
-        }
-        // this.$refs[formName].validate((valid) => {//表单验证
-        //   if (valid) {
-        //     this.loading = true//当调用调用接口前开启
-        //     // 登录请求
-        //     user.login(this.loginForm).then(res => {//发送请求
-        //       if (res) {
-        //         // 登录成功（异步编程）
-        //         setTimeout(() => {
-        //           console.log(res.data.userList[0])
-        //           // 定义常量，将获取到的数据赋值给它
-        //           var infoUsername = res.data.userList[0].username
-        //           var infoLevel = res.data.userList[0].level
-        //           sessionStorage.setItem('user', JSON.stringify({
-        //             username: infoUsername,
-        //             level: infoLevel
-        //           }))
-        //          this.initVisible= true
-        //         }, 500)
-        //         this.$message({
-        //           message: '登录成功',
-        //           type: 'success'
-        //         })
-        //       }
-        //     }).finally(_ => {
-        //       this.loading = false//结束后关闭
-        //     })
-        //   }
-        // })
+        //表单验证-loading-发送请求-获取数据-保存token-判断用户状态-是否需要初始化-跳转页面
+        this.$refs[formName].validate((valid) => {//表单验证
+          if (valid) {
+            this.loading = true//当调用调用接口前开启
+            // 登录请求
+            user.login(this.loginForm).then(res => {//发送请求
+              if (res) {
+                // 登录成功（异步编程）
+                setTimeout(() => {
+                  let token = res.data.login.token//login名字待定
+                  window.localStorage.setItem('Token',JSON.stringify({
+                    token: token
+                  }))
+                  if (res.data.login.status==true) {//旧用户
+                    this.$router.push({ path: '/home' })
+                  }else {//新用户
+                    this.initVisible= true
+                  }
+                  }, 500)
+                  this.$message({
+                    message: '登录成功',
+                    type: 'success'
+                  })
+              }
+            }).finally(_ => {
+              this.loading = false//结束后关闭
+            })
+          }
+        })
       },
     
-      //初始化仓库（需要后端返回数据）
+      //初始化仓库
     intoHome(formName){
-     // console.log(this.initStock.avg)
-      // this.$refs[formName].validate((valid) => {
-      //   if(valid){
-      //     this.loading = true
-      //     //保存数据
-      //     sessionStorage.setItem('initData',JSON.stringify({
-      //       capacity_x: this.initStock.capacity_x,
-      //       capacity_y: this.initStock.capacity_y,
-      //       avg: this.initStock.avg,
-      //       gateMachine: this.initStock.gateMachine
-      //     }))
-          
-      //     this.$router.push({ path: '/home' })
-      //     this.loading = false
-      //     this.initVisible= false
-      //     // user.initStock(this.initStock).then(res=>{
-      //     //   if(res) {
-      //     //     this.$message({
-      //     //         message: '仓库初始化成功',
-      //     //         type: 'success'
-      //     //       })
-      //     //       this.$router.push({ path: '/home' })
-      //     //   }
-      //     // }).finally(_ => {
-      //     //     this.loading = false
-      //     //   })
-      //   }
-      // })
-      //表单验证-加载-发送请求-保存数据(仓库初始化数据)-跳转-加载取消
-          this.loading = true
-          //保存数据
-          window.localStorage.setItem('initData',JSON.stringify({
-            capacity_x: this.initStock.capacity_x,
-            capacity_y: this.initStock.capacity_y,
-            avg: this.initStock.avg,
-            gateMachine: this.initStock.gateMachine
-          }))
-          // window.localStorage.setItem('testCss',JSON.stringify({
-          //   colorCss: "red",
-          // }))
-          this.$router.push({ path: '/home' })
-          this.loading = false
-          this.initVisible= false
+        this.loading = true
+        let token = JSON.parse(window.localStorage.getItem("Token")).token
+        user.initStock(this.initStock, token).then(res=>{
+          if(res) {
+            setTimeout(() => {
+              //保存输入数据
+            sessionStorage.setItem('initData',JSON.stringify({
+              capacity_x: this.initStock.capacity_x,
+              capacity_y: this.initStock.capacity_y,
+              avg: this.initStock.avg,
+              gateMachine: this.initStock.gateMachine
+            }))
+            //保存后端初始化数据
+            sessionStorage.setItem('initDataFromEnd',JSON.stringify({
+              depository: res.data.initStock.depository//initStock名字待定,是否要拆分数组？
+              }))
+            },500)
+            this.$message({
+                message: '仓库初始化成功',
+                type: 'success'
+              })
+            this.$router.push({ path: '/home' })
+            this.initVisible= false
+          }
+        }).finally(_ => {
+            this.loading = false
+          })
     }
     }
   }

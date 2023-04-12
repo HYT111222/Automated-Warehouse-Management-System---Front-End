@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 
-const BASE_API = 'http://localhost:8081'
+const BASE_API = 'http://localhost:7070'
 // create an axios instance
 const service = axios.create({
   baseURL: BASE_API, // api 的 base_url

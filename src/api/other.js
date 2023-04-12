@@ -5,22 +5,28 @@ export default {
    * 1.入库请求
    * @returns
    */
-  enterStock (parcel) {
+  enterStock (parcelList,token) {
     return request({
       url: '/other/enter',
       method: 'post',
-      data: parcel
+      data: {
+        parcelList,
+        token
+      }
     })
   },
 
   /**
    * 2.出库请求
    */
-  outStock (parcel) {
+  outStock (parcelList, token) {
     return request({
       url: '/other/out',
       method: 'post',
-      data: parcel
+      data: {
+        parcelList,
+        token
+      }
     })
   },
 
@@ -36,25 +42,22 @@ export default {
   },
   /**
    * 4.获取入库记录表格
-   * params:用户名（如果每次都要传用户名的话则需要）
    */
-  getInTable (params) {
+  getInTable (token) {
     return request({
       url: '/other/DBrecordIn',
       method: 'get',
-      params
+      params: token
     })
   },
   /**
    * 5.获取出库记录表格
-   * @param {*} params :用户名
-   * @returns 
    */
-  getOutTable (params) {
+  getOutTable (token) {
     return request({
       url: '/other/DBrecordOut',
       method: 'get',
-      params
+      params: token
     })
   },
 }

@@ -26,16 +26,6 @@ const routes = [
       // { path: '/out', component: Out},
       { path: '/seek', component: Seek },
       { path: '/personalPage', component: User}
-      // { path: '/changeInfo', component: ChangeInfo },
-      // { path: '/personalPage', component: PersonalPage },
-      // { path: '/userManagement', component: UserManagement },
-      // { path: '/changePW', component: ChangePW },
-      // { path: '/main', component: Main },
-      // { path: '/algorithmCom', component: AlgorithmCom },
-      // { path: '/userIndex', component: UserIndex },
-      // { path: '/test', component: Test },
-      // { path: '/judgeDefect', component: JudgeDefect },
-      // { path: '/home', redirect: '/userIndex' }
     ]
   }
 ]
@@ -44,4 +34,14 @@ const router = new VueRouter({
   routes
 })
 
+//路由守卫
+// router.beforeEach((to, from, next) => {
+//   const isLogin = localStorage.Token ? true: false
+//   if(to.path == '/login' || to.path == '/register'|| to.path == '/welcome'){
+//       next()
+//   }else {
+//       alert("请先进行登录操作~")
+//       isLogin ? next() : next('/login')
+//   }
+// })
 export default router

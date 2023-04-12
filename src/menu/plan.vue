@@ -112,8 +112,7 @@
             <svg
         class="mysvg"
         preserveAspectRatio="xMidYMid meet"
-        :style="{
-		   '--box':box}"
+        
         >
         <circle id="mycircle" cx="50" cy="50" r="50" />
           </svg>
@@ -137,24 +136,16 @@ export default{
       }
 
     return{
-      //svg画布初始化数据
-      box:"",
       parcelInList:[{}],//入库信息
       parcelOutList:[{}],//出库信息
       loading: false,//加载效果
       defaultTab:'first',
-      parcelIn:{
+      //avg运动
+
+      parcel:{
         id:'',
-        place: '',
-        userName: ''//是否需要每次传用户名，还是用token？
+        place: ''
       },
-      parcelOut:{
-        id:'',
-        place: '',
-        userName: ''
-      },
-      canvas:null,
-      context:null,
       rules:{
         id:[{ validator: parcelID, trigger: 'blur' }]
       }
@@ -163,9 +154,7 @@ export default{
   //初始化数据
   created(){
     const _this = this
-    // this.parcelIn.userName = JSON.parse(window.localStorage.getItem('user')).userName
-    // this.parcelOut.userName = JSON.parse(window.localStorage.getItem('user')).userName
-    
+    var token = JSON.parse(window.localStorage.getItem("Token")).token
     //SVG测试
     let temp = JSON.parse(window.localStorage.getItem('initData'))
     console.log(temp)
@@ -178,8 +167,8 @@ export default{
     //初始化表单
     console.log(temp.gateMachine)
     for (let i = 0; i < temp.gateMachine; i++) {
-      this.parcelInList[i] = this.parcelIn
-      this.parcelOutList[i] = this.parcelOut
+      this.parcelInList[i] = this.parcel
+      this.parcelOutList[i] = this.parcel
     }
     
   },
@@ -192,11 +181,30 @@ export default{
       //入库avg动画
       avgPlace(formName) {
        //表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
-       console.log(this.parcelOut.place)
+       console.log(this.parcelOutList[0].place)
        this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.loading = true
-          
+          this.loading = true//要在动画之前关闭
+          other.enterStock(formName,token).then(res=>{
+            if(res) {
+              setTimeout(() => {
+                for (let i = 0; i<res.data.avgPlace.parcelList.length; i++){
+                if(res.data.avgPlace.parcelList[i].status==true) {//可以入库
+                //提示用户该包裹可以正在入库中,保存路线以及存放位置，启动动画
+                //动画avg运动到指定位置后提示用户，该包裹入库完成，位置为XXX
+                }else {
+                  //提示用户该包裹不可入库
+                }
+              }
+              },500)
+              this.$message({
+                message: '仓库初始化成功',
+                type: 'success'
+              })
+            }
+          }).finally(res=>{
+            this.loading = false
+          })  
         }
        })
        
@@ -204,7 +212,33 @@ export default{
       },
       //出库avg动画
       avgFetch(formName) {
-        //表单验证-加载-发送请求-得到后端数据-关闭加载-触发动画
+        //表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
+        console.log(this.parcelOutList[0].place)
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.loading = true//要在动画之前关闭
+            other.enterStock(formName,token).then(res=>{
+              if(res) {
+                setTimeout(() => {
+                  for (let i = 0; i<res.data.avgPlace.parcelList.length; i++){
+                  if(res.data.avgPlace.parcelList[i].status==true) {//可以入库
+                  //提示用户该包裹可以正在入库中,保存路线以及存放位置，启动动画
+                  //动画avg运动到指定位置后提示用户，该包裹入库完成，位置为XXX
+                  }else {
+                    //提示用户该包裹不可入库
+                  }
+                }
+                },500)
+                this.$message({
+                  message: '仓库初始化成功',
+                  type: 'success'
+                })
+              }
+            }).finally(res=>{
+              this.loading = false
+            })  
+          }
+        })
       },
       //切换
       handleClick(tab, event) {
@@ -215,10 +249,7 @@ export default{
 </script>
 
 <style lang="less" scoped>
-.mysvg {
-  viewBox: var(--box)
-  
-}
+
   .can {
     border: #101a28;
   }

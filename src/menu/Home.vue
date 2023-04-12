@@ -10,14 +10,15 @@
       <!-- 侧边栏 -->
       <el-aside width="200px">
         <!-- 侧边栏菜单区 -->
-        <el-menu
+        <el-menu 
           background-color=#69a7e5
           text-color="#EAEDF1"
           active-text-color="#b2b2b2"
           :collapse-transition="false"
-          router="true" >
+          router="true" 
+          >
           <!-- 一级菜单1 -->
-          <el-submenu>
+          <el-submenu  >
             <!-- 一级菜单的模板区域 -->
             <template slot="title">
               <!-- 图标 -->
@@ -101,7 +102,13 @@ export default {
   methods: {
     tryAction () {
       this.$router.push('/main')
-    }
+    },
+    handleOpen(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleClose(key, keyPath) {
+        console.log(key, keyPath);
+      }
   },
   data () {
     return {
@@ -127,9 +134,11 @@ export default {
   height: 30px;
   background-color: #d8e9f7;
 }
-.header {
-  top: 10px;
+.el-menu-item.is-active {
+  color: #ffffff !important;
+  background: #8ab9e8 !important;
 }
+
 .el-icon-s-home,.el-icon-video-camera,.el-icon-user,.el-icon-user-solid,.el-icon-edit,.el-icon-place,.test{
     color: #e8f2fa;
 }

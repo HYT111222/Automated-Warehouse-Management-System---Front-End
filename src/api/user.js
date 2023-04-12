@@ -31,12 +31,26 @@ export default {
   /**
    * 3.仓库初始化
    */
-  initStock(param) {
+  initStock(param,token) {
     return request({
       url: '/user/initStock',
       method: 'post',
-      data: param
+      data: {
+        token,
+        param
+      }
     })
+  },
+  /**
+   * 4.获取用户个人主页信息
+   */
+  getUserInfo(token) {
+    return request({
+      url: 'user/information',
+      method: 'get',
+      params: token
+    })
+
   }
 
 }
