@@ -2,21 +2,26 @@
     <!--:style="{
 		'--color':color}":inline="true"-->
         <div class="personalPageWhole">
-            <el-avatar :src="userJPG" :size="120" class="jpg"></el-avatar>
+            <div :inline="true">
+                <el-avatar :src="userJPG" :size="120" class="jpg"></el-avatar>
+                <span class="welcome">Hi~ {{ userName }}</span>
+            </div>
+            
             <el-form :model="userInfoForm" class="personalInfo" >
                 <el-form-item  >
                     <el-card class="box-card">
-                        <el-descriptions class="margin-top" title="无边框列表" :column="3" :size="size">
+                        <el-descriptions class="margin-top" title="个人信息" :column="3" :size="size">
                             <template slot="extra">
-                            <el-button type="primary" size="small">操作</el-button>
+                            <el-button type="primary" icon="el-icon-edit" circle @click="modify()"></el-button>
                             </template>
-                            <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-                            <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
-                            <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
-                            <el-descriptions-item label="备注">
-                            <el-tag size="small">学校</el-tag>
+                            <el-descriptions-item  label="用户名">{{ userName }}</el-descriptions-item>
+                            <el-descriptions-item label="手机号" class="test">{{ phone }}</el-descriptions-item>   
+                            <el-descriptions-item label="所属中转站">
+                            <el-tag size="small">{{ address }}</el-tag>
                             </el-descriptions-item>
-                            <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
+                            <el-descriptions-item label="产生费用：">
+                                <el-tag type="danger">{{  totalCost }}</el-tag>
+                            </el-descriptions-item>
                         </el-descriptions>
                     </el-card>
                 </el-form-item>
@@ -35,12 +40,21 @@ export default{
         return{
             // color
             userJPG:jpg,
-            userName:""
+            userName:"hyt",
+            phone:"1425",
+            address:"北京中关村二部",
+            totalCost:0
         }
     },
     created() {
         // const _this =this
         // _this.userName = JSON.parse(window.localStorage.getItem('user')).userName
+    },
+    methods:{
+        //修改信息以及密码
+        modify(){
+
+        }
     }
 
 }
@@ -69,5 +83,12 @@ export default{
 }
 .personalPageWhole {
     margin-left: 20px;
+}
+.welcome {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 50px;
+    margin-top: auto;
+    margin-left: 50px;
+    color: #5379a7;
 }
 </style>

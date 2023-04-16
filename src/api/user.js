@@ -29,16 +29,14 @@ export default {
 
 
   /**
-   * 3.仓库初始化
+   * 3.仓库初始化(不能写成：
+   * data：{param，token}， 后端会读不到，所以只能在表单的数据对象里全部写完，否则后端接受的就是两个变量)
    */
-  initStock(param,token) {
+  initStock(param) {
     return request({
       url: '/user/initStock',
       method: 'post',
-      data: {
-        token,
-        param
-      }
+      data: param
     })
   },
   /**

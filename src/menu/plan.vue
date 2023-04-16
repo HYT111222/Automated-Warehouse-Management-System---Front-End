@@ -3,13 +3,12 @@
           <div class="inputData">
             <el-tabs v-model="defaultTab" @tab-click="handleClick" >
               <el-tab-pane label="入库" name="first">
-               
-                <el-form :inline="true" :model="parcelInList" class="mag" :rules="rules">
-                  <div  v-for= "(item) in parcelInList" >
-                <el-form-item label="包裹ID:" prop="id">
+                <el-form :inline="true" :model="InData" :ref="parcelInList" class="mag" :rules="rules">
+                  <div  v-for= "(item,index) in InData.parcelInList" >
+                <el-form-item label="包裹ID:" :prop="'parcelInList.'+index+'.id'" :rules="rules.id">
                     <el-input v-model="item.id" placeholder="ID"></el-input>
                 </el-form-item>
-                <el-form-item label="包裹目的地：" >
+                <el-form-item label="包裹目的地：" :prop="'parcelInList.'+index+'.place'" :rules="rules.place">
                     <el-select v-model="item.place" placeholder="目的地">
                     <!--香港澳门台湾是否在业务范围内-->
                     <el-option label="北京" value="北京"></el-option>
@@ -47,17 +46,15 @@
                   </el-form-item>
               </div >
                 <el-form-item  >
-                    <el-button type="primary" :loading="loading" @click="avgPlace('parcelInList')">入库</el-button>
+                    <el-button type="primary" :loading="loading" @click="avgPlace('InData')">入库</el-button>
                 </el-form-item>
             </el-form>
-          
               </el-tab-pane>
 
               <el-tab-pane label="出库" name="second">
-
-                <el-form :inline="true" :model="parcelOutList" class="mag" :rules="rules">
-                  <div  v-for= "(item) in parcelOutList" >
-                <el-form-item label="包裹ID:" prop="id">
+                <el-form :inline="true" :model="OutData" class="mag" :rules="rules">
+                  <div  v-for= "(item,index) in OutData.parcelOutList" :key="index">
+                <el-form-item label="包裹ID:" :prop="'parcelOutList.'+index+'.id'">
                     <el-input v-model="item.id" placeholder="ID"></el-input>
                 </el-form-item>
                 <el-form-item label="包裹目的地：" >
@@ -102,20 +99,7 @@
                 </el-form-item>
             </el-form>
               </el-tab-pane>
-        
             </el-tabs>
-            
-          </div>
-          <div class="can" >
-            <!--SVG测试-->
-            <!--若viewBox="0 0 x y"则会调整大小-->
-            <svg
-        class="mysvg"
-        preserveAspectRatio="xMidYMid meet"
-        
-        >
-        <circle id="mycircle" cx="50" cy="50" r="50" />
-          </svg>
           </div>
     </div>
 </template>
@@ -128,26 +112,34 @@ export default{
     var parcelID = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('请输入包裹id'))
-        } else if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{1,16}$/.test(value)) {
+        } else if (!/^\d+$/.test(value)) {
           return callback(new Error('长度在1-16个字符，只能包含数字、大小写字母'))
         }else {
           callback()
         }
       }
+      var parcelPlace = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('请选择目的地'))
+        } else {
+          callback()
+        }
+      }
 
     return{
-      parcelInList:[{}],//入库信息
-      parcelOutList:[{}],//出库信息
+      InData:{
+        parcelInList:[{}]//入库信息
+      },
+      OutData:{
+        parcelOutList:[{}]//出库信息
+      },
+      
       loading: false,//加载效果
       defaultTab:'first',
-      //avg运动
 
-      parcel:{
-        id:'',
-        place: ''
-      },
       rules:{
-        id:[{ validator: parcelID, trigger: 'blur' }]
+        id:[ { validator: parcelID, trigger: 'blur' } ],
+        place:[ {validator: parcelPlace, trigger: 'blur'}]
       }
     }
   },
@@ -157,18 +149,15 @@ export default{
     var token = JSON.parse(window.localStorage.getItem("Token")).token
     //SVG测试
     let temp = JSON.parse(window.localStorage.getItem('initData'))
-    console.log(temp)
-    let x = temp.capacity_x
-    let y = temp.capacity_y
-    this.box = "0 0 "+ x + " " + y
-    console.log("svg")
-    console.log(this.box)
-
+    let parcel={
+        id:'',
+        place: ''
+      }
     //初始化表单
     console.log(temp.gateMachine)
     for (let i = 0; i < temp.gateMachine; i++) {
-      this.parcelInList[i] = this.parcel
-      this.parcelOutList[i] = this.parcel
+      this.InData.parcelInList.push(parcel)
+      this.OutData.parcelOutList.push(parcel)
     }
     
   },
@@ -181,7 +170,6 @@ export default{
       //入库avg动画
       avgPlace(formName) {
        //表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
-       console.log(this.parcelOutList[0].place)
        this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true//要在动画之前关闭

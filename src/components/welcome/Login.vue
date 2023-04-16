@@ -91,7 +91,8 @@
           capacity_x: 100,
           capacity_y: 100,
           avg: 10,
-          gateMachine: 1
+          gateMachine: 1,
+          token: ''
         },
         rules: {
           username: [
@@ -116,25 +117,32 @@
             this.loading = true//当调用调用接口前开启
             // 登录请求
             user.login(this.loginForm).then(res => {//发送请求
-              if (res) {
+              if (res.data.status_code=="true") {
+                console.log("ok")
                 // 登录成功（异步编程）
                 setTimeout(() => {
-                  let token = res.data.login.token//login名字待定
+                  let token = res.data.token
                   window.localStorage.setItem('Token',JSON.stringify({
                     token: token
                   }))
-                  if (res.data.login.status==true) {//旧用户
-                    this.$router.push({ path: '/home' })
-                  }else {//新用户
-                    this.initVisible= true
-                  }
+                  this.initVisible = true//先一律按照旧用户处理
+                  // if (res.data.login.status==true) {//旧用户
+                  //   this.$router.push({ path: '/home' })
+                  // }else {//新用户
+                  //   this.initVisible= true
+                  // }
                   }, 500)
                   this.$message({
                     message: '登录成功',
                     type: 'success'
                   })
+              } else {
+                this.$message({
+                  message: '登录失败，用户名或密码错误',
+                  type: 'error'
+                })
               }
-            }).finally(_ => {
+            }).finally( res => {
               this.loading = false//结束后关闭
             })
           }
@@ -145,28 +153,31 @@
     intoHome(formName){
         this.loading = true
         let token = JSON.parse(window.localStorage.getItem("Token")).token
-        user.initStock(this.initStock, token).then(res=>{
-          if(res) {
-            setTimeout(() => {
-              //保存输入数据
-            sessionStorage.setItem('initData',JSON.stringify({
-              capacity_x: this.initStock.capacity_x,
-              capacity_y: this.initStock.capacity_y,
-              avg: this.initStock.avg,
-              gateMachine: this.initStock.gateMachine
-            }))
-            //保存后端初始化数据
-            sessionStorage.setItem('initDataFromEnd',JSON.stringify({
-              depository: res.data.initStock.depository//initStock名字待定,是否要拆分数组？
-              }))
-            },500)
-            this.$message({
-                message: '仓库初始化成功',
-                type: 'success'
-              })
-            this.$router.push({ path: '/home' })
-            this.initVisible= false
-          }
+        const _this = this
+        this.initStock.token = token
+        user.initStock(this.initStock).then(res=>{
+          console.log(res)
+          // if(res) {
+          //   setTimeout(() => {
+          //     //保存输入数据
+          //   sessionStorage.setItem('initData',JSON.stringify({
+          //     capacity_x: this.initStock.capacity_x,
+          //     capacity_y: this.initStock.capacity_y,
+          //     avg: this.initStock.avg,
+          //     gateMachine: this.initStock.gateMachine
+          //   }))
+          //   //保存后端初始化数据
+          //   sessionStorage.setItem('initDataFromEnd',JSON.stringify({
+          //     depository: res.data.initStock.depository//initStock名字待定,是否要拆分数组？
+          //     }))
+          //   },500)
+          //   this.$message({
+          //       message: '仓库初始化成功',
+          //       type: 'success'
+          //     })
+          //   this.$router.push({ path: '/home' })
+          //   this.initVisible= false
+          // }
         }).finally(_ => {
             this.loading = false
           })
@@ -188,6 +199,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .el-input-number {
+    position: Inherit; /* 好像没用 */
   }
   
   .login-form {
