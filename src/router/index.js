@@ -35,13 +35,18 @@ const router = new VueRouter({
 })
 
 // 路由守卫
-router.beforeEach((to, from, next) => {
-  const isLogin = localStorage.Token ? true: false
-  if(to.path == '/login' || to.path == '/register'|| to.path == '/welcome'){
-      next()
-  }else {
-      alert("请先进行登录操作~")
-      isLogin ? next() : next('/login')
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   let token = JSON.parse(window.localStorage.getItem("Token"))
+//   const isLogin = token.token ? true: false
+//   if(to.path == '/login' || to.path == '/register'|| to.path == '/welcome'){
+//       next()
+//   }else {
+//     if ( isLogin == true){
+//       next()
+//     }else {
+//       alert("请先进行登录操作")
+//       next('/login')
+//     }
+//   }
+// })
 export default router

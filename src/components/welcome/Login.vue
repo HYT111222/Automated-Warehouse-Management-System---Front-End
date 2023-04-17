@@ -131,7 +131,7 @@
                   // }else {//新用户
                   //   this.initVisible= true
                   // }
-                  }, 500)
+                  }, 10)
                   this.$message({
                     message: '登录成功',
                     type: 'success'
@@ -157,27 +157,28 @@
         this.initStock.token = token
         user.initStock(this.initStock).then(res=>{
           console.log(res)
-          // if(res) {
-          //   setTimeout(() => {
-          //     //保存输入数据
-          //   sessionStorage.setItem('initData',JSON.stringify({
-          //     capacity_x: this.initStock.capacity_x,
-          //     capacity_y: this.initStock.capacity_y,
-          //     avg: this.initStock.avg,
-          //     gateMachine: this.initStock.gateMachine
-          //   }))
-          //   //保存后端初始化数据
-          //   sessionStorage.setItem('initDataFromEnd',JSON.stringify({
-          //     depository: res.data.initStock.depository//initStock名字待定,是否要拆分数组？
-          //     }))
-          //   },500)
-          //   this.$message({
-          //       message: '仓库初始化成功',
-          //       type: 'success'
-          //     })
-          //   this.$router.push({ path: '/home' })
-          //   this.initVisible= false
-          // }
+          this.$router.push({ path: '/home' })
+          if(res) {
+            setTimeout(() => {
+              //保存输入数据
+            sessionStorage.setItem('initData',JSON.stringify({
+              capacity_x: this.initStock.capacity_x,
+              capacity_y: this.initStock.capacity_y,
+              avg: this.initStock.avg,
+              gateMachine: this.initStock.gateMachine
+            }))
+            //保存后端初始化数据
+            // sessionStorage.setItem('initDataFromEnd',JSON.stringify({
+            //   depository: res.data.initStock.depository//initStock名字待定,是否要拆分数组？
+            //   }))
+            },10)
+            this.$message({
+                message: '仓库初始化成功',
+                type: 'success'
+              })
+            this.$router.push({ path: '/home' })
+            this.initVisible= false
+          }
         }).finally(_ => {
             this.loading = false
           })

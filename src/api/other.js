@@ -5,14 +5,11 @@ export default {
    * 1.入库请求
    * @returns
    */
-  enterStock (parcelList,token) {
+  enterStock (param) {
     return request({
       url: '/other/enter',
       method: 'post',
-      data: {
-        parcelList,
-        token
-      }
+      data: param
     })
   },
 

@@ -3,17 +3,17 @@
           <div class="inputData">
             <el-tabs v-model="defaultTab" @tab-click="handleClick" >
               <el-tab-pane label="入库" name="first">
-                <el-form :inline="true" :model="InData" :ref="parcelInList" class="mag" :rules="rules">
+                <el-form :inline="true" :model="InData" ref="InData" class="mag" :rules="rules">
                   <div  v-for= "(item,index) in InData.parcelInList" >
                 <el-form-item label="包裹ID:" :prop="'parcelInList.'+index+'.id'" :rules="rules.id">
                     <el-input v-model="item.id" placeholder="ID"></el-input>
                 </el-form-item>
-                <el-form-item label="包裹目的地：" :prop="'parcelInList.'+index+'.place'" :rules="rules.place">
+                <el-form-item label="包裹目的地：" >
                     <el-select v-model="item.place" placeholder="目的地">
                     <!--香港澳门台湾是否在业务范围内-->
                     <el-option label="北京" value="北京"></el-option>
                     <el-option label="上海" value="上海"></el-option>
-                    <el-option label="广东" value="广"></el-option>
+                    <el-option label="广东" value="广东"></el-option>
                     <el-option label="天津" value="天津"></el-option>
                     <el-option label="重庆" value="重庆"></el-option>
                     <el-option label="河北" value="河北"></el-option>
@@ -52,13 +52,13 @@
               </el-tab-pane>
 
               <el-tab-pane label="出库" name="second">
-                <el-form :inline="true" :model="OutData" class="mag" :rules="rules">
-                  <div  v-for= "(item,index) in OutData.parcelOutList" :key="index">
-                <el-form-item label="包裹ID:" :prop="'parcelOutList.'+index+'.id'">
-                    <el-input v-model="item.id" placeholder="ID"></el-input>
+                <el-form :inline="true" :model="OutData" class="mag" ref="OutData" :rules="rules">
+                  <div  v-for= "(item2,index2) in OutData.parcelOutList" :key="index2">
+                <el-form-item label="包裹ID:" :prop="'parcelOutList.'+index2+'.id'">
+                    <el-input v-model="item2.id" placeholder="ID"></el-input>
                 </el-form-item>
                 <el-form-item label="包裹目的地：" >
-                    <el-select v-model="item.place" placeholder="目的地">
+                    <el-select v-model="item2.place" placeholder="目的地">
                     <!--香港澳门台湾是否在业务范围内-->
                     <el-option label="北京" value="北京"></el-option>
                     <el-option label="上海" value="上海"></el-option>
@@ -110,54 +110,53 @@
 export default{
   data(){
     var parcelID = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入包裹id'))
-        } else if (!/^\d+$/.test(value)) {
-          return callback(new Error('长度在1-16个字符，只能包含数字、大小写字母'))
-        }else {
-          callback()
-        }
-      }
-      var parcelPlace = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请选择目的地'))
+      if (!value) {
+          return callback()
         } else {
-          callback()
+            if (!/^\d+$/.test(value)) {
+            return callback(new Error('只能包含数字'))
+          }else {
+            callback()
+          }
         }
+         
       }
 
     return{
       InData:{
-        parcelInList:[{}]//入库信息
+        parcelInList:[],//入库信息
+        token: ''
       },
       OutData:{
-        parcelOutList:[{}]//出库信息
+        parcelOutList:[],//出库信息
+        token: ''
       },
       
       loading: false,//加载效果
       defaultTab:'first',
 
       rules:{
-        id:[ { validator: parcelID, trigger: 'blur' } ],
-        place:[ {validator: parcelPlace, trigger: 'blur'}]
+        id:[ { validator: parcelID, trigger: 'blur' } ]
       }
     }
   },
   //初始化数据
   created(){
-    const _this = this
-    var token = JSON.parse(window.localStorage.getItem("Token")).token
-    //SVG测试
-    let temp = JSON.parse(window.localStorage.getItem('initData'))
-    let parcel={
-        id:'',
-        place: ''
-      }
+    let temp = JSON.parse(window.sessionStorage.getItem('initData'))
     //初始化表单
     console.log(temp.gateMachine)
     for (let i = 0; i < temp.gateMachine; i++) {
+      //不能将parcel放在循环外，用同一个parcel赋给列表
+      let parcel={
+        id:'',
+        place: ''
+      }
+      let parcel2={
+        id:'',
+        place: ''
+      }
       this.InData.parcelInList.push(parcel)
-      this.OutData.parcelOutList.push(parcel)
+      this.OutData.parcelOutList.push(parcel2)
     }
     
   },
@@ -169,30 +168,51 @@ export default{
     methods: {
       //入库avg动画
       avgPlace(formName) {
+        const _this =this
        //表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
        this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.loading = true//要在动画之前关闭
-          other.enterStock(formName,token).then(res=>{
-            if(res) {
-              setTimeout(() => {
-                for (let i = 0; i<res.data.avgPlace.parcelList.length; i++){
-                if(res.data.avgPlace.parcelList[i].status==true) {//可以入库
-                //提示用户该包裹可以正在入库中,保存路线以及存放位置，启动动画
-                //动画avg运动到指定位置后提示用户，该包裹入库完成，位置为XXX
-                }else {
-                  //提示用户该包裹不可入库
-                }
-              }
-              },500)
-              this.$message({
-                message: '仓库初始化成功',
-                type: 'success'
-              })
+          let temp = {
+            parcelInList:[],
+            token:''
+          }
+          for (let i = 0; i<_this.InData.parcelInList.length;i++){
+            if (_this.InData.parcelInList[i].id!='' && _this.InData.parcelInList[i].place!=''){
+              temp.parcelInList.push(_this.InData.parcelInList[i])
             }
+          }
+          console.log(temp.parcelInList.length)
+          if (temp.parcelInList.length>0){
+          console.log("ok")
+          this.loading = true//要在动画之前关闭
+          temp.token = JSON.parse(window.localStorage.getItem("Token")).token
+          other.enterStock(temp).then(res=>{
+          console.log(res)
+            // if(res) {
+            //   setTimeout(() => {
+            //     for (let i = 0; i<res.data.avgPlace.parcelList.length; i++){
+            //     if(res.data.avgPlace.parcelList[i].status==true) {//可以入库
+            //     //提示用户该包裹可以正在入库中,保存路线以及存放位置，启动动画
+            //     //动画avg运动到指定位置后提示用户，该包裹入库完成，位置为XXX
+            //     }else {
+            //       //提示用户该包裹不可入库
+            //     }
+            //   }
+            //   },500)
+            //   this.$message({
+            //     message: '',
+            //     type: 'success'
+            //   })
+            // }
           }).finally(res=>{
             this.loading = false
-          })  
+          })
+          } else {
+                this.$message({
+                message: '包裹信息输入不可为空',
+                type: 'error'
+              })
+          }
         }
        })
        
