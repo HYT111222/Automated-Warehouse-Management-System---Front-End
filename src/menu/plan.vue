@@ -11,37 +11,37 @@
                 <el-form-item label="包裹目的地：" >
                     <el-select v-model="item.place" placeholder="目的地">
                     <!--香港澳门台湾是否在业务范围内-->
-                    <el-option label="北京" value="北京"></el-option>
-                    <el-option label="上海" value="上海"></el-option>
-                    <el-option label="广东" value="广东"></el-option>
-                    <el-option label="天津" value="天津"></el-option>
-                    <el-option label="重庆" value="重庆"></el-option>
-                    <el-option label="河北" value="河北"></el-option>
-                    <el-option label="山西" value="山西"></el-option>
-                    <el-option label="陕西" value="陕西"></el-option>
-                    <el-option label="山东" value="山东"></el-option>
-                    <el-option label="河南" value="河南"></el-option>
-                    <el-option label="辽宁" value="辽宁"></el-option>
-                    <el-option label="吉林" value="吉林"></el-option>
-                    <el-option label="黑龙江" value="黑龙江"></el-option>
-                    <el-option label="江苏" value="江苏"></el-option>
-                    <el-option label="浙江" value="浙江"></el-option>
-                    <el-option label="安徽" value="安徽"></el-option>
-                    <el-option label="江西" value="江西"></el-option>
-                    <el-option label="福建" value="福建"></el-option>
-                    <el-option label="湖北" value="湖北"></el-option>
-                    <el-option label="湖南" value="湖南"></el-option>
-                    <el-option label="四川" value="四川"></el-option>
-                    <el-option label="贵州" value="贵州"></el-option>
-                    <el-option label="云南" value="云南"></el-option>
-                    <el-option label="海南" value="海南"></el-option>
-                    <el-option label="甘肃" value="甘肃"></el-option>
-                    <el-option label="内蒙古" value="内蒙古"></el-option>
-                    <el-option label="青海" value="青海"></el-option>
-                    <el-option label="新疆" value="新疆"></el-option>
-                    <el-option label="西藏" value="西藏"></el-option>
-                    <el-option label="广西" value="广西"></el-option>
-                    <el-option label="宁夏" value="宁夏"></el-option>
+                    <el-option label="北京" value="1"></el-option>
+                    <el-option label="上海" value="2"></el-option>
+                    <el-option label="广东" value="3"></el-option>
+                    <el-option label="天津" value="4"></el-option>
+                    <el-option label="重庆" value="5"></el-option>
+                    <el-option label="河北" value="6"></el-option>
+                    <el-option label="山西" value="7"></el-option>
+                    <el-option label="陕西" value="8"></el-option>
+                    <el-option label="山东" value="9"></el-option>
+                    <el-option label="河南" value="10"></el-option>
+                    <el-option label="辽宁" value="11"></el-option>
+                    <el-option label="吉林" value="12"></el-option>
+                    <el-option label="黑龙江" value="13"></el-option>
+                    <el-option label="江苏" value="14"></el-option>
+                    <el-option label="浙江" value="15"></el-option>
+                    <el-option label="安徽" value="16"></el-option>
+                    <el-option label="江西" value="17"></el-option>
+                    <el-option label="福建" value="18"></el-option>
+                    <el-option label="湖北" value="19"></el-option>
+                    <el-option label="湖南" value="20"></el-option>
+                    <el-option label="四川" value="21"></el-option>
+                    <el-option label="贵州" value="22"></el-option>
+                    <el-option label="云南" value="23"></el-option>
+                    <el-option label="海南" value="24"></el-option>
+                    <el-option label="甘肃" value="25"></el-option>
+                    <el-option label="内蒙古" value="26"></el-option>
+                    <el-option label="青海" value="27"></el-option>
+                    <el-option label="新疆" value="28"></el-option>
+                    <el-option label="西藏" value="29"></el-option>
+                    <el-option label="广西" value="30"></el-option>
+                    <el-option label="宁夏" value="31"></el-option>
                   </el-select>
                   </el-form-item>
               </div >
@@ -60,37 +60,37 @@
                 <el-form-item label="包裹目的地：" >
                     <el-select v-model="item2.place" placeholder="目的地">
                     <!--香港澳门台湾是否在业务范围内-->
-                    <el-option label="北京" value="北京"></el-option>
-                    <el-option label="上海" value="上海"></el-option>
-                    <el-option label="广东" value="广"></el-option>
-                    <el-option label="天津" value="天津"></el-option>
-                    <el-option label="重庆" value="重庆"></el-option>
-                    <el-option label="河北" value="河北"></el-option>
-                    <el-option label="山西" value="山西"></el-option>
-                    <el-option label="陕西" value="陕西"></el-option>
-                    <el-option label="山东" value="山东"></el-option>
-                    <el-option label="河南" value="河南"></el-option>
-                    <el-option label="辽宁" value="辽宁"></el-option>
-                    <el-option label="吉林" value="吉林"></el-option>
-                    <el-option label="黑龙江" value="黑龙江"></el-option>
-                    <el-option label="江苏" value="江苏"></el-option>
-                    <el-option label="浙江" value="浙江"></el-option>
-                    <el-option label="安徽" value="安徽"></el-option>
-                    <el-option label="江西" value="江西"></el-option>
-                    <el-option label="福建" value="福建"></el-option>
-                    <el-option label="湖北" value="湖北"></el-option>
-                    <el-option label="湖南" value="湖南"></el-option>
-                    <el-option label="四川" value="四川"></el-option>
-                    <el-option label="贵州" value="贵州"></el-option>
-                    <el-option label="云南" value="云南"></el-option>
-                    <el-option label="海南" value="海南"></el-option>
-                    <el-option label="甘肃" value="甘肃"></el-option>
-                    <el-option label="内蒙古" value="内蒙古"></el-option>
-                    <el-option label="青海" value="青海"></el-option>
-                    <el-option label="新疆" value="新疆"></el-option>
-                    <el-option label="西藏" value="西藏"></el-option>
-                    <el-option label="广西" value="广西"></el-option>
-                    <el-option label="宁夏" value="宁夏"></el-option>
+                    <el-option label="北京" value="1"></el-option>
+                    <el-option label="上海" value="2"></el-option>
+                    <el-option label="广东" value="3"></el-option>
+                    <el-option label="天津" value="4"></el-option>
+                    <el-option label="重庆" value="5"></el-option>
+                    <el-option label="河北" value="6"></el-option>
+                    <el-option label="山西" value="7"></el-option>
+                    <el-option label="陕西" value="8"></el-option>
+                    <el-option label="山东" value="9"></el-option>
+                    <el-option label="河南" value="10"></el-option>
+                    <el-option label="辽宁" value="11"></el-option>
+                    <el-option label="吉林" value="12"></el-option>
+                    <el-option label="黑龙江" value="13"></el-option>
+                    <el-option label="江苏" value="14"></el-option>
+                    <el-option label="浙江" value="15"></el-option>
+                    <el-option label="安徽" value="16"></el-option>
+                    <el-option label="江西" value="17"></el-option>
+                    <el-option label="福建" value="18"></el-option>
+                    <el-option label="湖北" value="19"></el-option>
+                    <el-option label="湖南" value="20"></el-option>
+                    <el-option label="四川" value="21"></el-option>
+                    <el-option label="贵州" value="22"></el-option>
+                    <el-option label="云南" value="23"></el-option>
+                    <el-option label="海南" value="24"></el-option>
+                    <el-option label="甘肃" value="25"></el-option>
+                    <el-option label="内蒙古" value="26"></el-option>
+                    <el-option label="青海" value="27"></el-option>
+                    <el-option label="新疆" value="28"></el-option>
+                    <el-option label="西藏" value="29"></el-option>
+                    <el-option label="广西" value="30"></el-option>
+                    <el-option label="宁夏" value="31"></el-option>
                   </el-select>
                   </el-form-item>
               </div >
@@ -166,7 +166,7 @@ export default{
     },  
 
     methods: {
-      //入库avg动画
+      //入库
       avgPlace(formName) {
         const _this =this
        //表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
@@ -185,6 +185,7 @@ export default{
           if (temp.parcelInList.length>0){
           console.log("ok")
           this.loading = true//要在动画之前关闭
+          console.log(temp.parcelInList[0].place)
           temp.token = JSON.parse(window.localStorage.getItem("Token")).token
           other.enterStock(temp).then(res=>{
           console.log(res)
@@ -218,35 +219,54 @@ export default{
        
 
       },
-      //出库avg动画
+      //出库
       avgFetch(formName) {
-        //表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
-        console.log(this.parcelOutList[0].place)
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
+        const _this =this
+       //表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
+       this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let temp = {
+            parcelInList:[],
+            token:''
+          }
+          for (let i = 0; i<_this.OutData.parcelOutList.length;i++){
+            if (_this.OutData.parcelOutList[i].id!='' && _this.OutData.parcelOutList[i].place!=''){
+              temp.parcelInList.push(_this.OutData.parcelOutList[i])
+            }
+          }
+          if (temp.parcelInList.length>0){
             this.loading = true//要在动画之前关闭
-            other.enterStock(formName,token).then(res=>{
-              if(res) {
-                setTimeout(() => {
-                  for (let i = 0; i<res.data.avgPlace.parcelList.length; i++){
-                  if(res.data.avgPlace.parcelList[i].status==true) {//可以入库
-                  //提示用户该包裹可以正在入库中,保存路线以及存放位置，启动动画
-                  //动画avg运动到指定位置后提示用户，该包裹入库完成，位置为XXX
-                  }else {
-                    //提示用户该包裹不可入库
-                  }
-                }
-                },500)
-                this.$message({
-                  message: '仓库初始化成功',
-                  type: 'success'
-                })
-              }
+            temp.token = JSON.parse(window.localStorage.getItem("Token")).token
+            this.loading = true//要在动画之前关闭
+            other.enterStock(temp).then(res=>{
+            console.log(res)
+              // if(res) {
+              //   setTimeout(() => {
+              //     for (let i = 0; i<res.data.avgPlace.parcelList.length; i++){
+              //     if(res.data.avgPlace.parcelList[i].status==true) {//可以入库
+              //     //提示用户该包裹可以正在入库中,保存路线以及存放位置，启动动画
+              //     //动画avg运动到指定位置后提示用户，该包裹入库完成，位置为XXX
+              //     }else {
+              //       //提示用户该包裹不可入库
+              //     }
+              //   }
+              //   },500)
+              //   this.$message({
+              //     message: '',
+              //     type: 'success'
+              //   })
+              // }
             }).finally(res=>{
               this.loading = false
-            })  
+            })
+          } else {
+                this.$message({
+                message: '包裹信息输入不可为空',
+                type: 'error'
+              })
           }
-        })
+        }
+       })
       },
       //切换
       handleClick(tab, event) {

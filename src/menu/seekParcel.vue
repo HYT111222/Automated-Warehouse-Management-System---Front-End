@@ -1,12 +1,12 @@
 <template>
     <div>
     <div class="Checkform">
-        <el-form :inline="true" :model="checkMag" :rules="rules" :ref="checkMag">
+        <el-form :inline="true" :model="checkMag" :rules="rules" ref="checkMag">
          <el-form-item label="包裹ID:" prop="ID">
             <el-input v-model="checkMag.ID" placeholder="输入包裹id" maxlength="32"></el-input>
          </el-form-item>
          <el-form-item >
-            <el-button icon="el-icon-search"  type="primary" circle @click="onSubmit(checkMag)"></el-button>
+            <el-button icon="el-icon-search"  type="primary" circle @click="onSubmit('checkMag')"></el-button>
         </el-form-item>
         </el-form>
     </div>
@@ -46,8 +46,10 @@ export default{
       }
         return{
             loading:false,
+            token: '',
             checkMag:{
-                ID:""
+                ID:"",
+                token:""
             },
             inTableData: [],//后端传过来的表格记录数据[{},{}]的格式,现在不懂有啥
             outTableData: [],
@@ -60,6 +62,8 @@ export default{
     }
     },
     created(){
+        this.token = JSON.parse(window.localStorage.getItem('Token').token)
+        this.checkMag.token = this.token 
         this.initTable(),
         this.initOutTable()
 

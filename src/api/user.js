@@ -44,11 +44,39 @@ export default {
    */
   getUserInfo(token) {
     return request({
-      url: 'user/information',
+      url: '/user/information',
       method: 'get',
       params: token
     })
-
+  },
+  /**
+   * 5.旧用户获取初始化仓库数据
+   */
+  getInitStock(token) {
+    return request({
+      url: '/user/getOldInitStock',
+      method: 'get',
+      params: token
+    })
+  },
+  /**
+   * 6.修改个人信息
+   */
+  changeInfo(param) {
+    return request({
+      url: '/user/changeInfo',
+      method: 'post',
+      params: param
+    })
+  },
+  /**
+   * 7.修改密码
+   */
+  changePassword(param) {
+    return request({
+      url: '/user/changePassword',
+      method: 'post',
+      params: param
+    })
   }
-
 }

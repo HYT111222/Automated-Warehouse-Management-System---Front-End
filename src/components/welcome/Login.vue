@@ -72,7 +72,7 @@
         if (!value) {
           return callback(new Error('请输入密码'))
         } else if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{3,16}$/.test(value)) {
-          return callback(new Error('密码长度在3-18个字符,只能包含数字、大小写字母'))
+          return callback(new Error('密码长度在3-16个字符,只能包含数字、大小写字母'))
         } else {
           callback()
         }
@@ -126,12 +126,21 @@
                     token: token
                   }))
                   this.initVisible = true//先一律按照旧用户处理
-                  // if (res.data.login.status==true) {//旧用户
+                  // if (res.data.login.status==true) {//旧用户,发送获取请求
                   //   this.$router.push({ path: '/home' })
+                      // user.getInitStock(token).then(res=>{
+                      //   if (res.status=="true") {
+                      //     //保存后端数据传来的仓库初始化数据
+                      //   } else {
+                      //     this.initVisible= true
+                      //   }
+                      // }).finally({
+
+                      // })
                   // }else {//新用户
                   //   this.initVisible= true
                   // }
-                  }, 10)
+                  }, 5)
                   this.$message({
                     message: '登录成功',
                     type: 'success'
