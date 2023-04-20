@@ -125,7 +125,7 @@ export default{
         }
     },
     created() {
-        this.token = JSON.parse(window.localStorage.getItem('Token')).token
+        this.token = JSON.parse(window.sessionStorage.getItem('Token')).token
         this.changeInfo.token = this.token
         this.changePassword.token = this.token
         // this.getPersonalInfo()

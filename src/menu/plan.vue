@@ -162,12 +162,14 @@ export default{
   },
   //仓库初始化（画出平面图,根据后端返回的数据）
   mounted() {
-
+    
     },  
 
     methods: {
       //入库
       avgPlace(formName) {
+        // let test = JSON.parse(window.sessionStorage.getItem('depository')).depository
+        // console.log(test[0][0][0])
         const _this =this
        //表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
        this.$refs[formName].validate((valid) => {
@@ -186,7 +188,7 @@ export default{
           console.log("ok")
           this.loading = true//要在动画之前关闭
           console.log(temp.parcelInList[0].place)
-          temp.token = JSON.parse(window.localStorage.getItem("Token")).token
+          temp.token = JSON.parse(window.sessionStorage.getItem("Token")).token
           other.enterStock(temp).then(res=>{
           console.log(res)
             // if(res) {
@@ -226,19 +228,19 @@ export default{
        this.$refs[formName].validate((valid) => {
         if (valid) {
           let temp = {
-            parcelInList:[],
+            parcelOutList:[],
             token:''
           }
           for (let i = 0; i<_this.OutData.parcelOutList.length;i++){
             if (_this.OutData.parcelOutList[i].id!='' && _this.OutData.parcelOutList[i].place!=''){
-              temp.parcelInList.push(_this.OutData.parcelOutList[i])
+              temp.parcelOutList.push(_this.OutData.parcelOutList[i])
             }
           }
-          if (temp.parcelInList.length>0){
+          if (temp.parcelOutList.length>0){
             this.loading = true//要在动画之前关闭
-            temp.token = JSON.parse(window.localStorage.getItem("Token")).token
+            temp.token = JSON.parse(window.sessionStorage.getItem("Token")).token
             this.loading = true//要在动画之前关闭
-            other.enterStock(temp).then(res=>{
+            other.outStock(temp).then(res=>{
             console.log(res)
               // if(res) {
               //   setTimeout(() => {

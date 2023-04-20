@@ -96,7 +96,7 @@
           if (valid) {
             this.loading = true
             user.register(this.registerForm).then(res => {
-              if (res.status_code=="true") {
+              if (res.data.status_code =="true") {
                 // 注册成功
                 this.$message({
                   message: '注册成功',

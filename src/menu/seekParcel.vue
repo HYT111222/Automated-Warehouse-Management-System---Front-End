@@ -1,7 +1,7 @@
 <template>
     <div>
     <div class="Checkform">
-        <el-form :inline="true" :model="checkMag" :rules="rules" ref="checkMag">
+        <el-form :inline="true" :model="checkMag" rules="rules" ref="checkMag">
          <el-form-item label="包裹ID:" prop="ID">
             <el-input v-model="checkMag.ID" placeholder="输入包裹id" maxlength="32"></el-input>
          </el-form-item>
@@ -13,18 +13,30 @@
     <el-tabs type="border-card">
     <el-tab-pane label="入库记录">
         <el-table :data="inTableData" stripe style="width: 100%">
-        <el-table-column prop="date" label="ID"  width="180"></el-table-column>
-        <el-table-column prop="name" label="时间"  width="180"></el-table-column>
+        <el-table-column prop="id" label="ID"  width="180"></el-table-column>
+        <el-table-column prop="in_time" label="入库时间"  width="180"></el-table-column>
+        <el-table-column prop="location_xy" label="存放货架"></el-table-column>
         <el-table-column prop="address" label="目的地"></el-table-column>
       </el-table>
     </el-tab-pane>
     <el-tab-pane label="出库记录">
       <el-table :data="outTableData" stripe style="width: 100%">
-        <el-table-column prop="date" label="ID"  width="180"></el-table-column>
-        <el-table-column prop="name" label="时间"  width="180"></el-table-column>
+        <el-table-column prop="id" label="ID"  width="180"></el-table-column>
+        <el-table-column prop="in_time" label="入库时间"  width="180"></el-table-column>
+        <el-table-column prop="location_xy" label="存放货架"></el-table-column>
         <el-table-column prop="address" label="目的地"></el-table-column>
       </el-table>
     </el-tab-pane>
+    <el-dialog title="包裹详情" :visible.sync="dialogTableVisible">
+    <el-table :data="parcel">
+        <el-table-column property="id" label="包裹id" ></el-table-column>
+        <el-table-column property="status" label="姓名" ></el-table-column>
+        <el-table-column property="location_xy" label="所属货架"></el-table-column>
+        <el-table-column property="place" label="目的地"></el-table-column>
+        <el-table-column property="in_time" label="入库时间"></el-table-column>
+        <el-table-column property="out_time" label="出库时间"></el-table-column>
+    </el-table>
+    </el-dialog>
     </el-tabs>
     </div>
 </template>
@@ -46,7 +58,16 @@ export default{
       }
         return{
             loading:false,
+            dialogTableVisible: false,
             token: '',
+            parcel:{
+                id:'',
+                status:'',
+                location_xy:'',
+                place:'',
+                in_time:'',
+                out_time:''
+            },
             checkMag:{
                 ID:"",
                 token:""
@@ -62,13 +83,14 @@ export default{
     }
     },
     created(){
-        this.token = JSON.parse(window.localStorage.getItem('Token').token)
+        this.token = JSON.parse(window.sessionStorage.getItem('Token')).token
         this.checkMag.token = this.token 
         this.initTable(),
         this.initOutTable()
 
     },
     methods:{
+
         //查询包裹
         onSubmit(formName){
             //表单验证-加载-发送请求-获得结果（）-利用弹窗展现结果-结束加载
@@ -77,20 +99,14 @@ export default{
                 if(valid){
                     _this.loading = true
                     other.checkParcel(_this.checkMag).then(res=>{
-                        if (res) {
-                            //获取数据
-                            //弹窗显示
-                            this.$alert('这是一段内容', _this.checkMag.ID, {
-                            confirmButtonText: '确定',
-                            callback: action => {
-                                this.$message({
-                                type: 'info',
-                                message: `action: ${ action }`
-                                });
-                            }
-                            });
-
-
+                        if (res.data.status_code== true) {
+                            //保存数据
+                            _this.dialogTableVisible = true
+                        } else {
+                            _this.$message({
+                                message:'查询异常',
+                                type: 'error'
+                            })
                         }
                     }).finally(res=>{
                         _this.loading = false
@@ -101,10 +117,33 @@ export default{
         },
         //表格数据请求
         initInTable(){
+            const _this = this
             //获取用户名-发送请求-保存数据
+            other.getInTable(_this.token).then(res=>{
+                if(res.data.status_code == true) { //正常获取
+                    _this.inTableData = res.data.inTableData
+                } else {  //异常获取
+                    _this.$message({
+                        message: '获取异常',
+                        type: 'error'
+                    })
+                }
+            })
         },
+        //获取出库记录表
         initOutTable(){
-
+            const _this = this
+            //获取用户名-发送请求-保存数据
+            other.getOutTable(_this.token).then(res=>{
+                if(res.data.status_code == true) { //正常获取
+                    _this.outTableData = res.data.outTableData
+                } else {  //异常获取
+                    _this.$message({
+                        message: '获取异常',
+                        type: 'error'
+                    })
+                }
+            })
         }
     }
 }

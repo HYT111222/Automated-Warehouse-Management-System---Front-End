@@ -16,14 +16,11 @@ export default {
   /**
    * 2.出库请求
    */
-  outStock (parcelList, token) {
+  outStock (param) {
     return request({
       url: '/other/out',
       method: 'post',
-      data: {
-        parcelList,
-        token
-      }
+      data: param
     })
   },
 
