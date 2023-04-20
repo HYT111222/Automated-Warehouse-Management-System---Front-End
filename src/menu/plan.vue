@@ -1,4 +1,5 @@
 <template>
+  <div>
     <div class="whole_container">
           <div class="inputData">
             <el-tabs v-model="defaultTab" @tab-click="handleClick" >
@@ -106,21 +107,24 @@
             </el-tabs>
             
           </div>
-          <div class="can" >
-            <!--SVG测试-->
-            <!--若viewBox="0 0 x y"则会调整大小-->
-            <svg
-        class="mysvg"
-        preserveAspectRatio="xMidYMid meet"
-        
-        >
-        <circle id="mycircle" cx="50" cy="50" r="50" />
-          </svg>
+            
           </div>
+          <!-- <div class="can">
+             <canvas id="stock" width="900" height="700"></canvas>
+          </div> -->
+    
+    <!-- <div>仓库实时平面图 -->
+    <div class="canvas">
+        <div ref="page_canvas"></div>
+        <canvas id='mycanvas' ></canvas>
     </div>
+  </div>
 </template>
 
+
 <script>
+//导入pixi.js
+  import * as PIXI from "pixi.js";
   import other from '@/api/other.js'
   import user from '@/api/user'
 export default{
@@ -174,10 +178,145 @@ export default{
   },
   //仓库初始化（画出平面图,根据后端返回的数据）
   mounted() {
+    this.createStickerCanvas();
 
     },  
 
     methods: {
+      //仓库动画
+      createStickerCanvas(){
+            this.app = new PIXI.Application({
+            width: 1000 ,
+            height: 600 ,
+            backgroundColor: "#bff8ec",
+            transparent:false,
+            resolution: 1,
+            //forceCanvas: true,
+            });
+            //app.renderer.backgroundColor = 0xcccccc;
+            //将应用画布添加到dom中
+            this.$refs.page_canvas.appendChild(this.app.view);
+            //document.body.appendChild(app.view);
+            for(let i=0;i<4;i++){
+              for(let j=0;j<4;j++){
+                const ren = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
+                ren.beginFill("#f9d5e8");//填充颜色
+                ren.drawRect(j*200,i*100,100,50);//绘制矩形
+                ren.endFill();//结束填充
+
+                 this.app.stage.addChild(ren);//将矩形添加到舞台
+              }
+            }
+            // let runball=function(){
+            // const ren = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
+            // ren.beginFill(0x66ccff);//填充颜色
+            // ren.drawCircle(400,400,300);//绘制圆
+            // ren.endFill();//结束填充
+
+            //  this.app.stage.addChild(ren);//将矩形添加到舞台
+            // }
+            // runball();
+            //创建一个纹理来添加图片
+            const ball = PIXI.Texture.from("ball.png");
+            const sprite = new PIXI.Sprite(ball);
+            //设置精灵的锚点
+            sprite.anchor.set(0.5,0.5);
+            //设置精灵缩放
+            sprite.scale.set(0.05,0.05);
+            //sprite.x = this.app.screen.width/2;
+            //sprite.y= this.app.screen.height/2;
+            
+            
+            sprite.y = 60;
+            sprite.vx = 0;
+            sprite.vy = 0;
+            this.app.stage.addChild(sprite);
+            // runball() {
+            //  this.app.ticker.add(function () {
+            //     sprite.rotation += 0.2
+            //     if(sprite.x < 700 && sprite.y <350) {
+            //         play()
+            //     }
+            //     if(sprite.x == 699 || sprite.y == 349){
+            //         sprite.visible=false;
+            //     }
+            
+            // })
+            // //设置运行的速度
+            // function play() {
+            //     sprite.vx = 2;
+            //     sprite.vy = 1;
+            //     sprite.x += sprite.vx;
+            //     sprite.y += sprite.vy
+            // }
+            
+            // runball();
+            //控制运动规迹，让它在终点消失
+            this.app.ticker.add(function () {
+                sprite.rotation += 0.2;
+                // 定义
+                let arr = [[400,60],[400,300],[600,300],[600,400]]
+                //在使用时，需要创建一个一维数组，否则会报错。
+                 //arr[i] = []
+                // 赋值
+          
+                //v-for="n in 3"
+                for(let i=0;i<arr.length;i++){
+                    // if(sprite.x!=arr[i][i]&&sprite.y!=arr[i][i+1]){
+                    //     sprite.vx = 1;
+                    //     sprite.vy= 1;
+                    //     sprite.x += sprite.vx;
+                    //     sprite.y += sprite.vy;
+                    //     //play()
+                    // }
+                   if(sprite.x==arr[i][0]&&sprite.y!=arr[i][1]){
+                        //console.log(arr[i][i]);
+
+                        //sprite.x += 1;
+                        sprite.y += 2;
+                    }
+                    else if(sprite.x!=arr[i][0]&&sprite.y==arr[i][1]){
+                        sprite.x += 2;
+                        //sprite.y += 1;
+                    }
+
+                    else if(sprite.x==arr[(arr.length-1)][0]&&sprite.y==arr[(arr.length-1)][1]){
+                       sprite.visible=false;
+                        //sprite.y += 1;
+                    }
+                    
+                }
+                //sprite.visible=false;
+            })
+            
+        },
+            //     // if(sprite.x < 7play()00 && sprite.y <350) {
+            //     //     
+            //     // }
+            //     // if(sprite.x == 699 || sprite.y == 349){
+            //     //     sprite.visible=false;
+            //     // }
+            // });
+            // //设置运行的速度
+            // function play() {
+            //     sprite.vx = 2;
+            //     sprite.vy = 1;
+            //     sprite.x += sprite.vx;
+            //     sprite.y += sprite.vy
+            // };   
+        
+        
+            
+        
+        //创建一个纹理
+        createsprite(app1){
+            const ball = PIXI.Texture.from("src\assets\ball.png") 
+            const sprite = new PIXI.Sprite(ball);
+            sprite.width = app.screen.width/2;
+            sprite.height= app.screen.height/2;
+            app1.stage.addChild(sprite);
+
+        },
       //入库avg动画
       avgPlace(formName) {
        //表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
@@ -254,3 +393,35 @@ export default{
     border: #101a28;
   }
 </style>
+      
+    
+
+</script>
+
+<style lang="less" scoped>//scoped控制其只在当前组件内生效，而不是全局样式！！！
+#stock{
+    border: 1px solid rgb(190, 206, 50);
+}
+  .el-carousel__item:nth-child(2n) {
+     background-color: #99a9bf;
+  }
+  
+  .el-carousel__item:nth-child(2n+1) {
+     background-color: #d3dce6;
+     font:#bff8ec
+  }
+  .can {
+    background-color: #eef3fb;
+  }
+  .mycanvas{
+  width: 1000pt;
+  height: 800pt;
+  position: fixed;
+  //background-color: #cee2d2;
+  left:200pt;
+  top:100pt;
+
+}
+</style>
+
+

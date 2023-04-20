@@ -1,5 +1,5 @@
 <template>
-    <div class="login_container">
+    <div class="login_container">//类名，方便后续添加样式
       <div class="login">
         <div class="login-form">
           <h2>登录</h2>
