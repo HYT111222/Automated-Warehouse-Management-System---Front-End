@@ -150,6 +150,20 @@ export default{
         id:'',
         place: ''
       },
+      pixi:{
+        width_h:'',//仓库长度
+        height_h:'',//仓库宽度
+        avg:'',
+        arr1:[[]],
+        width_h:'300',
+        height_h:'200',
+        avg:'5',
+        ping:[[[]]],
+        arr1:[[0,400,60],[0,400,300],[0,600,300],[0,600,400],[1,300,60],[1,300,200],[1,500,200]],
+        arr3:[[300,60],[300,200],[500,200]],
+        arr4:[[400,60],[400,300],[600,300],[600,400]],
+        arr2:{avg1:[[]]}
+      },
       rules:{
         id:[{ validator: parcelID, trigger: 'blur' }]
       }
@@ -178,17 +192,22 @@ export default{
   },
   //仓库初始化（画出平面图,根据后端返回的数据）
   mounted() {
-    this.createStickerCanvas();
+    //let test = JSON.parse(window.sessionStorage.getItem('depository')).depository;
+    // console.log(test);
+    let width_1=this.pixi.width_h;//货架实际长度
+    let height_1=this.pixi.height_h;//货架实际宽度
+    let proportion=1000/width_1;//按照屏幕大小计算比例
+    let width_new=proportion*width_1;//屏幕画面像素大小
+    let height_new=proportion*height_1;
 
-    },  
-
-    methods: {
-      //仓库动画
-      createStickerCanvas(){
-            this.app = new PIXI.Application({
-            width: 1000 ,
-            height: 600 ,
-            backgroundColor: "#bff8ec",
+    let test=[[[0,0],[1,0],[0,0],[1,0],[0,0],[2,0],[0,0]],[[0],[0],[0],[0],[0]],[[0],[3],[0],[3]],[[4],[5],[6],[7],[8],[9],[10],[11],[12],[13],[14],[15],[16],
+              [17]],[[18],[19],[20],[21],[22],[23],[24],[25],[26],[27],[28],[29],[30],[31],[32]],[[-1],[0]],
+              [[0],[7]],[[0],[8]],[[0],[9]],[[-2],[0]]];//一个假的货架数组
+    //console.log(test[0][1][0]);]
+    this.app = new PIXI.Application({
+            width: width_new ,
+            height: height_new ,
+            backgroundColor: "#feeeed",
             transparent:false,
             resolution: 1,
             //forceCanvas: true,
@@ -197,51 +216,281 @@ export default{
             //将应用画布添加到dom中
             this.$refs.page_canvas.appendChild(this.app.view);
             //document.body.appendChild(app.view);
-            for(let i=0;i<4;i++){
-              for(let j=0;j<4;j++){
-                const ren = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
-                ren.beginFill("#f9d5e8");//填充颜色
-                ren.drawRect(j*200,i*100,100,50);//绘制矩形
-                ren.endFill();//结束填充
-
-                 this.app.stage.addChild(ren);//将矩形添加到舞台
-              }
-            }
-            // let runball=function(){
-            // const ren = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
-            // ren.beginFill(0x66ccff);//填充颜色
-            // ren.drawCircle(400,400,300);//绘制圆
-            // ren.endFill();//结束填充
-
-            //  this.app.stage.addChild(ren);//将矩形添加到舞台
-            // }
-            // runball();
-            //创建一个纹理来添加图片
+            this.createhouse(proportion,test);
             const ball = PIXI.Texture.from("ball.png");
-            const sprite = new PIXI.Sprite(ball);
+            //for(let j=0;j<this.pixi.avg;j++){
+            const sprite1 = new PIXI.Sprite(ball);//创建精灵，可能需要20个，目前先画了两个
             //设置精灵的锚点
-            sprite.anchor.set(0.5,0.5);
+            sprite1.anchor.set(0.5,0.5);
             //设置精灵缩放
-            sprite.scale.set(0.05,0.05);
+            sprite1.scale.set(0.05,0.05);
             //sprite.x = this.app.screen.width/2;
             //sprite.y= this.app.screen.height/2;
             
             
-            sprite.y = 60;
-            sprite.vx = 0;
-            sprite.vy = 0;
-            this.app.stage.addChild(sprite);
-            // runball() {
-            //  this.app.ticker.add(function () {
-            //     sprite.rotation += 0.2
-            //     if(sprite.x < 700 && sprite.y <350) {
-            //         play()
-            //     }
-            //     if(sprite.x == 699 || sprite.y == 349){
-            //         sprite.visible=false;
-            //     }
+            sprite1.x=60;
+            sprite1.y = 60;
+            sprite1.vx = 0;
+            sprite1.vy = 0;
+            //this.app.stage.addChild(sprite1);
+            const sprite2= new PIXI.Sprite(ball);
+            //设置精灵的锚点
+            sprite2.x=60;
+            sprite2.y = 60;
+            sprite2.anchor.set(0.5,0.5);
+            //设置精灵缩放
+            sprite2.scale.set(0.07,0.07);
+            //sprite.x = this.app.screen.width/2;
+            //sprite.y= this.app.screen.height/2;
             
-            // })
+            
+            //sprite.x=0;
+            sprite2.y = 60;
+            sprite2.vx = 0;
+            sprite2.vy = 0;
+            this.app.stage.addChild(sprite2);
+    let arr_new=this.pixi.arr1;
+    var rr_now = new Array();
+
+    var arr_now_1 = [];
+    //let arr_now=[[0,0],[0,0],[0,0]];
+    switch(2)
+    {
+      case 3:{
+
+      }
+     // ((arr_new[(arr_new.length-1)
+      case 2:{
+      // const ren1 = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
+      //           ren1.beginFill("#f9d5e8");//填充颜色
+      //           ren1.drawRect(300,300,100,100);//绘制矩形
+      //           ren1.endFill();//结束填充
+
+      //            this.app.stage.addChild(ren1);//将矩形添加到舞台
+        
+      //   let a=0;
+      //   for(let h=0;h<arr_new.length;h++){
+      //     if(arr_new[h][0]==1){
+      //       console.log(a);
+      //       console.log("yes");
+      //       console.log(arr_new[h][1]);
+      //       console.log(arr_new[h][2]);
+      //       arr_now[0]=arr_new[h][1];
+      //       arr_now[1]=arr_new[h][2];
+      //       arr_now_1[a]=arr_now;
+      //       console.log(arr_now_1[a][0]);
+      //       console.log(arr_now_1[a][1]);
+      //       a=a+1;
+      //     }
+         
+      // }
+      // console.log(arr_now_1);
+      // console.log(arr_now_1.length);
+      this.createStickerCanvas(arr_now_1,sprite2,a);//动画触发
+      }
+    
+    }
+    //this.createStickerCanvas(this.pixi.arr1,sprite1);//动画触发
+    //this.createStickerCanvas(this.pixi.arr3,sprite2);//动画触发
+
+
+    },  
+
+    methods: {
+      createhouse(proportion1,test1){
+        var start=[];
+        console.log("yes");
+        for(let i=0;i<test1.length;i++){
+              for(let j=0;j<test1[i].length;j++){
+                switch(test1[i][j][0]){
+                  case 0:{
+                    this.createroad("#feeeed",j,i,proportion1);
+                    break;
+                  }
+                  case 1:{
+                    this.createroad("#f9d5e8",j,i,proportion1);
+                    break;
+                  }
+                  case 2:{
+                    this.create();
+                    this.createroad("#b03a33",j,i,proportion1);
+                    break;
+                  }
+                  case 3:{
+                    this.createroad("#d7c83c",j,i,proportion1);
+                    break;
+                  }
+                  case 4:{
+                    this.createroad("#9cd73c",j,i,proportion1);
+                    break;
+                  }
+                  case 5:{
+                    this.createroad("#d7913c",j,i,proportion1);
+                    break;
+                  }
+                  case 6:{
+                    this.createroad("#3cd787",j,i,proportion1);
+                    break;
+                  }
+                  case 7:{
+                    this.createroad("#38de3b",j,i,proportion1);
+                    break;
+                  }
+                  case 8:{
+                    this.createroad("#ef5b9c",j,i,proportion1);
+                    break;
+                  }
+                  case 9:{
+                    this.createroad("#6f6d85",j,i,proportion1);
+                    break;
+                  }
+                  case 10:{
+                    this.createroad("#f05b72",j,i,proportion1);
+                    break;
+                  }
+                  case 11:{
+                    this.createroad("#a3cf62",j,i,proportion1);
+                    break;
+                  }
+                  case 12:{
+                    this.createroad("#444693",j,i,proportion1);
+                    break;
+                  }
+                  case 13:{
+                    this.createroad("#c76968",j,i,proportion1);
+                    break;
+                  }
+                  case 14:{
+                    this.createroad("#fab27b",j,i,proportion1);
+                    break;
+                  }
+                  case 15:{
+                    this.createroad("#b7ba6b",j,i,proportion1);
+                    break;
+                  }
+                  case 16:{
+                    this.createroad("#afb4db",j,i,proportion1);
+                    break;
+                  }
+                  case 17:{
+                    this.createroad("#1d953f",j,i,proportion1);
+                    break;
+                  }
+                  case 18:{
+                    this.createroad("#d64f44",j,i,proportion1);
+                    break;
+                  }
+                  case 19:{
+                    this.createroad("#faa755",j,i,proportion1);
+                    break;
+                  }
+                  case 20:{
+                    this.createroad("#78a355",j,i,proportion1);
+                    break;
+                  }
+                  case 21:{
+                    this.createroad("#f58f98",j,i,proportion1);
+                    break;
+                  }
+                  case 22:{
+                    this.createroad("#2a5caa",j,i,proportion1);
+                    break;
+                  }
+                  case 23:{
+                    this.createroad("#87843b",j,i,proportion1);
+                    break;
+                  }
+                  case 24:{
+                    this.createroad("#dea32c",j,i,proportion1);
+                    break;
+                  }
+                  case 25:{
+                    this.createroad("#006c54",j,i,proportion1);
+                    break;
+                  }
+                  case 26:{
+                    this.createroad("#7d5886",j,i,proportion1);
+                    break;
+                  }
+                  case 27:{
+                    this.createroad("#411445",j,i,proportion1);
+                    break;
+                  }
+                  case 28:{
+                    this.createroad("#f3715c",j,i,proportion1);
+                    break;
+                  }
+                  case 29:{
+                    this.createroad("#c77eb5",j,i,proportion1);
+                    break;
+                  }
+                  case 30:{
+                    this.createroad("#50b7c1",j,i,proportion1);
+                    break;
+                  }
+                  case 31:{
+                    this.createroad("#da765b",j,i,proportion1);
+                    break;
+                  }
+                  case 32:{
+                    this.createroad("#7bbfea",j,i,proportion1);
+                    break;
+                  }
+                  case -1:{
+                    
+                    start[0]=j*10*proportion1;
+                    start[1]=i*10*proportion1+5;
+                    // const ren = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
+                    // ren.beginFill("#1b315e");//填充颜色
+                    // ren.drawRect(j*10*proportion1,i*10*proportion1+5,5*proportion1,30*proportion1);//绘制矩形
+                    // ren.endFill();//结束填充
+                    // this.app.stage.addChild(ren);//将矩形添加到舞台
+                    break;
+                  }
+                  case -2:{
+                    start[2]=j*10*proportion1;
+                    start[3]=i*10*proportion1+5;
+                    // const ren = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
+                    // ren.beginFill("#1b315e");//填充颜色
+                    // ren.drawRect(j*10*proportion1,i*10*proportion1+5,5*proportion1,30*proportion1);//绘制矩形
+                    // ren.endFill();//结束填充
+                    // this.app.stage.addChild(ren);//将矩形添加到舞台
+                    break;
+                  }
+
+                }
+              }
+            }
+            const ren = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
+            ren.beginFill("#1b315e");//填充颜色
+            ren.drawRect(start[0],start[1],5*proportion1,30*proportion1);//绘制矩形
+            ren.endFill();//结束填充
+            this.app.stage.addChild(ren);//将矩形添加到舞台
+            const ren1 = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
+            ren1.beginFill("#1b315e");//填充颜色
+            ren1.drawRect(start[2],start[3],5*proportion1,30*proportion1);//绘制矩形
+            ren1.endFill();//结束填充
+            this.app.stage.addChild(ren1);//将矩形添加到舞台
+
+      },
+      create(){
+        console.log("chenggong");
+      },
+      createroad(str,x,y,proportion2){
+        const ren = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
+                    ren.beginFill(str);//填充颜色
+                    ren.drawRect(x*10*proportion2,y*10*proportion2,10*proportion2,10*proportion2);//绘制矩形
+                    ren.endFill();//结束填充
+                    this.app.stage.addChild(ren);//将矩形添加到舞台
+      },
+      //仓库动画
+      createStickerCanvas(arr,sprite,g){
+            // //sprite.x=0;
+            // sprite.y = 60;
+            // sprite.vx = 0;
+            // sprite.vy = 0;
+            // this.app.stage.addChild(sprite);
+          //}
             // //设置运行的速度
             // function play() {
             //     sprite.vx = 2;
@@ -249,30 +498,27 @@ export default{
             //     sprite.x += sprite.vx;
             //     sprite.y += sprite.vy
             // }
+            //let _this=this;//为了让函数里的函数也能调用data的数据
+          //   let root=0;
             
-            // runball();
-            //控制运动规迹，让它在终点消失
-            this.app.ticker.add(function () {
-                sprite.rotation += 0.2;
-                // 定义
-                let arr = [[400,60],[400,300],[600,300],[600,400]]
-                //在使用时，需要创建一个一维数组，否则会报错。
-                 //arr[i] = []
-                // 赋值
-          
-                //v-for="n in 3"
-                for(let i=0;i<arr.length;i++){
-                    // if(sprite.x!=arr[i][i]&&sprite.y!=arr[i][i+1]){
-                    //     sprite.vx = 1;
-                    //     sprite.vy= 1;
-                    //     sprite.x += sprite.vx;
-                    //     sprite.y += sprite.vy;
-                    //     //play()
-                    // }
-                   if(sprite.x==arr[i][0]&&sprite.y!=arr[i][1]){
-                        //console.log(arr[i][i]);
+          //   this.app.ticker.add (function(){
+          //     for(let h=0;h<((arr[(arr.length-1)][0])+1);h++){
+          //   for(let j=0;j<arr.length;j++){
+          //     if(arr[j][0]=h){
+          //       root=root++;
+          //     }
 
-                        //sprite.x += 1;
+          //   }
+          // }
+           console.log(arr);     
+            this.app.ticker.add (function(){
+                sprite.rotation += 0.2;
+                //定义
+                //let arr = _this.pixi.arr1[[]];
+                
+                for(let i=0;i<arr.length;i++){
+                  console.log(arr[i][0]);
+                   if(sprite.x==arr[i][0]&&sprite.y!=arr[i][1]){
                         sprite.y += 2;
                     }
                     else if(sprite.x!=arr[i][0]&&sprite.y==arr[i][1]){
@@ -286,26 +532,11 @@ export default{
                     }
                     
                 }
-                //sprite.visible=false;
-            })
+                
+           })
             
         },
-            //     // if(sprite.x < 7play()00 && sprite.y <350) {
-            //     //     
-            //     // }
-            //     // if(sprite.x == 699 || sprite.y == 349){
-            //     //     sprite.visible=false;
-            //     // }
-            // });
-            // //设置运行的速度
-            // function play() {
-            //     sprite.vx = 2;
-            //     sprite.vy = 1;
-            //     sprite.x += sprite.vx;
-            //     sprite.y += sprite.vy
-            // };   
-        
-        
+           
             
         
         //创建一个纹理
@@ -391,6 +622,7 @@ export default{
 
   .can {
     border: #101a28;
+    font:#38de3b
   }
 </style>
       
@@ -401,6 +633,7 @@ export default{
 <style lang="less" scoped>//scoped控制其只在当前组件内生效，而不是全局样式！！！
 #stock{
     border: 1px solid rgb(190, 206, 50);
+    
 }
   .el-carousel__item:nth-child(2n) {
      background-color: #99a9bf;
@@ -408,7 +641,6 @@ export default{
   
   .el-carousel__item:nth-child(2n+1) {
      background-color: #d3dce6;
-     font:#bff8ec
   }
   .can {
     background-color: #eef3fb;
