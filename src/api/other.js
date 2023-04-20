@@ -37,21 +37,25 @@ export default {
   /**
    * 4.获取入库记录表格
    */
-  getInTable (token) {
+  getInTable (param) {
     return request({
       url: '/other/DBrecordIn',
       method: 'get',
-      params: token
+      params: {
+        token: param
+      }
     })
   },
   /**
    * 5.获取出库记录表格
    */
-  getOutTable (token) {
+  getOutTable (param) {
     return request({
       url: '/other/DBrecordOut',
       method: 'get',
-      params: token
+      params: {
+        token: param
+      }
     })
   },
   
