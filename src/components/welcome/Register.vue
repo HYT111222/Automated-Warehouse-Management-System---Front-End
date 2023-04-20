@@ -9,10 +9,10 @@
           </el-form-item>
           
           <el-form-item label="密码" prop="password">
-            <el-input prefix-icon="el-icon-lock" placeholder="请填写 3-18 位密码" type="password" maxlength="18" v-model="registerForm.password" show-password></el-input>
+            <el-input prefix-icon="el-icon-lock" placeholder="请填写 3-16 位密码" type="password" maxlength="18" v-model="registerForm.password" show-password></el-input>
           </el-form-item>
           <el-form-item label="确认密码" prop="passwordConfirm">
-            <el-input prefix-icon="el-icon-lock" placeholder="请填写 3-18 位密码" type="password" maxlength="18"  show-password></el-input>
+            <el-input prefix-icon="el-icon-lock" placeholder="请填写 3-16 位密码" type="password" maxlength="18"  v-model="registerForm.passwordConfirm" show-password></el-input>
           </el-form-item>
       
           <el-form-item class="btn-r" label-width="0px">
@@ -69,8 +69,8 @@
       return {
         registerForm: {
           username: '',
-          password: ''
-          // passwordConfirm: ''
+          password: '',
+          passwordConfirm: ''
         },
         // 按钮加载
         loading: false,
@@ -89,29 +89,32 @@
       }
     },
     methods: {
+      
       // 注册
       submitForm (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.loading = true
-            user.register(this.registerForm).then(_ => {
-              if (_) {
+            user.register(this.registerForm).then(res => {
+              if (res.data.status_code =="true") {
                 // 注册成功
-                setTimeout(() => {
-                  this.$router.push({ path: '/login' })
-                }, 500)
                 this.$message({
                   message: '注册成功',
                   type: 'success'
                 })
+                this.$router.push({ path: '/login' })
+              } else {
+                this.$message({
+                  message: '注册失败，该用户已存在',
+                  type: 'error'
+                })
               }
-            }).finally(_ => {
+            }).finally(res => {
               this.loading = false
             })
           }
         })
       },
-  
     }
   }
   </script>

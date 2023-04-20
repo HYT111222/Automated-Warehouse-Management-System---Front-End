@@ -5,28 +5,22 @@ export default {
    * 1.入库请求
    * @returns
    */
-  enterStock (parcelList,token) {
+  enterStock (param) {
     return request({
       url: '/other/enter',
       method: 'post',
-      data: {
-        parcelList,
-        token
-      }
+      data: param
     })
   },
 
   /**
    * 2.出库请求
    */
-  outStock (parcelList, token) {
+  outStock (param) {
     return request({
       url: '/other/out',
       method: 'post',
-      data: {
-        parcelList,
-        token
-      }
+      data: param
     })
   },
 
@@ -60,4 +54,5 @@ export default {
       params: token
     })
   },
+  
 }

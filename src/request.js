@@ -16,26 +16,27 @@ service.interceptors.response.use(
    * 当code返回如下情况则说明权限有问题，登出并返回到登录页
    */
   response => {
-    const res = response.data
-    if (res.code !== 200) {
-      if (res.code > 4000) {
-        Message({
-          message: res.message,
-          type: 'error',
-          duration: 5 * 1000
-        })
-        return response.success
-      }
+    // const res = response
+    // if (res.code !== 200) {
+    //   if (res.code > 4000) {
+    //     Message({
+    //       message: res.message,
+    //       type: 'error',
+    //       duration: 5 * 1000
+    //     })
+    //     return response.success
+    //   }
 
-      Message({
-        message: res.message,
-        type: 'error',
-        duration: 5 * 1000
-      })
-      return Promise.reject(new Error('error'))
-    } else {
-      return response.data
-    }
+    //   Message({
+    //     message: res.message,
+    //     type: 'error',
+    //     duration: 5 * 1000
+    //   })
+    //   return Promise.reject(new Error('error'))
+    // } else {
+    //   return response.data
+    // }
+    return response.data
   },
   error => {
     console.log('err' + error) // for debug

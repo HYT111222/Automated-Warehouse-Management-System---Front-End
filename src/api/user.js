@@ -29,16 +29,14 @@ export default {
 
 
   /**
-   * 3.仓库初始化
+   * 3.仓库初始化(不能写成：
+   * data：{param，token}， 后端会读不到，所以只能在表单的数据对象里全部写完，否则后端接受的就是两个变量)
    */
-  initStock(param,token) {
+  initStock(param) {
     return request({
       url: '/user/initStock',
       method: 'post',
-      data: {
-        token,
-        param
-      }
+      data: param
     })
   },
   /**
@@ -46,11 +44,39 @@ export default {
    */
   getUserInfo(token) {
     return request({
-      url: 'user/information',
+      url: '/user/information',
       method: 'get',
       params: token
     })
-
+  },
+  /**
+   * 5.旧用户获取初始化仓库数据
+   */
+  getInitStock(token) {
+    return request({
+      url: '/user/getOldInitStock',
+      method: 'get',
+      params: token
+    })
+  },
+  /**
+   * 6.修改个人信息
+   */
+  changeInfo(param) {
+    return request({
+      url: '/user/changeInfo',
+      method: 'post',
+      params: param
+    })
+  },
+  /**
+   * 7.修改密码
+   */
+  changePassword(param) {
+    return request({
+      url: '/user/changePassword',
+      method: 'post',
+      params: param
+    })
   }
-
 }

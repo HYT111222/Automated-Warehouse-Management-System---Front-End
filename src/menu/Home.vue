@@ -55,21 +55,15 @@
                   <span>个人主页</span>
                 </template>
               </el-menu-item>
-              <el-menu-item index="changeInfo">
+              <el-menu-item index="cost">
                 <template slot="title">
                   <i class="el-icon-user-solid"></i>
-                  <span>消费记录</span>
-                </template>
-              </el-menu-item>
-              <el-menu-item index="changePW">
-                <template slot="title">
-                  <i class="el-icon-edit"></i>
-                  <span>密码修改</span>
+                  <span>消费中心</span>
                 </template>
               </el-menu-item>
             </el-menu-item-group>
         </el-submenu>
-        <el-menu-item index="dataStatistics" class="test">
+        <el-menu-item index="data" class="test">
         <i class="el-icon-place"></i>
         <span slot="title">数据统计</span>
       </el-menu-item>
