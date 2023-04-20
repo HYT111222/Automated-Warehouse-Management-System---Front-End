@@ -141,9 +141,10 @@
                         //   avg: this.initStock.avg,
                         //   gateMachine: this.initStock.gateMachine
                         // }))
-                        } else {   //获取旧用户初始化数据失败
-                          this.initVisible= true
-                        }
+                        } 
+                        // else {   //获取旧用户初始化数据失败
+                        //   this.initVisible= true
+                        // }
                       })
                   }else {//新用户
                     this.initVisible= true

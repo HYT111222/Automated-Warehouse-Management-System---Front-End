@@ -1,7 +1,7 @@
 <template>
     <div>
     <div class="Checkform">
-        <el-form :inline="true" :model="checkMag" rules="rules" ref="checkMag">
+        <el-form :inline="true" :model="checkMag" :rules="rules" ref="checkMag">
          <el-form-item label="包裹ID:" prop="ID">
             <el-input v-model="checkMag.ID" placeholder="输入包裹id" maxlength="32"></el-input>
          </el-form-item>
@@ -49,9 +49,9 @@ export default{
     data(){
         var parcelId = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('请输入密码'))
+          return callback(new Error('请输入ID'))
         } else if (!/^(?![0-9]+$)/.test(value)) {
-          return callback(new Error('密码长度在3-18个字符,只能包含数字、大小写字母'))
+          return callback(new Error('只能由数字组成'))
         } else {
           callback()
         }
@@ -76,18 +76,16 @@ export default{
             outTableData: [],
             //规则名称要与:model中的一致
             rules: {
-                ID: [
-                { validator: parcelId, trigger: 'blur' }
-            ]
+                ID: [{ validator: parcelId, trigger: 'blur' }]
             }
     }
     },
     created(){
-        this.token = JSON.parse(window.sessionStorage.getItem('Token')).token
-        this.checkMag.token = this.token 
-        this.initTable(),
-        this.initOutTable()
-
+        //JSON.parse(window.sessionStorage.getItem('Token')).token
+        this.token = "ok"
+        this.checkMag.token = this.token
+        this.initInTable()
+        // this.initOutTable()
     },
     methods:{
 
@@ -95,12 +93,14 @@ export default{
         onSubmit(formName){
             //表单验证-加载-发送请求-获得结果（）-利用弹窗展现结果-结束加载
             const _this = this
+            console.log(_this.$refs[formName])
             _this.$refs[formName].validate((valid)=>{
                 if(valid){
                     _this.loading = true
                     other.checkParcel(_this.checkMag).then(res=>{
                         if (res.data.status_code== true) {
                             //保存数据
+
                             _this.dialogTableVisible = true
                         } else {
                             _this.$message({
@@ -120,14 +120,15 @@ export default{
             const _this = this
             //获取用户名-发送请求-保存数据
             other.getInTable(_this.token).then(res=>{
-                if(res.data.status_code == true) { //正常获取
-                    _this.inTableData = res.data.inTableData
-                } else {  //异常获取
-                    _this.$message({
-                        message: '获取异常',
-                        type: 'error'
-                    })
-                }
+                console.log(res)
+                // if(res.data.status_code == true) { //正常获取
+                //     _this.inTableData = res.data.inTableData
+                // } else {  //异常获取
+                //     _this.$message({
+                //         message: '获取异常',
+                //         type: 'error'
+                //     })
+                // }
             })
         },
         //获取出库记录表
@@ -149,8 +150,6 @@ export default{
 }
 </script>
 
-<style>
-/* #mysvg {
-    border: #7a85e5;
-} */
+<style lang="less" scoped>
+
 </style>
