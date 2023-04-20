@@ -51,7 +51,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="resetForm('changePassword')">重 置</el-button>
-                <el-button type="primary" :loading="loading" @click="changePassword('changePassword')">确 定</el-button>
+                <el-button type="primary" :loading="loading" @click="change('changePassword')">确 定</el-button>
             </div>
             </el-dialog>
     </div>
@@ -65,8 +65,8 @@ import jpg from '../assets/R.jpg'
 export default{
     data(){
         var phone = (rule, value, callback) => {
-            if (!value) {
-                return callback()
+            if (!value && this.changeInfo.addr== '') {
+                return callback(new Error('二者不能同时为空'))
                 } else {
                     if (!/^\d+$/.test(value)) {
                     return callback(new Error('只能包含数字'))
@@ -74,7 +74,17 @@ export default{
                     callback()
                 }
                 }
-         
+      }
+      var addr = (rule, value, callback) => {
+            if (!value && this.changeInfo.phone== '') {
+                return callback(new Error('二者不能同时为空'))
+                } else {
+                    if (!/^\d+$/.test(value)) {
+                    return callback(new Error('只能包含数字'))
+                }else {
+                    callback()
+                }
+                }
       }
        var pre_password = (rule, value, callback) => {
         if (!value) {
@@ -118,7 +128,7 @@ export default{
             },
             rules:{
                 phone: [{ validator: phone, trigger: 'blur'}],
-                addr: [{}],
+                addr: [{ validator: addr, trigger: 'blur'}],
                 pre_password: [{ validator: pre_password, trigger: 'blur'}],
                 new_password: [{ validator: new_password, trigger: 'blur'}]
             }
@@ -139,25 +149,21 @@ export default{
         modify(formName){
             this.$refs[formName].validate(valid=> {
                 if (valid) {
-                    if (this.changeInfo.addr == '' && this.changeInfo.phone == '') {
-                        this.$message({
-                            message: '输入信息为空',
-                            type: 'error'
-                        })
-                    } else {
-                        this.loading = true
-                        user.changeInfo(this.changeInfo).then(res=> {
-                            if (res.data.status_code == "true"){
-                                this.$message({
-                                message: '修改信息成功',
-                                type: 'success'
-                                })
-                            }
-                        }).finally(res=>{
-                           this.loading = false
-                           this.dialogFormVisible = false
-                        })
-                    }
+                    this.loading = true
+                    user.changeInfo(this.changeInfo).then(res=> {
+                        if (res.data.status_code == "true"){
+                            //重新获取用户信息
+                            this.getPersonalInfo()
+                            this.$message({
+                            message: '修改信息成功',
+                            type: 'success'
+                            })
+                        }
+                    }).finally(res=>{
+                        this.loading = false
+                        this.dialogFormVisible = false
+                    })
+
                     
                 }
             })
@@ -179,7 +185,8 @@ export default{
             })
         },
         //修改密码
-        changePassword(formName){
+        change(formName){
+            console.log(this.$refs[formName])
             this.$refs[formName].validate(valid=>{
                 if (valid) {
                     this.loading = true
@@ -202,12 +209,6 @@ export default{
 </script>
 
 <style lang="less" scoped>
-/* .personalPageWhole {
-    color: var(--color)
-} */
-/* .personalInfo {
-    background-color: rgb(229, 238, 246);
-} */
 .box-card {
     background-color: #f6f9fb;
     color: #2675aa;

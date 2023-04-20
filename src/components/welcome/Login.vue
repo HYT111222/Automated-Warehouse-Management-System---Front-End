@@ -28,16 +28,16 @@
         <el-dialog @close="clearForm('initStock')" title="仓库初始化设置" :visible.sync="initVisible" width="40%" class="initDialog">
           <el-form :model="initStock" ref="initStock"  label-width="100px">
 
-             <el-form-item label="仓库宽度：" >
-              <el-input-number v-model="initStock.capacity_x" controls-position="right" @change="handleChange" :min="20" :max="10000"></el-input-number>
+             <el-form-item label="仓库长度：" >
+              <el-input-number v-model="initStock.capacity_x" controls-position="right" @change="handleChange" :min="120" :max="1000" :step="10"></el-input-number>
             </el-form-item>
 
-            <el-form-item label="仓库长度：">
-              <el-input-number v-model="initStock.capacity_y" controls-position="right" @change="handleChange" :min="20" :max="10000"></el-input-number>
+            <el-form-item label="仓库宽度：">
+              <el-input-number v-model="initStock.capacity_y" controls-position="right" @change="handleChange" :min="120" :max="800" :step="10"></el-input-number>
             </el-form-item>
 
-            <el-form-item label="Avg数量：" >
-              <el-input-number v-model="initStock.avg" controls-position="right" @change="handleChange" :min="2" :max="200" :step="2"></el-input-number>
+            <el-form-item label="Avg数量:" >
+              <el-input-number v-model="initStock.avg" controls-position="right" @change="handleChange" :min="2" :max="20" :step="2"></el-input-number>
             </el-form-item>
 
             <el-form-item label="闸机数量：" >
@@ -88,8 +88,8 @@
         //初始化仓库
         initVisible: false,
         initStock: {
-          capacity_x: 100,
-          capacity_y: 100,
+          capacity_x: 120,
+          capacity_y: 120,
           avg: 10,
           gateMachine: 1,
           token: ''
