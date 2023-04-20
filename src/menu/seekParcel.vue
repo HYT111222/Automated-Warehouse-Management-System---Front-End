@@ -22,7 +22,7 @@
     <el-tab-pane label="出库记录">
       <el-table :data="outTableData" stripe style="width: 100%">
         <el-table-column prop="id" label="ID"  width="180"></el-table-column>
-        <el-table-column prop="in_time" label="入库时间"  width="180"></el-table-column>
+        <el-table-column prop="in_time" label="出库时间"  width="180"></el-table-column>
         <el-table-column prop="location_xy" label="存放货架"></el-table-column>
         <el-table-column prop="address" label="目的地"></el-table-column>
       </el-table>
