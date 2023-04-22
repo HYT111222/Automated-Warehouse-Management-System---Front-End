@@ -14,7 +14,7 @@
     <el-tab-pane label="入库记录">
         <el-table :data="inTableData" stripe style="width: 100%">
         <el-table-column prop="id" label="ID"  width="180"></el-table-column>
-        <el-table-column prop="in_time" label="入库时间"  width="180"></el-table-column>
+        <el-table-column prop="time" label="入库时间"  width="180"></el-table-column>
         <el-table-column prop="location_xy" label="存放货架"></el-table-column>
         <el-table-column prop="address" label="目的地"></el-table-column>
       </el-table>
@@ -22,7 +22,7 @@
     <el-tab-pane label="出库记录">
       <el-table :data="outTableData" stripe style="width: 100%">
         <el-table-column prop="id" label="ID"  width="180"></el-table-column>
-        <el-table-column prop="in_time" label="入库时间"  width="180"></el-table-column>
+        <el-table-column prop="time" label="入库时间"  width="180"></el-table-column>
         <el-table-column prop="location_xy" label="存放货架"></el-table-column>
         <el-table-column prop="address" label="目的地"></el-table-column>
       </el-table>
@@ -139,7 +139,7 @@ export default{
             other.getOutTable(temp).then(res=>{
                 console.log(res)
                 if(res.data.status_code == true) { //正常获取
-                    this.outTableData = res.data.stock_out
+                    this.outTableData = res.data.outTableData
                 } else {  //异常获取
                     this.$message({
                         message: '获取异常',
