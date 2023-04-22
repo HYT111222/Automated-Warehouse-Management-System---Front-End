@@ -96,7 +96,7 @@
                   </el-form-item>
               </div >
                 <el-form-item  >
-                    <el-button type="success" :loading="loading" @click="avgFetch('parcelOutList')">入库</el-button>
+                    <el-button type="success" :loading="loading" @click="avgFetch('parcelOutList')">出库</el-button>
                 </el-form-item>
             </el-form>
               </el-tab-pane>
@@ -155,18 +155,31 @@ export default{
         place: ''
       },
       pixi:{
-        width_h:'',//仓库长度
-        height_h:'',//仓库宽度
-        avg:'',
-        arr1:[[]],
-        width_h:'300',
-        height_h:'200',
-        avg:'5',
-        ping:[[[]]],
-        arr1:[[0,400,60],[0,400,300],[0,600,300],[0,600,400],[1,300,60],[1,300,200],[1,500,200]],
-        arr3:[[300,60],[300,200],[500,200]],
-        arr4:[[400,60],[400,300],[600,300],[600,400]],
-        arr2:{avg1:[[]]}
+        p:'',
+        avgList:[
+        {
+            avg_id:'0',
+            parcelList: [],
+            route: [[0,0],[50,0],[50,100],[74,100]]
+        },
+        {
+            avg_id:'1',
+            parcelList: [],
+            route: [[0,124],[50,124],[50,150]]
+        }
+   ],
+   avgList2:[
+        {
+            avg_id:'0',
+            parcelList: [],
+            route: [[74,100],[50,100],[50,0],[0,0]]
+        },
+        {
+            avg_id:'1',
+            parcelList: [],
+            route: [[50,150],[50,124],[0,0]]
+        }
+   ]
       },
       rules:{
         id:[ { validator: parcelID, trigger: 'blur' } ]
@@ -176,6 +189,8 @@ export default{
   //初始化数据
   created(){
     let temp = JSON.parse(window.sessionStorage.getItem('initData'))
+    let width_start=JSON.parse(window.sessionStorage.getItem('initData')).capacity_x;//货架实际长度
+    this.pixi.p=1000/width_start;
     //初始化表单
     console.log(temp.gateMachine)
     for (let i = 0; i < temp.gateMachine; i++) {
@@ -190,23 +205,21 @@ export default{
       }
       this.InData.parcelInList.push(parcel)
       this.OutData.parcelOutList.push(parcel2)
+      
     }
     
   },
   //仓库初始化（画出平面图,根据后端返回的数据）
   mounted() {
-    //let test = JSON.parse(window.sessionStorage.getItem('depository')).depository;
-    // console.log(test);
-    let width_1=this.pixi.width_h;//货架实际长度
-    let height_1=this.pixi.height_h;//货架实际宽度
+    let test = JSON.parse(window.sessionStorage.getItem('depository')).depository;
+    console.log(test);
+    console.log(this.pixi.p);
+    let width_1=JSON.parse(window.sessionStorage.getItem('initData')).capacity_x;//货架实际长度
+    let height_1=JSON.parse(window.sessionStorage.getItem('initData')).capacity_y;//货架实际宽度
+    let avg1=JSON.parse(window.sessionStorage.getItem('initData')).avg;//货架实际宽度
     let proportion=1000/width_1;//按照屏幕大小计算比例
     let width_new=proportion*width_1;//屏幕画面像素大小
     let height_new=proportion*height_1;
-
-    let test=[[[0,0],[1,0],[0,0],[1,0],[0,0],[2,0],[0,0]],[[0],[0],[0],[0],[0]],[[0],[3],[0],[3]],[[4],[5],[6],[7],[8],[9],[10],[11],[12],[13],[14],[15],[16],
-              [17]],[[18],[19],[20],[21],[22],[23],[24],[25],[26],[27],[28],[29],[30],[31],[32]],[[-1],[0]],
-              [[0],[7]],[[0],[8]],[[0],[9]],[[-2],[0]]];//一个假的货架数组
-    //console.log(test[0][1][0]);]
     this.app = new PIXI.Application({
             width: width_new ,
             height: height_new ,
@@ -220,88 +233,63 @@ export default{
             this.$refs.page_canvas.appendChild(this.app.view);
             //document.body.appendChild(app.view);
             
-            this.createhouse(proportion,test);
-            // console.log("ok");
+            let start2=this.createhouse(proportion,test);
+            console.log(start2);
+            
+            var place_start=[];
+            var place_end=[];
+            place_start[0]=start2[0];
+            place_start[1]=start2[1];
+            place_end[0]=start2[2];
+            place_end[1]=start2[3];
+            
             const ball = PIXI.Texture.from("ball.png");
             //for(let j=0;j<this.pixi.avg;j++){
-            const sprite1 = new PIXI.Sprite(ball);//创建精灵，可能需要20个，目前先画了两个
-            //设置精灵的锚点
-            sprite1.anchor.set(0.5,0.5);
-            //设置精灵缩放
-            sprite1.scale.set(0.05,0.05);
-            //sprite.x = this.app.screen.width/2;
-            //sprite.y= this.app.screen.height/2;
-            
-            
-            sprite1.x=60;
-            sprite1.y = 60;
-            sprite1.vx = 0;
-            sprite1.vy = 0;
-            //this.app.stage.addChild(sprite1);
-            const sprite2= new PIXI.Sprite(ball);
-            //设置精灵的锚点
-            sprite2.x=60;
-            sprite2.y = 60;
-            sprite2.anchor.set(0.5,0.5);
-            //设置精灵缩放
-            sprite2.scale.set(0.07,0.07);
-            //sprite.x = this.app.screen.width/2;
-            //sprite.y= this.app.screen.height/2;
-            
-            
-            //sprite.x=0;
-            sprite2.y = 60;
-            sprite2.vx = 0;
-            sprite2.vy = 0;
-            this.app.stage.addChild(sprite2);
-    let arr_new=this.pixi.arr1;
-    var rr_now = new Array();
+            const sprite1 = new PIXI.Sprite(ball);//创建精灵，可能需要20个
 
-    var arr_now_1 = [];
-    //let arr_now=[[0,0],[0,0],[0,0]];
-    switch(2)
-    {
-      case 3:{
-
-      }
-     // ((arr_new[(arr_new.length-1)
-      case 2:{
-      // const ren1 = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
-      //           ren1.beginFill("#f9d5e8");//填充颜色
-      //           ren1.drawRect(300,300,100,100);//绘制矩形
-      //           ren1.endFill();//结束填充
-
-      //            this.app.stage.addChild(ren1);//将矩形添加到舞台
-        
-      //   let a=0;
-      //   for(let h=0;h<arr_new.length;h++){
-      //     if(arr_new[h][0]==1){
-      //       console.log(a);
-      //       console.log("yes");
-      //       console.log(arr_new[h][1]);
-      //       console.log(arr_new[h][2]);
-      //       arr_now[0]=arr_new[h][1];
-      //       arr_now[1]=arr_new[h][2];
-      //       arr_now_1[a]=arr_now;
-      //       console.log(arr_now_1[a][0]);
-      //       console.log(arr_now_1[a][1]);
-      //       a=a+1;
-      //     }
-         
-      // }
-      // console.log(arr_now_1);
-      // console.log(arr_now_1.length);
-      this.createStickerCanvas(arr_now_1,sprite2,a);//动画触发
-      }
-    
-    }
-    //this.createStickerCanvas(this.pixi.arr1,sprite1);//动画触发
-    //this.createStickerCanvas(this.pixi.arr3,sprite2);//动画触发
-
+            const sprite11 = new PIXI.Sprite(ball);
+           
+            
+            this.setsprite_start(place_start,sprite1);
+            this.setsprite_end(place_end,sprite11);
+           
 
     },  
 
     methods: {
+      //画入口假小车
+      setsprite_start(place,spr){       
+        spr.anchor.set(0.5,0.5);
+        spr.scale.set(0.08,0.08)
+        spr.x=place[0]+10;
+        spr.y=place[1]+10;
+        this.app.stage.addChild(spr);
+      },
+     //画出口假小车
+      setsprite_end(place,spr){
+        spr.anchor.set(0.5,0.5);
+        spr.scale.set(0.08,0.08)
+        spr.x=place[0]+10;
+        spr.y=place[1]+10;
+        this.app.stage.addChild(spr);
+      },
+      //画行动的小车
+      setsprite(spr,avgplace1){
+        let avgplace=avgplace1;
+        console.log("yes?");
+        spr.anchor.set(0.5,0.5);
+        spr.scale.set(0.08,0.08)
+        spr.x=avgplace[0];
+        spr.y=avgplace[1];
+        spr.vx = 0;
+        spr.vy = 0;
+        this.app.stage.addChild(spr);
+
+      },
+      create(){
+
+      },
+      //画所有的货架
       createhouse(proportion1,test1){
         console.log("ok");
         var start=[];
@@ -443,9 +431,8 @@ export default{
                     break;
                   }
                   case -1:{
-                    
                     start[0]=j*10*proportion1;
-                    start[1]=i*10*proportion1+5;
+                    start[1]=i*10*proportion1;
                     // const ren = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
                     // ren.beginFill("#1b315e");//填充颜色
                     // ren.drawRect(j*10*proportion1,i*10*proportion1+5,5*proportion1,30*proportion1);//绘制矩形
@@ -455,7 +442,7 @@ export default{
                   }
                   case -2:{
                     start[2]=j*10*proportion1;
-                    start[3]=i*10*proportion1+5;
+                    start[3]=i*10*proportion1;
                     // const ren = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
                     // ren.beginFill("#1b315e");//填充颜色
                     // ren.drawRect(j*10*proportion1,i*10*proportion1+5,5*proportion1,30*proportion1);//绘制矩形
@@ -467,21 +454,39 @@ export default{
                 }
               }
             }
+            if(start[0]==0){
             const ren = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
             ren.beginFill("#1b315e");//填充颜色
-            ren.drawRect(start[0],start[1],5*proportion1,30*proportion1);//绘制矩形
+            ren.drawRect(start[0],start[1],2*proportion1,30*proportion1);//绘制矩形
             ren.endFill();//结束填充
             this.app.stage.addChild(ren);//将矩形添加到舞台
-            const ren1 = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
-            ren1.beginFill("#1b315e");//填充颜色
-            ren1.drawRect(start[2],start[3],5*proportion1,30*proportion1);//绘制矩形
-            ren1.endFill();//结束填充
-            this.app.stage.addChild(ren1);//将矩形添加到舞台
+            }
+            // if(start[1]==0){
+            // const ren = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
+            // ren.beginFill("#1b315e");//填充颜色
+            // ren.drawRect(start[0],start[1],30*proportion1,2*proportion1);//绘制矩形
+            // ren.endFill();//结束填充
+            // this.app.stage.addChild(ren);//将矩形添加到舞台
+            // }
+            
+            if(start[3]==0){
+              const ren1 = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
+              ren1.beginFill("#1b315e");//填充颜色
+              ren1.drawRect(start[2],start[3],2*proportion1,30*proportion1);//绘制矩形
+              ren1.endFill();//结束填充
+              this.app.stage.addChild(ren1);//将矩形添加到舞台
+            }
+            // if(start[3]==0){
+            //   const ren1 = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
+            //   ren1.beginFill("#1b315e");//填充颜色
+            //   ren1.drawRect(start[2],start[3],30*proportion1,2*proportion1);//绘制矩形
+            //   ren1.endFill();//结束填充
+            //   this.app.stage.addChild(ren1);//将矩形添加到舞台
+            // }
+            return start;
 
       },
-      create(){
-        console.log("chenggong");
-      },
+      //画每个货架
       createroad(str,x,y,proportion2){
         const ren = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
                     ren.beginFill(str);//填充颜色
@@ -489,78 +494,75 @@ export default{
                     ren.endFill();//结束填充
                     this.app.stage.addChild(ren);//将矩形添加到舞台
       },
-      //仓库动画
-      createStickerCanvas(arr,sprite,g){
-            // //sprite.x=0;
-            // sprite.y = 60;
-            // sprite.vx = 0;
-            // sprite.vy = 0;
-            // this.app.stage.addChild(sprite);
-          //}
-            // //设置运行的速度
-            // function play() {
-            //     sprite.vx = 2;
-            //     sprite.vy = 1;
-            //     sprite.x += sprite.vx;
-            //     sprite.y += sprite.vy
-            // }
-            //let _this=this;//为了让函数里的函数也能调用data的数据
-          //   let root=0;
-            
-          //   this.app.ticker.add (function(){
-          //     for(let h=0;h<((arr[(arr.length-1)][0])+1);h++){
-          //   for(let j=0;j<arr.length;j++){
-          //     if(arr[j][0]=h){
-          //       root=root++;
+      //仓库入库动画
+      createStickerCanvas(sprite2,arr1){
+          
+           var sprite=sprite2;
+           let arr=arr1;
+          //  for(let i=0;i<arr.length;i++){
+          //     for(let j=0;j<arr[i].length;j++){
+          //       arr[i][j]=arr[i][j]*4
           //     }
-
-          //   }
-          // }
-           console.log(arr);     
-            this.app.ticker.add (function(){
+          //  }
+           console.log(arr); 
+                 this.app.ticker.add (function(){
                 sprite.rotation += 0.2;
-                //定义
-                //let arr = _this.pixi.arr1[[]];
                 
                 for(let i=0;i<arr.length;i++){
-                  console.log(arr[i][0]);
-                   if(sprite.x==arr[i][0]&&sprite.y!=arr[i][1]){
+                   if(sprite.x==(arr[i][0])&&sprite.y!=(arr[i][1])){
                         sprite.y += 2;
                     }
-                    else if(sprite.x!=arr[i][0]&&sprite.y==arr[i][1]){
+                    else if(sprite.x!=(arr[i][0])&&sprite.y==(arr[i][1])){
                         sprite.x += 2;
-                        //sprite.y += 1;
+                        
                     }
-
-                    else if(sprite.x==arr[(arr.length-1)][0]&&sprite.y==arr[(arr.length-1)][1]){
+                    else if(sprite.x==(arr[(arr.length-1)][0])&&sprite.y==(arr[(arr.length-1)][1])){
                        sprite.visible=false;
-                        //sprite.y += 1;
                     }
                     
                 }
                 
            })
-            
-        },
+          },
+        //仓库出库动画
+      createStickerCanvas_2(sprite2,arr){
+           console.log(arr); 
+           var sprite=sprite2;
            
-            
-        
-        //创建一个纹理
-        createsprite(app1){
-            const ball = PIXI.Texture.from("src\assets\ball.png") 
-            const sprite = new PIXI.Sprite(ball);
-            sprite.width = app.screen.width/2;
-            sprite.height= app.screen.height/2;
-            app1.stage.addChild(sprite);
-
-        },
+          
+          this.app.ticker.add (function(){
+         sprite.rotation -= 0.2;
+         
+         for(let i=0;i<arr.length;i++){
+            if(sprite.x==(arr[i][0])&&sprite.y!=(arr[i][1])){
+                 sprite.y -= 2;
+             }
+             else if(sprite.x!=(arr[i][0])&&sprite.y==(arr[i][1])){
+                 sprite.x -= 2;
+                 
+             }
+             else if(sprite.x==(arr[(arr.length-1)][0])&&sprite.y==(arr[(arr.length-1)][1])){
+                sprite.visible=false;
+             }
+             
+         }
+         
+    })
+          },      
       //入库avg动画
         //入库
       avgPlace(formName) {
         // let test = JSON.parse(window.sessionStorage.getItem('depository')).depository
         // console.log(test[0][0][0])
-        const _this =this
-       //表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
+        const _this =this;
+        console.log(_this.pixi.avgList);
+        let avglist=_this.pixi.avgList;
+        let bili_p=_this.pixi.p;
+        console.log(bili_p);
+        this.avgrun_in(avglist,bili_p);//这个就是入库按钮触发的小车的动画
+             
+
+       表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
        this.$refs[formName].validate((valid) => {
         if (valid) {
           let temp = {
@@ -574,28 +576,29 @@ export default{
           }
           console.log(temp.parcelInList.length)
           if (temp.parcelInList.length>0){
-          console.log("ok")
           this.loading = true//要在动画之前关闭
           console.log(temp.parcelInList[0].place)
           temp.token = JSON.parse(window.sessionStorage.getItem("Token")).token
           other.enterStock(temp).then(res=>{
           console.log(res)
-            // if(res) {
-            //   setTimeout(() => {
-            //     for (let i = 0; i<res.data.avgPlace.parcelList.length; i++){
-            //     if(res.data.avgPlace.parcelList[i].status==true) {//可以入库
-            //     //提示用户该包裹可以正在入库中,保存路线以及存放位置，启动动画
-            //     //动画avg运动到指定位置后提示用户，该包裹入库完成，位置为XXX
-            //     }else {
-            //       //提示用户该包裹不可入库
-            //     }
-            //   }
-            //   },500)
-            //   this.$message({
-            //     message: '',
-            //     type: 'success'
-            //   })
-            // }
+            if(res) {//加入动画的位置
+              //
+              
+              setTimeout(() => {
+                for (let i = 0; i<res.data.avgPlace.parcelList.length; i++){
+                if(res.data.avgPlace.parcelList[i].status==true) {//可以入库
+                //提示用户该包裹可以正在入库中,保存路线以及存放位置，启动动画
+                //动画avg运动到指定位置后提示用户，该包裹入库完成，位置为XXX
+                }else {
+                  //提示用户该包裹不可入库
+                }
+              }
+              },500)
+              this.$message({
+                message: '',
+                type: 'success'
+              })
+            }
           }).finally(res=>{
             this.loading = false
           })
@@ -612,7 +615,12 @@ export default{
       },
       //出库
       avgFetch(formName) {
-        const _this =this
+        const _this =this;
+        console.log(_this.pixi.avgList2);
+        let avglist=_this.pixi.avgList2;
+        let bili_p=_this.pixi.p;
+        console.log(bili_p);
+        this.avgrun_out(avglist,bili_p);//这个就是入库按钮触发的小车的动画
        //表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
        this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -662,6 +670,84 @@ export default{
       //切换
       handleClick(tab, event) {
         console.log(tab, event);
+      },
+      //入库小车按数量触发
+      avgrun_in(avglist,p){
+        //var bili=this.pixi.
+        const ball = PIXI.Texture.from("ball.png");
+            //for(let j=0;j<this.pixi.avg;j++){
+            const sprite1 = new PIXI.Sprite(ball);//创建精灵，可能需要5个
+            const sprite2 = new PIXI.Sprite(ball);
+            const sprite3 = new PIXI.Sprite(ball);
+            const sprite4 = new PIXI.Sprite(ball);
+            const sprite5 = new PIXI.Sprite(ball);
+            switch(avglist.length){
+                  case 5:{
+                    this.setsprite(sprite5,avglist[4].route[0]);
+                    createStickerCanvas(sprite5,avglist[4].route[0]);
+                    
+                  }
+                  case 4:{
+                    this.setsprite(sprite4,avglist[3].route[0]);
+                    this.createStickerCanvas(sprite4,avglist[2].route);
+                  }
+                  case 3:{
+                    this.setsprite(sprite3,avglist[2].route[0]);
+                    this.createStickerCanvas(sprite3,avglist[2].route);
+                  }
+                  case 2:{
+                  
+                    this.setsprite(sprite2,avglist[1].route[0]);
+                    //console.log(avglist_avg2[0]);
+                    this.createStickerCanvas(sprite2,avglist[1].route);
+                  }
+                  case 1:{
+                    
+                    this.setsprite(sprite1,avglist[0].route[0]);
+                    console.log(avglist[0].route);
+                    this.createStickerCanvas(sprite1,avglist[0].route);
+                  
+                  }
+                  
+            }
+      },
+      //出库小车按数量触发
+      avgrun_out(avglist,p){
+       
+        const ball = PIXI.Texture.from("ball.png");
+            //for(let j=0;j<this.pixi.avg;j++){
+            const sprite1 = new PIXI.Sprite(ball);//创建精灵，可能需要5个
+            const sprite2 = new PIXI.Sprite(ball);
+            const sprite3 = new PIXI.Sprite(ball);
+            const sprite4 = new PIXI.Sprite(ball);
+            const sprite5 = new PIXI.Sprite(ball);
+            switch(avglist.length){
+                  case 5:{
+                    this.setsprite(sprite5,avglist[4].route[0]);
+                    createStickerCanvas_2(sprite5,avglist[4].route[0]);
+                    
+                  }
+                  case 4:{
+                    this.setsprite(sprite4,avglist[3].route[0]);
+                    this.createStickerCanvas_2(sprite4,avglist[2].route);
+                  }
+                  case 3:{
+                    this.setsprite(sprite3,avglist[2].route[0]);
+                    this.createStickerCanvas_2(sprite3,avglist[2].route);
+                  }
+                  case 2:{
+                    this.setsprite(sprite2,avglist[1].route[0]);
+                    console.log(avglist[1].route);
+                    this.createStickerCanvas_2(sprite2,avglist[1].route);
+                  }
+                  case 1:{
+                    this.setsprite(sprite1,avglist[0].route[0]);
+                    console.log(avglist[0].route);
+                    this.createStickerCanvas_2(sprite1,avglist[0].route);
+                  
+                  }
+                  
+            }
       }
     }
     }
@@ -672,7 +758,7 @@ export default{
 
   .can {
     border: #101a28;
-    font:#38de3b
+    font:#8ede38
   }
 </style>
       

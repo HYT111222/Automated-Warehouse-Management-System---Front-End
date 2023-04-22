@@ -120,6 +120,7 @@
             this.loading = true//当调用调用接口前开启
             // 登录请求
             user.login(this.loginForm).then(res => {//发送请求
+              console.log(res.data)
               if (res.data.status_code== true) {
                 // 登录成功（异步编程）
                   let token = res.data.token
@@ -129,7 +130,7 @@
                   if (res.data.warehouse == false) {//旧用户,发送获取请求
                     this.$router.push({ path: '/home' })
                       user.getInitStock(token).then(res=>{
-                        if (res.data.status_code==true) { //成功获取旧用户初始化数据
+                        if (res.data.status_code == true) { //成功获取旧用户初始化数据
                           // 保存后端仓库数据
                           window.sessionStorage.setItem('depository',JSON.stringify({
                             depository: res.data.depository
@@ -142,9 +143,9 @@
                         //   gateMachine: this.initStock.gateMachine
                         // }))
                         } 
-                        // else {   //获取旧用户初始化数据失败
-                        //   this.initVisible= true
-                        // }
+                        else {   //获取旧用户初始化数据失败
+                          this.initVisible= true
+                        }
                       })
                   }else {//新用户
                     this.initVisible= true
