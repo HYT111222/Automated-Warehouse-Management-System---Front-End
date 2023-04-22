@@ -14,7 +14,7 @@
     <el-tab-pane label="入库记录">
         <el-table :data="inTableData" stripe style="width: 100%">
         <el-table-column prop="id" label="ID"  width="180"></el-table-column>
-        <el-table-column prop="in_time" label="入库时间"  width="180"></el-table-column>
+        <el-table-column prop="time" label="入库时间"  width="180"></el-table-column>
         <el-table-column prop="location_xy" label="存放货架"></el-table-column>
         <el-table-column prop="address" label="目的地"></el-table-column>
       </el-table>
@@ -22,7 +22,7 @@
     <el-tab-pane label="出库记录">
       <el-table :data="outTableData" stripe style="width: 100%">
         <el-table-column prop="id" label="ID"  width="180"></el-table-column>
-        <el-table-column prop="in_time" label="出库时间"  width="180"></el-table-column>
+        <el-table-column prop="time" label="入库时间"  width="180"></el-table-column>
         <el-table-column prop="location_xy" label="存放货架"></el-table-column>
         <el-table-column prop="address" label="目的地"></el-table-column>
       </el-table>
@@ -81,11 +81,11 @@ export default{
     }
     },
     created(){
-        //JSON.parse(window.sessionStorage.getItem('Token')).token
-        this.token = "ok"
+        
+        this.token = JSON.parse(window.sessionStorage.getItem('Token')).token
         this.checkMag.token = this.token
         this.initInTable()
-        // this.initOutTable()
+        this.initOutTable()
     },
     methods:{
 
@@ -117,29 +117,31 @@ export default{
         },
         //表格数据请求
         initInTable(){
-            const _this = this
+            let temp = JSON.parse(window.sessionStorage.getItem('Token')).token
             //获取用户名-发送请求-保存数据
-            other.getInTable(_this.token).then(res=>{
+            console.log(this.token)
+            other.getInTable(temp).then(res=>{
                 console.log(res)
-                // if(res.data.status_code == true) { //正常获取
-                //     _this.inTableData = res.data.inTableData
-                // } else {  //异常获取
-                //     _this.$message({
-                //         message: '获取异常',
-                //         type: 'error'
-                //     })
-                // }
+                if(res.data.status_code == true) { //正常获取
+                    this.inTableData = res.data.inTableData
+                } else {  //异常获取
+                    this.$message({
+                        message: '获取异常',
+                        type: 'error'
+                    })
+                }
             })
         },
         //获取出库记录表
         initOutTable(){
-            const _this = this
+            let temp = JSON.parse(window.sessionStorage.getItem('Token')).token
             //获取用户名-发送请求-保存数据
-            other.getOutTable(_this.token).then(res=>{
+            other.getOutTable(temp).then(res=>{
+                console.log(res)
                 if(res.data.status_code == true) { //正常获取
-                    _this.outTableData = res.data.outTableData
+                    this.outTableData = res.data.outTableData
                 } else {  //异常获取
-                    _this.$message({
+                    this.$message({
                         message: '获取异常',
                         type: 'error'
                     })
