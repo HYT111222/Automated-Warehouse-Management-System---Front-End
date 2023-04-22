@@ -42,21 +42,25 @@ export default {
   /**
    * 4.获取用户个人主页信息
    */
-  getUserInfo(token) {
+  getUserInfo(param) {
     return request({
       url: '/user/information',
       method: 'get',
-      params: token
+      params: {
+        token: param
+      }
     })
   },
   /**
    * 5.旧用户获取初始化仓库数据
    */
-  getInitStock(token) {
+  getInitStock(param) {
     return request({
       url: '/user/getOldInitStock',
       method: 'get',
-      params: token
+      params:  {
+        token: param
+      }
     })
   },
   /**

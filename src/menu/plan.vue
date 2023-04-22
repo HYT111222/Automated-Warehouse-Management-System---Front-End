@@ -54,8 +54,8 @@
 
               <el-tab-pane label="出库" name="second">
                 <el-form :inline="true" :model="OutData" class="mag" ref="OutData" :rules="rules">
-                  <div  v-for= "(item2,index2) in OutData.parcelOutList" :key="index2">
-                <el-form-item label="包裹ID:" :prop="'parcelOutList.'+index2+'.id'">
+                  <div  v-for= "(item2,index2) in OutData.parcelOutList" >
+                <el-form-item label="包裹ID:" :prop="'parcelOutList.'+index2+'.id'" :rules="rules.id">
                     <el-input v-model="item2.id" placeholder="ID"></el-input>
                 </el-form-item>
                 <el-form-item label="包裹目的地：" >
@@ -96,18 +96,13 @@
                   </el-form-item>
               </div >
                 <el-form-item  >
-                    <el-button type="success" :loading="loading" @click="avgFetch('parcelOutList')">入库</el-button>
+                    <el-button type="success" :loading="loading" @click="avgFetch('OutData')">入库</el-button>
                 </el-form-item>
             </el-form>
               </el-tab-pane>
             </el-tabs>
           </div>
     </div>
-          <!-- <div class="can">
-             <canvas id="stock" width="900" height="700"></canvas>
-          </div> -->
-    
-    <!-- <div>仓库实时平面图 -->
     <div class="canvas">
         <div ref="page_canvas"></div>
         <canvas id='mycanvas' ></canvas>
@@ -191,26 +186,27 @@ export default{
       this.InData.parcelInList.push(parcel)
       this.OutData.parcelOutList.push(parcel2)
     }
+    console.log(this.InData.parcelInList.length)
     
   },
   //仓库初始化（画出平面图,根据后端返回的数据）
   mounted() {
-    //let test = JSON.parse(window.sessionStorage.getItem('depository')).depository;
-    // console.log(test);
-    let width_1=this.pixi.width_h;//货架实际长度
-    let height_1=this.pixi.height_h;//货架实际宽度
+    let test = JSON.parse(window.sessionStorage.getItem('depository')).depository;
+    let initData = JSON.parse(window.sessionStorage.getItem('initData'));
+    let width_1= initData.capacity_x;//货架实际长度
+    let height_1= initData.capacity_y;//货架实际宽度
     let proportion=1000/width_1;//按照屏幕大小计算比例
     let width_new=proportion*width_1;//屏幕画面像素大小
     let height_new=proportion*height_1;
 
-    let test=[[[0,0],[1,0],[0,0],[1,0],[0,0],[2,0],[0,0]],[[0],[0],[0],[0],[0]],[[0],[3],[0],[3]],[[4],[5],[6],[7],[8],[9],[10],[11],[12],[13],[14],[15],[16],
-              [17]],[[18],[19],[20],[21],[22],[23],[24],[25],[26],[27],[28],[29],[30],[31],[32]],[[-1],[0]],
-              [[0],[7]],[[0],[8]],[[0],[9]],[[-2],[0]]];//一个假的货架数组
+    // let test=[[[0,0],[1,0],[0,0],[1,0],[0,0],[2,0],[0,0]],[[0],[0],[0],[0],[0]],[[0],[3],[0],[3]],[[4],[5],[6],[7],[8],[9],[10],[11],[12],[13],[14],[15],[16],
+    //           [17]],[[18],[19],[20],[21],[22],[23],[24],[25],[26],[27],[28],[29],[30],[31],[32]],[[-1],[0]],
+    //           [[0],[7]],[[0],[8]],[[0],[9]],[[-2],[0]]];//一个假的货架数组
     //console.log(test[0][1][0]);]
     this.app = new PIXI.Application({
             width: width_new ,
             height: height_new ,
-            backgroundColor: "#feeeed",
+            backgroundColor: "#fdfdea",
             transparent:false,
             resolution: 1,
             //forceCanvas: true,
@@ -310,7 +306,7 @@ export default{
               for(let j=0;j<test1[i].length;j++){
                 switch(test1[i][j][0]){
                   case 0:{
-                    this.createroad("#feeeed",j,i,proportion1);
+                    this.createroad("#fdfdea",j,i,proportion1);
                     break;
                   }
                   case 1:{
@@ -574,9 +570,8 @@ export default{
           }
           console.log(temp.parcelInList.length)
           if (temp.parcelInList.length>0){
-          console.log("ok")
           this.loading = true//要在动画之前关闭
-          console.log(temp.parcelInList[0].place)
+          console.log(temp.parcelInList[0].place)//
           temp.token = JSON.parse(window.sessionStorage.getItem("Token")).token
           other.enterStock(temp).then(res=>{
           console.log(res)
@@ -628,25 +623,25 @@ export default{
           if (temp.parcelOutList.length>0){
             this.loading = true//要在动画之前关闭
             temp.token = JSON.parse(window.sessionStorage.getItem("Token")).token
-            this.loading = true//要在动画之前关闭
+            console.log(temp.parcelOutList.length)
             other.outStock(temp).then(res=>{
             console.log(res)
-              // if(res) {
-              //   setTimeout(() => {
-              //     for (let i = 0; i<res.data.avgPlace.parcelList.length; i++){
-              //     if(res.data.avgPlace.parcelList[i].status==true) {//可以入库
-              //     //提示用户该包裹可以正在入库中,保存路线以及存放位置，启动动画
-              //     //动画avg运动到指定位置后提示用户，该包裹入库完成，位置为XXX
-              //     }else {
-              //       //提示用户该包裹不可入库
-              //     }
-              //   }
-              //   },500)
-              //   this.$message({
-              //     message: '',
-              //     type: 'success'
-              //   })
-              // }
+              if(res) {
+                setTimeout(() => {
+                  for (let i = 0; i<res.data.avgPlace.parcelList.length; i++){
+                  if(res.data.avgPlace.parcelList[i].status==true) {//可以入库
+                  //提示用户该包裹可以正在入库中,保存路线以及存放位置，启动动画
+                  //动画avg运动到指定位置后提示用户，该包裹入库完成，位置为XXX
+                  }else {
+                    //提示用户该包裹不可入库
+                  }
+                }
+                },500)
+                this.$message({
+                  message: '',
+                  type: 'success'
+                })
+              }
             }).finally(res=>{
               this.loading = false
             })
@@ -680,13 +675,13 @@ export default{
 
 </script>
 
-<style lang="less" scoped>//scoped控制其只在当前组件内生效，而不是全局样式！！！
+<style lang="less" scoped>
 #stock{
     border: 1px solid rgb(190, 206, 50);
     
 }
   .el-carousel__item:nth-child(2n) {
-     background-color: #99a9bf;
+     background-color: #fdfdea;
   }
   
   .el-carousel__item:nth-child(2n+1) {
