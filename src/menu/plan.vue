@@ -275,8 +275,8 @@ export default{
         console.log("yes?");
         spr.anchor.set(0.5,0.5);
         spr.scale.set(0.08,0.08)
-        spr.x=avgplace[0];
-        spr.y=avgplace[1];
+        spr.x=avgplace[0]*4;
+        spr.y=avgplace[1]*4;
         spr.vx = 0;
         spr.vy = 0;
         this.app.stage.addChild(spr);
