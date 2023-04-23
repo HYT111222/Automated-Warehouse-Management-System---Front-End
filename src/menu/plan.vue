@@ -551,14 +551,14 @@ export default{
         // let test = JSON.parse(window.sessionStorage.getItem('depository')).depository
         // console.log(test[0][0][0])
         const _this =this;
-        console.log(_this.pixi.avgList);
-        let avglist=_this.pixi.avgList;
-        let bili_p=_this.pixi.p;
-        console.log(bili_p);
-        this.avgrun_in(avglist,bili_p);//这个就是入库按钮触发的小车的动画
+        // console.log(_this.pixi.avgList);
+        // let avglist=_this.pixi.avgList;
+        // let bili_p=_this.pixi.p;
+        // console.log(bili_p);
+        // this.avgrun_in(avglist,bili_p);//这个就是入库按钮触发的小车的动画
              
 
-       表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
+      //  表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
        this.$refs[formName].validate((valid) => {
         if (valid) {
           let temp = {
@@ -580,16 +580,16 @@ export default{
             if(res) {//加入动画的位置
               //
               
-              setTimeout(() => {
-                for (let i = 0; i<res.data.avgPlace.parcelList.length; i++){
-                if(res.data.avgPlace.parcelList[i].status==true) {//可以入库
-                //提示用户该包裹可以正在入库中,保存路线以及存放位置，启动动画
-                //动画avg运动到指定位置后提示用户，该包裹入库完成，位置为XXX
-                }else {
-                  //提示用户该包裹不可入库
-                }
-              }
-              },500)
+              // setTimeout(() => {
+              //   for (let i = 0; i<res.data.avgPlace.parcelList.length; i++){
+              //   if(res.data.avgPlace.parcelList[i].status==true) {//可以入库
+              //   //提示用户该包裹可以正在入库中,保存路线以及存放位置，启动动画
+              //   //动画avg运动到指定位置后提示用户，该包裹入库完成，位置为XXX
+              //   }else {
+              //     //提示用户该包裹不可入库
+              //   }
+              // }
+              // },500)
               this.$message({
                 message: '',
                 type: 'success'
