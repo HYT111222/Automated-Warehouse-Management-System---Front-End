@@ -121,6 +121,7 @@
             // 登录请求
             user.login(this.loginForm).then(res => {//发送请求
               console.log(res.data.token)
+              console.log(res.data)
               if (res.data.status_code== true) {
                   let token = res.data.token
                   window.sessionStorage.setItem('Token',JSON.stringify({
