@@ -29,10 +29,10 @@
         <el-dialog width="450px" title="修改个人信息" :visible.sync="dialogFormVisible">
             <el-form :model="changeInfo" ref="changeInfo" :rules="rules">
                 <el-form-item label="电话号码:" label-width="100px" prop="phone">
-                   <el-input v-model="changeInfo.phone" placeholder="只能包含数字"></el-input>
+                   <el-input v-model="changeInfo.phone" placeholder="11位数手机号"></el-input>
                 </el-form-item>
-                <el-form-item label="所属中转站:" label-width="100px" prop="addr">
-                    <el-input v-model="changeInfo.addr" ></el-input>
+                <el-form-item label="所属中转站:" label-width="100px" prop="address">
+                    <el-input v-model="changeInfo.address" ></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -68,8 +68,8 @@ export default{
             if (!value && this.changeInfo.addr== '') {
                 return callback(new Error('二者不能同时为空'))
                 } else {
-                    if (!/^\d+$/.test(value)) {
-                    return callback(new Error('只能包含数字'))
+                    if (!/^[1][3,4,5,6,7,8,9][0-9]{9}$/.test(value)) {
+                    return callback(new Error('手机号格式不正确'))
                 }else {
                     callback()
                 }
@@ -119,12 +119,12 @@ export default{
             },
             changeInfo: {
                 phone:'',
-                addr:'',
+                address:'',
                 token:''
             },
             rules:{
                 phone: [{ validator: phone, trigger: 'blur' }],
-                addr: [{ validator: addr, trigger: 'blur'}],
+                address: [{ validator: addr, trigger: 'blur'}],
                 pre_password: [{ required: true,validator: pre_password, trigger: 'blur'}],
                 new_password: [{ required: true,validator: new_password, trigger: 'blur'}]
             }

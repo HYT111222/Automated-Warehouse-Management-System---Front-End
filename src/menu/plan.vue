@@ -574,8 +574,6 @@ export default{
       createStickerCanvas_2(sprite2,arr){
            console.log(arr); 
            var sprite=sprite2;
-           
-          
           this.app.ticker.add (function(){
          sprite.rotation -= 0.2;
          
@@ -620,8 +618,6 @@ export default{
                  
                 }
               }
-         
-
               this.loading = false
               for (let i=0;i<res.data.parcelList.length;i++){
                 if (res.data.parcelList[i].status == true) {

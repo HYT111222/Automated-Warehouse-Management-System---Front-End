@@ -63,7 +63,7 @@ export default {
    */
   save(param){
     return request({
-      url: '/other/avgSaveDB',
+      url: '/other/delivery',
       method: 'post',
       data: param
     })
