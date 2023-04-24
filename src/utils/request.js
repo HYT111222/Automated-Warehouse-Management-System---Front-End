@@ -39,7 +39,7 @@ service.interceptors.response.use(
     return response.data
   },
   error => {
-    console.log('err' + error) // for debug
+    // console.log('err' + error) // for debug
     if (error.code === 'ECONNABORTED' || error.message === 'Network Error' || error.message.includes('timeout')) {
       Message({
         message: '请求超时，请稍后重试',

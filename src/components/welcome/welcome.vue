@@ -1,15 +1,15 @@
 <template>
     <div class="welcome_container">
-      <transition  name="el-zoom-in-center" appear >
+     
           <h3 class="titleBox" >
             自 动 化 仓 库 管 理 系 统
           </h3>
-        </transition>
+     
       
       <div class="welcome_box">
         
           <div class="button_box" >
-            <transition-group name="el-zoom-in-center" appear>
+          
               <el-col key="1">
                   <el-button round id="registerbtn" @click="registerAct">注 册</el-button>
               </el-col >
@@ -22,7 +22,6 @@
               <el-col key="4">
                   <el-button round>退 出</el-button>
               </el-col>
-            </transition-group>
           </div>
         
       </div>
@@ -63,14 +62,14 @@
   
   <style lang="less" scoped>
     .welcome_container {
-      //background-color: #193653;
-      background-image: url("../../assets/welcome.jpg");
-      height: 800px;
+      // background-image: url("../../assets/welcome.jpg");
+      height: 665px;
+      width: 100%;
   }
   
   .welcome_box{
-      width: 350px;
-      height: 350px;
+      width: 600px;
+      height: 600px;
       background-color: transparent !important;
       border-radius: 10px;
       position: absolute;
@@ -83,25 +82,27 @@
   color: rgb(17, 66, 88);
   background-color: #f0f4d2;
   border-color: rgb(17, 66, 88);
-  height: 60px;
-  width: 300px;
-  font-size: larger;
+  height: 50px;
+  width: 250px;
+  font-size: 17px;
   font-family: Youyuan;
   margin-bottom: 20px;
   }
   .button_box{
-          //设置到中间
+        //设置到中间
     position: absolute;
-    left:50%;
+    width: 400px;
+    height: 300px;
+    left:65%;
     top:53%;
     transform: translate(-50%,-50%);
   }
   
   .titleBox{
-  font-size: 80px;
+  font-size: 150px;
   font-family: 华文行楷;
   color: white;
-  margin-left: 10%;
+  margin-left: 15%;
   position: absolute;
   // top:10%;
   }

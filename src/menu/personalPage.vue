@@ -13,8 +13,8 @@
                         <el-button type="text" @click="changePasswordDialog = true">修改密码</el-button>
                         <el-button type="primary" icon="el-icon-edit" circle @click="dialogFormVisible = true"></el-button>
                         </template>
-                        <el-descriptions-item  label="用户名">{{ userName }}</el-descriptions-item>
-                        <el-descriptions-item label="手机号" class="test">{{ phone }}</el-descriptions-item>   
+                        <el-descriptions-item  label="用户名">{{ this.userName }}</el-descriptions-item>
+                        <el-descriptions-item label="手机号" class="test">{{ this.phone }}</el-descriptions-item>   
                         <el-descriptions-item label="所属中转站">
                         <el-tag size="small">{{ address }}</el-tag>
                         </el-descriptions-item>
@@ -109,8 +109,8 @@ export default{
         return{
             loading: false,
             userJPG: jpg,
-            userName: "hyt",
-            phone: "1425",
+            userName: "hyt4",
+            phone: "142578343",
             address: "北京中关村二部",
             totalCost: 0,
             token: '',
@@ -138,7 +138,7 @@ export default{
         this.token = JSON.parse(window.sessionStorage.getItem('Token')).token
         this.changeInfo.token = this.token
         this.changePassword.token = this.token
-        // this.getPersonalInfo()
+        this.getPersonalInfo()
     },
     methods:{
         //重置表单(被重置的表单元素必须有prop规则引用)
@@ -171,17 +171,15 @@ export default{
         //获取用户信息
         getPersonalInfo(){
             user.getUserInfo(this.token).then(res=> {
-                if (res.status=="true") {
-                    this.userName = res.user_name
-                    this.phone = res.phone
-                    this.address = res.address
-                    this.totalCost = res.totalCost
+                if (res.data.status_code==true) {
+                    console.log(res)
+                    this.userName = res.data.user_name
+                    this.phone = res.data.phone
+                    this.address = res.data.address
+                    this.totalCost = res.data.total_cost
                 }
             }).finally(res=>{
-                this.$message({
-                    message: '欢迎来到个人主页',
-                    type: 'success'
-                  })
+                
             })
         },
         //修改密码

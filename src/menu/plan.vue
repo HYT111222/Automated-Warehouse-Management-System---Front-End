@@ -152,27 +152,23 @@ export default{
       pixi:{
         p:'',
         avgList:[
-        {
-            avg_id:'0',
-            parcelList: [],
-            route: [[0,0],[50,0],[50,100],[74,100]]
-        },
-        {
-            avg_id:'1',
-            parcelList: [],
-            route: [[0,124],[50,124],[50,150]]
-        }
+        // {
+        //     avg_id:'0',
+        //     parcelList: [],
+        //     route: [[0,0],[40,0],[40,40]]
+        // },
+        // {
+        //     avg_id:'1',
+        //     parcelList: [],
+        //     route: [[0,0],[0,20],[720,20]]
+        // }
    ],
    avgList2:[
+       
         {
             avg_id:'0',
             parcelList: [],
-            route: [[74,100],[50,100],[50,0],[0,0]]
-        },
-        {
-            avg_id:'1',
-            parcelList: [],
-            route: [[50,150],[50,124],[0,0]]
+            route: [[0,760],[740,760],[740,40]]
         }
    ]
       },
@@ -275,8 +271,8 @@ export default{
         console.log("yes?");
         spr.anchor.set(0.5,0.5);
         spr.scale.set(0.08,0.08)
-        spr.x=avgplace[0]*4;
-        spr.y=avgplace[1]*4;
+        spr.x=avgplace[0];
+        spr.y=avgplace[1];
         spr.vx = 0;
         spr.vy = 0;
         this.app.stage.addChild(spr);
@@ -453,7 +449,7 @@ export default{
             if(start[0]==0){
             const ren = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
             ren.beginFill("#1b315e");//填充颜色
-            ren.drawRect(start[0],start[1],2*proportion1,30*proportion1);//绘制矩形
+            ren.drawRect(start[0],start[1],2*proportion1,15*proportion1);//绘制矩形
             ren.endFill();//结束填充
             this.app.stage.addChild(ren);//将矩形添加到舞台
             }
@@ -465,7 +461,7 @@ export default{
             // this.app.stage.addChild(ren);//将矩形添加到舞台
             // }
             
-            if(start[3]==0){
+            if(start[2]==0){
               const ren1 = new PIXI.Graphics();//为了让小车在其上行进，需要先画图
               ren1.beginFill("#1b315e");//填充颜色
               ren1.drawRect(start[2],start[3],2*proportion1,30*proportion1);//绘制矩形
@@ -506,10 +502,10 @@ export default{
                 
                 for(let i=0;i<arr.length;i++){
                    if(sprite.x==(arr[i][0])&&sprite.y!=(arr[i][1])){
-                        sprite.y += 2;
+                        sprite.y += 1;
                     }
                     else if(sprite.x!=(arr[i][0])&&sprite.y==(arr[i][1])){
-                        sprite.x += 2;
+                        sprite.x += 1;
                         
                     }
                     else if(sprite.x==(arr[(arr.length-1)][0])&&sprite.y==(arr[(arr.length-1)][1])){
@@ -531,10 +527,10 @@ export default{
          
          for(let i=0;i<arr.length;i++){
             if(sprite.x==(arr[i][0])&&sprite.y!=(arr[i][1])){
-                 sprite.y -= 2;
+                 sprite.y -= 1;
              }
              else if(sprite.x!=(arr[i][0])&&sprite.y==(arr[i][1])){
-                 sprite.x -= 2;
+                 sprite.x += 1;
                  
              }
              else if(sprite.x==(arr[(arr.length-1)][0])&&sprite.y==(arr[(arr.length-1)][1])){
@@ -545,7 +541,6 @@ export default{
          
     })
           },      
-      //入库avg动画
         //入库
       avgPlace(formName) {
         // let test = JSON.parse(window.sessionStorage.getItem('depository')).depository
@@ -575,26 +570,40 @@ export default{
           this.loading = true//要在动画之前关闭
           console.log(temp.parcelInList[0].place)//
           temp.token = JSON.parse(window.sessionStorage.getItem("Token")).token
+          console.log(_this.pixi.avgList);
+        // let avglist=_this.pixi.avgList;
+        // let bili_p=_this.pixi.p;
+        // console.log(bili_p);
+        // this.avgrun_in(avglist,bili_p);//这个就是入库按钮触发的小车的动画
+        // this.loading = false//要在动画之前关闭
           other.enterStock(temp).then(res=>{
-          console.log(res)
-            if(res) {//加入动画的位置
-              //
-              
+            if(res.data.status_code == true) {//加入动画的位置
+              this.avgList = res.data.avgList
+              console.log(this.avgList)
+              //循环路径，将其按比例放大，放到avgList里
+              window.sessionStorage.setItem("All",JSON.stringify({
+                // avgList:res.data.avgList,
+                parcelList:res.data.parcelList
+              }))
+              //提示信息
+              this.$notify({
+              title: '入库操作',
+              message: h('i', { style: 'color: teal'}, '包裹入库成功，具体查看入库记录')
+              });
               // setTimeout(() => {
-              //   for (let i = 0; i<res.data.avgPlace.parcelList.length; i++){
-              //   if(res.data.avgPlace.parcelList[i].status==true) {//可以入库
+              //   for (let i = 0; i<res.data.parcelList.length; i++){
+              //   if(res.data.parcelList[i].status==true) {//可以入库
               //   //提示用户该包裹可以正在入库中,保存路线以及存放位置，启动动画
               //   //动画avg运动到指定位置后提示用户，该包裹入库完成，位置为XXX
+                
               //   }else {
               //     //提示用户该包裹不可入库
               //   }
               // }
               // },500)
-              this.$message({
-                message: '',
-                type: 'success'
-              })
             }
+          }).catch({
+            
           }).finally(res=>{
             this.loading = false
           })
@@ -606,17 +615,16 @@ export default{
           }
         }
        })
-       
 
       },
       //出库
       avgFetch(formName) {
         const _this =this;
         console.log(_this.pixi.avgList2);
-        let avglist=_this.pixi.avgList2;
-        let bili_p=_this.pixi.p;
-        console.log(bili_p);
-        this.avgrun_out(avglist,bili_p);//这个就是入库按钮触发的小车的动画
+        // let avglist=_this.pixi.avgList2;
+        // let bili_p=_this.pixi.p;
+        // console.log(bili_p);
+        // this.avgrun_out(avglist,bili_p);//这个就是入库按钮触发的小车的动画
        //表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
        this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -633,25 +641,38 @@ export default{
             this.loading = true//要在动画之前关闭
             temp.token = JSON.parse(window.sessionStorage.getItem("Token")).token
             console.log(temp.parcelOutList.length)
-            other.outStock(temp).then(res=>{
-            console.log(res)
-              if(res) {
-                setTimeout(() => {
-                  for (let i = 0; i<res.data.avgPlace.parcelList.length; i++){
-                  if(res.data.avgPlace.parcelList[i].status==true) {//可以入库
-                  //提示用户该包裹可以正在入库中,保存路线以及存放位置，启动动画
-                  //动画avg运动到指定位置后提示用户，该包裹入库完成，位置为XXX
-                  }else {
-                    //提示用户该包裹不可入库
-                  }
-                }
-                },500)
-                this.$message({
-                  message: '',
-                  type: 'success'
-                })
-              }
-            }).finally(res=>{
+            // let avglist=_this.pixi.avgList2;
+            // let bili_p=_this.pixi.p;
+            // console.log(bili_p);
+            // this.avgrun_out(avglist,bili_p);
+            this.loading = false//要在动画之前关闭
+            other.enterStock(temp).then(res=>{
+            if(res.data.status_code == true) {//加入动画的位置
+              this.avgList = res.data.avgList
+              console.log(this.avgList)
+              //循环路径，将其按比例放大，放到avgList里
+              window.sessionStorage.setItem("All",JSON.stringify({
+                // avgList:res.data.avgList,
+                parcelList:res.data.parcelList
+              }))
+              //提示信息
+              this.$notify({
+              title: '入库操作',
+              message: h('i', { style: 'color: teal'}, '包裹入库成功，具体查看入库记录')
+              });
+              // setTimeout(() => {
+              //   for (let i = 0; i<res.data.parcelList.length; i++){
+              //   if(res.data.parcelList[i].status==true) {//可以入库
+              //   //提示用户该包裹可以正在入库中,保存路线以及存放位置，启动动画
+              //   //动画avg运动到指定位置后提示用户，该包裹入库完成，位置为XXX
+                
+              //   }else {
+              //     //提示用户该包裹不可入库
+              //   }
+              // }
+              // },500)
+            }
+          }).finally(res=>{
               this.loading = false
             })
           } else {
