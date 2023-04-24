@@ -58,5 +58,15 @@ export default {
       }
     })
   },
+  /**
+   * 6.发送存入DB请求
+   */
+  save(param){
+    return request({
+      url: '/other/avgSaveDB',
+      method: 'post',
+      data: param
+    })
+  }
   
 }

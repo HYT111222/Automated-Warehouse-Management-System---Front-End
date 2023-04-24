@@ -70,7 +70,7 @@ export default {
     return request({
       url: '/user/changeInfo',
       method: 'post',
-      params: param
+      data: param
     })
   },
   /**
@@ -80,7 +80,7 @@ export default {
     return request({
       url: '/user/changePassword',
       method: 'post',
-      params: param
+      data: param
     })
   }
 }

@@ -5,12 +5,12 @@
             <el-tabs v-model="defaultTab" @tab-click="handleClick" >
               <el-tab-pane label="入库" name="first">
                 <el-form :inline="true" :model="InData" ref="InData" class="mag" :rules="rules">
-                  <div  v-for= "(item,index) in InData.parcelInList" >
-                <el-form-item label="包裹ID:" :prop="'parcelInList.'+index+'.id'" :rules="rules.id">
-                    <el-input v-model="item.id" placeholder="ID"></el-input>
+                 <el-row :gutter="20" v-for= "(item,index) in InData.parcelInList" :key="index">
+                  <el-form-item  label="包裹ID:" :prop="'parcelInList.'+index+'.id'" :rules="rules.id">
+                    <el-input  v-model="item.id" placeholder="只能由数字组成" size="mini"></el-input>
                 </el-form-item>
-                <el-form-item label="包裹目的地：" >
-                    <el-select v-model="item.place" placeholder="目的地">
+                <el-form-item label="包裹目的地：" :prop="'parcelInList.'+index+'.place'" :rules="rules.place">
+                   <el-select v-model="item.place" size="mini" placeholder="请选择目的地">
                     <!--香港澳门台湾是否在业务范围内-->
                     <el-option label="北京" value="1"></el-option>
                     <el-option label="上海" value="2"></el-option>
@@ -45,21 +45,36 @@
                     <el-option label="宁夏" value="31"></el-option>
                   </el-select>
                   </el-form-item>
-              </div >
+                  <el-button
+                      type="text"
+                      style="border-radius: 2px; color:#b93947"
+                      @click="handleAdd(index)"
+                      v-if="InData.parcelInList.length == index + 1">
+                      <i class="el-icon-circle-plus-outline"></i >&nbsp;添加包裹</el-button>
+                  <el-button
+                      style="margin-top: 2px"
+                      v-if="InData.parcelInList.length != 1"
+                      type="text"
+                      class="deleteBox"
+                      @click="handleDel(index)">
+                      <i class="el-icon-delete"></i>&nbsp;删除</el-button>
+                      <i :class="item.result"  style="color:black"></i>
+                  </el-row >
                 <el-form-item  >
-                    <el-button type="primary" :loading="loading" @click="avgPlace('InData')">入库</el-button>
+                    <el-button  size="mini" @click="resetForm('InData')">重 置</el-button>
+                    <el-button type="primary" size="mini" :loading="loading" @click="avgPlace('InData')">入库</el-button>
                 </el-form-item>
             </el-form>
               </el-tab-pane>
 
               <el-tab-pane label="出库" name="second">
                 <el-form :inline="true" :model="OutData" class="mag" ref="OutData" :rules="rules">
-                  <div  v-for= "(item2,index2) in OutData.parcelOutList" >
+                  <el-row :gutter="20"  v-for= "(item2,index2) in OutData.parcelOutList" :key="index2">
                 <el-form-item label="包裹ID:" :prop="'parcelOutList.'+index2+'.id'" :rules="rules.id">
-                    <el-input v-model="item2.id" placeholder="ID"></el-input>
+                    <el-input v-model="item2.id" size="mini" placeholder="只能由数字构成"></el-input>
                 </el-form-item>
-                <el-form-item label="包裹目的地：" >
-                    <el-select v-model="item2.place" placeholder="目的地">
+                <el-form-item label="包裹目的地：" :prop="'parcelInList.'+index2+'.place'" :rules="rules.place">
+                  <el-select v-model="item2.place" size="mini" placeholder="目的地">
                     <!--香港澳门台湾是否在业务范围内-->
                     <el-option label="北京" value="1"></el-option>
                     <el-option label="上海" value="2"></el-option>
@@ -93,10 +108,25 @@
                     <el-option label="广西" value="30"></el-option>
                     <el-option label="宁夏" value="31"></el-option>
                   </el-select>
-                  </el-form-item>
-              </div >
-                <el-form-item  >
-                    <el-button type="success" :loading="loading" @click="avgFetch('OutData')">出库</el-button>
+                </el-form-item>
+                  <el-button
+                      type="text"
+                      style="border-radius: 2px; color:#b93947"
+                      @click="handleAdd2(index2)"
+                      v-if="OutData.parcelOutList.length == index2 + 1">
+                      <i class="el-icon-circle-plus-outline"></i >&nbsp;添加包裹</el-button>
+                  <el-button
+                      style="margin-top: 2px"
+                      v-if="OutData.parcelOutList.length != 1"
+                      type="text"
+                      class="deleteBox"
+                      @click="handleDel2(index2)">
+                      <i class="el-icon-delete"></i>&nbsp;删除</el-button>
+                      <i :class="item2.result"  style="color:black"></i>
+              </el-row>
+                <el-form-item >
+                  <el-button  size="mini" @click="resetForm('OutData')">重 置</el-button>
+                    <el-button type="success" size="mini" :loading="loading" @click="avgFetch('OutData')">出库</el-button>
                 </el-form-item>
             </el-form>
               </el-tab-pane>
@@ -121,34 +151,33 @@ export default{
   data(){
     var parcelID = (rule, value, callback) => {
       if (!value) {
-          return callback()
-        } else {
-            if (!/^\d+$/.test(value)) {
+          return callback(new Error('请填写包裹id'))
+        } else if (!/^\d+$/.test(value)){
             return callback(new Error('只能包含数字'))
-          }else {
-            callback()
-          }
+        } else {
+          return callback()
         }
-         
       }
 
     return{
       InData:{
-        parcelInList:[],//入库信息
-        token: ''
+        parcelInList:[{
+        id:'',
+        place: '',
+        result:''
+      }],//入库信息
+        token: '',
       },
       OutData:{
-        parcelOutList:[],//出库信息
+        parcelOutList:[{
+        id:'',
+        place: '',
+        result:''
+      }],//出库信息
         token: ''
       },
-      
       loading: false,//加载效果
       defaultTab:'first',
-
-      parcel:{
-        id:'',
-        place: ''
-      },
       pixi:{
         p:'',
         avgList:[
@@ -173,7 +202,8 @@ export default{
    ]
       },
       rules:{
-        id:[ { validator: parcelID, trigger: 'blur' } ]
+        id:[ { required: true,validator: parcelID, trigger: 'blur' } ],
+        place:[{ required: true,message: '目的地不能为空',trigger: 'blur'}]
       }
     }
   },
@@ -182,23 +212,6 @@ export default{
     let temp = JSON.parse(window.sessionStorage.getItem('initData'))
     let width_start=JSON.parse(window.sessionStorage.getItem('initData')).capacity_x;//货架实际长度
     this.pixi.p=1000/width_start;
-    //初始化表单
-    console.log(temp.gateMachine)
-    for (let i = 0; i < temp.gateMachine; i++) {
-      //不能将parcel放在循环外，用同一个parcel赋给列表
-      let parcel={
-        id:'',
-        place: ''
-      }
-      let parcel2={
-        id:'',
-        place: ''
-      }
-      this.InData.parcelInList.push(parcel)
-      this.OutData.parcelOutList.push(parcel2)
-      
-    }
-    console.log(this.InData.parcelInList.length)
     
   },
   //仓库初始化（画出平面图,根据后端返回的数据）
@@ -249,6 +262,47 @@ export default{
     },  
 
     methods: {
+      //重置表单
+      resetForm(formName) {
+           this.$refs[formName].resetFields();
+        },
+    //加按钮
+    handleAdd(index) {
+      if(index<4){
+        this.InData.parcelInList.push({
+             fbxBoxNoPro: "",
+             boxNumberPro: "",
+      });
+      }else {
+        this.$message({
+          message:"最多可以输入5个包裹",
+          type:"warning"
+        })
+      }
+         
+    },
+    //减按钮
+    handleDel(index) {
+      this.InData.parcelInList.splice(index, 1);
+    },
+    //加按钮2
+    handleAdd2(index) {
+      if(index<4){
+         this.OutData.parcelOutList.push({
+             fbxBoxNoPro: "",
+             boxNumberPro: "",
+      });
+    }else {
+        this.$message({
+          message:"最多可以输入5个包裹",
+          type:"warning"
+        })
+      }
+    },
+    //减按钮2
+    handleDel2(index) {
+      this.OutData.parcelOutList.splice(index, 1);
+    },
       //画入口假小车
       setsprite_start(place,spr){       
         spr.anchor.set(0.5,0.5);
@@ -541,150 +595,140 @@ export default{
          
     })
           },      
-        //入库
+        //入库请求
       avgPlace(formName) {
-        // let test = JSON.parse(window.sessionStorage.getItem('depository')).depository
-        // console.log(test[0][0][0])
         const _this =this;
-        // console.log(_this.pixi.avgList);
-        // let avglist=_this.pixi.avgList;
-        // let bili_p=_this.pixi.p;
-        // console.log(bili_p);
-        // this.avgrun_in(avglist,bili_p);//这个就是入库按钮触发的小车的动画
-             
-
       //  表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
        this.$refs[formName].validate((valid) => {
         if (valid) {
-          let temp = {
-            parcelInList:[],
-            token:''
-          }
-          for (let i = 0; i<_this.InData.parcelInList.length;i++){
-            if (_this.InData.parcelInList[i].id!='' && _this.InData.parcelInList[i].place!=''){
-              temp.parcelInList.push(_this.InData.parcelInList[i])
-            }
-          }
-          console.log(temp.parcelInList.length)
-          if (temp.parcelInList.length>0){
+          console.log(_this.InData.parcelInList.length)
           this.loading = true//要在动画之前关闭
-          console.log(temp.parcelInList[0].place)//
-          temp.token = JSON.parse(window.sessionStorage.getItem("Token")).token
-          console.log(_this.pixi.avgList);
-        // let avglist=_this.pixi.avgList;
-        // let bili_p=_this.pixi.p;
-        // console.log(bili_p);
-        // this.avgrun_in(avglist,bili_p);//这个就是入库按钮触发的小车的动画
-        // this.loading = false//要在动画之前关闭
-          other.enterStock(temp).then(res=>{
-            if(res.data.status_code == true) {//加入动画的位置
-              this.avgList = res.data.avgList
-              console.log(this.avgList)
-              //循环路径，将其按比例放大，放到avgList里
+          _this.InData.token = JSON.parse(window.localStorage.getItem("Token")).token
+          other.enterStock(_this.InData).then(res=>{
+            if(res.data.status_code == true) {
+              // this.avgList = res.data.avgList
+              console.log(res.data.avgList)
+              console.log(res.data.avgList[0].route[0])
+              let tempAvg = res.data.avgList
               window.sessionStorage.setItem("All",JSON.stringify({
                 // avgList:res.data.avgList,
                 parcelList:res.data.parcelList
               }))
-              //提示信息
-              this.$notify({
-              title: '入库操作',
-              message: h('i', { style: 'color: teal'}, '包裹入库成功，具体查看入库记录')
-              });
-              // setTimeout(() => {
-              //   for (let i = 0; i<res.data.parcelList.length; i++){
-              //   if(res.data.parcelList[i].status==true) {//可以入库
-              //   //提示用户该包裹可以正在入库中,保存路线以及存放位置，启动动画
-              //   //动画avg运动到指定位置后提示用户，该包裹入库完成，位置为XXX
-                
-              //   }else {
-              //     //提示用户该包裹不可入库
-              //   }
-              // }
-              // },500)
+              //循环路径，将其按比例放大，放到avgList里
+              for(let i=0;i<res.data.avgList.length;i++){
+                for (let j =0;j<res.data.avgList[i].route.length;j++){//几个拐点
+                 
+                }
+              }
+         
+
+              this.loading = false
+              for (let i=0;i<res.data.parcelList.length;i++){
+                if (res.data.parcelList[i].status == true) {
+                  this.InData.parcelInList[i].result = "el-icon-loading"
+                } else {
+                  this.$message({
+                    message:'包裹'+res.data.parcelList[i].id+'不可入库',
+                    type:'error'
+                  })
+                  console.log("no")
+                  this.InData.parcelInList[i].result = "el-icon-error"
+                }
+              }
+              
+                //加入动画的位置
+                // console.log(_this.pixi.avgList);
+                // let avglist=_this.pixi.avgList;
+                // let bili_p=_this.pixi.p;
+                // console.log(bili_p);
+                // this.avgrun_in(avglist,bili_p);//这个就是入库按钮触发的小车的动画
+                for (let i =0;i<this.InData.parcelInList.length;i++){
+                  if (this.InData.parcelInList[i].result == "el-icon-loading"){
+                    this.InData.parcelInList[i].result = "el-icon-success"
+                  }
+                }
+              //提示用户去往XX查看详情
             }
           }).catch({
             
           }).finally(res=>{
             this.loading = false
           })
-          } else {
-                this.$message({
-                message: '包裹信息输入不可为空',
-                type: 'error'
-              })
-          }
+    
         }
        })
 
       },
-      //出库
+      //出库请求
       avgFetch(formName) {
         const _this =this;
-        console.log(_this.pixi.avgList2);
-        // let avglist=_this.pixi.avgList2;
-        // let bili_p=_this.pixi.p;
-        // console.log(bili_p);
-        // this.avgrun_out(avglist,bili_p);//这个就是入库按钮触发的小车的动画
-       //表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
+      //  表单验证-加载-发送请求(传输数据)-得到后端数据-关闭加载-触发动画
        this.$refs[formName].validate((valid) => {
         if (valid) {
-          let temp = {
-            parcelOutList:[],
-            token:''
-          }
-          for (let i = 0; i<_this.OutData.parcelOutList.length;i++){
-            if (_this.OutData.parcelOutList[i].id!='' && _this.OutData.parcelOutList[i].place!=''){
-              temp.parcelOutList.push(_this.OutData.parcelOutList[i])
-            }
-          }
-          if (temp.parcelOutList.length>0){
-            this.loading = true//要在动画之前关闭
-            temp.token = JSON.parse(window.sessionStorage.getItem("Token")).token
-            console.log(temp.parcelOutList.length)
-            // let avglist=_this.pixi.avgList2;
-            // let bili_p=_this.pixi.p;
-            // console.log(bili_p);
-            // this.avgrun_out(avglist,bili_p);
-            this.loading = false//要在动画之前关闭
-            other.enterStock(temp).then(res=>{
-            if(res.data.status_code == true) {//加入动画的位置
-              this.avgList = res.data.avgList
-              console.log(this.avgList)
+          console.log(_this.OutData.parcelOutList.length)
+          this.loading = true//要在动画之前关闭
+          _this.OutData.token = JSON.parse(window.localStorage.getItem("Token")).token
+          other.enterStock(_this.OutData).then(res=>{
+            if(res.data.status_code == true) {
+              // this.avgList = res.data.avgList
+              console.log(res)
               //循环路径，将其按比例放大，放到avgList里
               window.sessionStorage.setItem("All",JSON.stringify({
                 // avgList:res.data.avgList,
                 parcelList:res.data.parcelList
               }))
-              //提示信息
-              this.$notify({
-              title: '入库操作',
-              message: h('i', { style: 'color: teal'}, '包裹入库成功，具体查看入库记录')
-              });
-              // setTimeout(() => {
-              //   for (let i = 0; i<res.data.parcelList.length; i++){
-              //   if(res.data.parcelList[i].status==true) {//可以入库
-              //   //提示用户该包裹可以正在入库中,保存路线以及存放位置，启动动画
-              //   //动画avg运动到指定位置后提示用户，该包裹入库完成，位置为XXX
-                
-              //   }else {
-              //     //提示用户该包裹不可入库
-              //   }
-              // }
-              // },500)
-            }
-          }).finally(res=>{
               this.loading = false
-            })
-          } else {
-                this.$message({
-                message: '包裹信息输入不可为空',
-                type: 'error'
-              })
-          }
+              for (let i=0;i<res.data.parcelList.length;i++){
+                if (res.data.parcelList[i].status == true) {
+                  this.OutData.parcelOutList[i].result = "el-icon-loading"
+                } else {
+                  this.$message({
+                    message:'包裹'+res.data.parcelList[i].id+'不可入库',
+                    type:'error'
+                  })
+                  this.OutData.parcelOutList[i].result = "el-icon-error"
+                }
+              }
+              
+                //加入动画的位置
+               // let avglist=_this.pixi.avgList2;
+                // let bili_p=_this.pixi.p;
+                // console.log(bili_p);
+                // this.avgrun_out(avglist,bili_p);//这个就是入库按钮触发的小车的动画
+
+                for (let i =0;i<this.OutData.parcelOutList.length;i++){
+                  if (this.OutData.parcelOutList[i].result == "el-icon-loading"){
+                    this.OutData.parcelOutList[i].result = "el-icon-success"
+                  }
+                }
+              //提示用户去往XX查看详情
+            }
+          }).catch({
+            
+          }).finally(res=>{
+            this.loading = false
+          })
+    
         }
        })
       },
-      //切换
+      //发送出入库存入DB请求
+      sendSaveDB(parcelList){
+        let temp = {
+          parcelList:[],
+          token:''
+        }
+        temp.token = JSON.parse(window.localStorage.getItem('Token')).token
+        temp.parcelList = parcelList
+        other.sendSaveDB(temp).then(res=>{
+
+        }).catch({
+
+        }).finally({
+
+        })
+
+      },      //切换
       handleClick(tab, event) {
         console.log(tab, event);
       },
@@ -701,28 +745,32 @@ export default{
             switch(avglist.length){
                   case 5:{
                     this.setsprite(sprite5,avglist[4].route[0]);
-                    createStickerCanvas(sprite5,avglist[4].route[0]);
-                    
+                    this.createStickerCanvas(sprite5,avglist[4].route[0]);
+                    this.sendSaveDB(avglist[4].parcelList);
                   }
                   case 4:{
                     this.setsprite(sprite4,avglist[3].route[0]);
-                    this.createStickerCanvas(sprite4,avglist[2].route);
+                    this.createStickerCanvas(sprite4,avglist[3].route);
+                    this.sendSaveDB(avglist[3].parcelList);
                   }
                   case 3:{
                     this.setsprite(sprite3,avglist[2].route[0]);
                     this.createStickerCanvas(sprite3,avglist[2].route);
+                    this.sendSaveDB(avglist[2].parcelList);
                   }
                   case 2:{
                   
                     this.setsprite(sprite2,avglist[1].route[0]);
                     //console.log(avglist_avg2[0]);
                     this.createStickerCanvas(sprite2,avglist[1].route);
+                    this.sendSaveDB(avglist[1].parcelList);
                   }
                   case 1:{
                     
                     this.setsprite(sprite1,avglist[0].route[0]);
                     console.log(avglist[0].route);
                     this.createStickerCanvas(sprite1,avglist[0].route);
+                    this.sendSaveDB(avglist[0].parcelList);
                   
                   }
                   
@@ -788,10 +836,13 @@ export default{
     border: 1px solid rgb(190, 206, 50);
     
 }
+.el-form-item{
+    margin-bottom: 8px;
+} 
   .el-carousel__item:nth-child(2n) {
      background-color: #fdfdea;
   }
-  
+
   .el-carousel__item:nth-child(2n+1) {
      background-color: #d3dce6;
   }

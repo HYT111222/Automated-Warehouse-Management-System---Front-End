@@ -5,7 +5,7 @@
             <span class="welcome">Hi~ {{ userName }}</span>
         </div>
         <div>
-        <el-form :model="userInfoForm" class="personalInfo" >
+        <el-form  class="personalInfo" >
             <el-form-item  >
                 <el-card class="box-card">
                     <el-descriptions class="margin-top" title="个人信息" :column="3" :size="size">
@@ -16,7 +16,7 @@
                         <el-descriptions-item  label="用户名">{{ this.userName }}</el-descriptions-item>
                         <el-descriptions-item label="手机号" class="test">{{ this.phone }}</el-descriptions-item>   
                         <el-descriptions-item label="所属中转站">
-                        <el-tag size="small">{{ address }}</el-tag>
+                        <el-tag >{{ this.address }}</el-tag>
                         </el-descriptions-item>
                         <el-descriptions-item label="产生费用">
                             <el-tag type="danger">{{  totalCost }}</el-tag>
@@ -29,7 +29,7 @@
         <el-dialog width="450px" title="修改个人信息" :visible.sync="dialogFormVisible">
             <el-form :model="changeInfo" ref="changeInfo" :rules="rules">
                 <el-form-item label="电话号码:" label-width="100px" prop="phone">
-                   <el-input v-model="changeInfo.phone" ></el-input>
+                   <el-input v-model="changeInfo.phone" placeholder="只能包含数字"></el-input>
                 </el-form-item>
                 <el-form-item label="所属中转站:" label-width="100px" prop="addr">
                     <el-input v-model="changeInfo.addr" ></el-input>
@@ -43,10 +43,10 @@
             <el-dialog width="450px" title="修改密码" :visible.sync="changePasswordDialog">
             <el-form :model="changePassword" ref="changePassword" :rules="rules">
                 <el-form-item label="旧密码:" label-width="100px" prop="pre_password">
-                   <el-input prefix-icon="el-icon-lock" placeholder="请填写 3-16 位密码" type="password" maxlength="18" v-model="changePassword.pre_password" show-password></el-input>
+                   <el-input prefix-icon="el-icon-lock" placeholder="长度3-16个字符,包含数字、大小写字母" type="password" maxlength="18" v-model="changePassword.pre_password" show-password></el-input>
                 </el-form-item>
                 <el-form-item label="新密码:" label-width="100px" prop="new_password">
-                    <el-input prefix-icon="el-icon-lock" placeholder="请填写 3-16 位密码" type="password" maxlength="18" v-model="changePassword.new_password" show-password></el-input>
+                    <el-input prefix-icon="el-icon-lock" placeholder="长度3-16个字符,包含数字、大小写字母" type="password" maxlength="18" v-model="changePassword.new_password" show-password></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -79,11 +79,7 @@ export default{
             if (!value && this.changeInfo.phone== '') {
                 return callback(new Error('二者不能同时为空'))
                 } else {
-                    if (!/^\d+$/.test(value)) {
-                    return callback(new Error('只能包含数字'))
-                }else {
                     callback()
-                }
                 }
       }
        var pre_password = (rule, value, callback) => {
@@ -127,15 +123,15 @@ export default{
                 token:''
             },
             rules:{
-                phone: [{ validator: phone, trigger: 'blur'}],
+                phone: [{ validator: phone, trigger: 'blur' }],
                 addr: [{ validator: addr, trigger: 'blur'}],
-                pre_password: [{ validator: pre_password, trigger: 'blur'}],
-                new_password: [{ validator: new_password, trigger: 'blur'}]
+                pre_password: [{ required: true,validator: pre_password, trigger: 'blur'}],
+                new_password: [{ required: true,validator: new_password, trigger: 'blur'}]
             }
         }
     },
     created() {
-        this.token = JSON.parse(window.sessionStorage.getItem('Token')).token
+        this.token = JSON.parse(window.localStorage.getItem('Token')).token
         this.changeInfo.token = this.token
         this.changePassword.token = this.token
         this.getPersonalInfo()
@@ -150,21 +146,20 @@ export default{
             this.$refs[formName].validate(valid=> {
                 if (valid) {
                     this.loading = true
+                    console.log(this.changeInfo)
                     user.changeInfo(this.changeInfo).then(res=> {
-                        if (res.data.status_code == "true"){
+                        if (res.data.status_code == true){
                             //重新获取用户信息
                             this.getPersonalInfo()
                             this.$message({
                             message: '修改信息成功',
                             type: 'success'
-                            })
+                            }) 
                         }
                     }).finally(res=>{
                         this.loading = false
                         this.dialogFormVisible = false
-                    })
-
-                    
+                    })  
                 }
             })
         },
@@ -189,7 +184,7 @@ export default{
                 if (valid) {
                     this.loading = true
                     user.changePassword(this.changePassword).then(res=> {
-                        if (res.data.status_code=='true') {
+                        if (res.data.status_code==true) {
                             this.$message({
                                 message: '成功修改密码',
                                 type:'success'
@@ -197,6 +192,7 @@ export default{
                         }
                     }).finally(res=> {
                         this.loading = false
+                        this.changePasswordDialog = false
                     })
                 }
             })

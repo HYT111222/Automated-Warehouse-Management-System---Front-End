@@ -82,7 +82,7 @@ export default{
     },
     created(){
         
-        this.token = JSON.parse(window.sessionStorage.getItem('Token')).token
+        this.token = JSON.parse(window.localStorage.getItem('Token')).token
         this.checkMag.token = this.token
         this.initInTable()
         this.initOutTable()
@@ -117,7 +117,7 @@ export default{
         },
         //表格数据请求
         initInTable(){
-            let temp = JSON.parse(window.sessionStorage.getItem('Token')).token
+            let temp = JSON.parse(window.localStorage.getItem('Token')).token
             //获取用户名-发送请求-保存数据
             console.log(this.token)
             other.getInTable(temp).then(res=>{
@@ -134,7 +134,7 @@ export default{
         },
         //获取出库记录表
         initOutTable(){
-            let temp = JSON.parse(window.sessionStorage.getItem('Token')).token
+            let temp = JSON.parse(window.localStorage.getItem('Token')).token
             //获取用户名-发送请求-保存数据
             other.getOutTable(temp).then(res=>{
                 console.log(res)

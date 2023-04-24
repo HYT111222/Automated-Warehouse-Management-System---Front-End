@@ -124,7 +124,7 @@
               console.log(res.data)
               if (res.data.status_code== true) {
                   let token = res.data.token
-                  window.sessionStorage.setItem('Token',JSON.stringify({
+                  window.localStorage.setItem('Token',JSON.stringify({
                     token: token
                   }))
                   if (res.data.warehouse == true) {//旧用户,发送获取请求
@@ -172,7 +172,7 @@
       //初始化仓库
     intoHome(formName){
         
-        let token = JSON.parse(window.sessionStorage.getItem("Token")).token
+        let token = JSON.parse(window.localStorage.getItem("Token")).token
         this.initStock.token = token
         this.loading = true
         user.initStock(this.initStock).then(res=>{

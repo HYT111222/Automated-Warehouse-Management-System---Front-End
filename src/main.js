@@ -6,9 +6,12 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 Vue.use(Element)
 Vue.config.productionTip = false
-window.sessionStorage.setItem('Token',JSON.stringify({
+window.localStorage.setItem('Token',JSON.stringify({
   token: ""
 }))
+// window.sessionStorage.setItem('Token',JSON.stringify({
+//   token: ""
+// }))
 
 new Vue({
   router,
