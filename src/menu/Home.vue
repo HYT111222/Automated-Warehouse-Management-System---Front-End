@@ -8,7 +8,7 @@
     <!-- 页面主体区域 -->
     <el-container class="all">
       <!-- 侧边栏 -->
-      <el-aside width="200px">
+      <el-aside width="160px">
         <!-- 侧边栏菜单区 -->
         <el-menu 
           background-color=#69a7e5
@@ -114,7 +114,7 @@ export default {
 
 <style lang="less" scoped>
 .all {
-  height: 900px;
+  height: 580px;
 }
 .el-aside{
   background-color: #69a7e5;

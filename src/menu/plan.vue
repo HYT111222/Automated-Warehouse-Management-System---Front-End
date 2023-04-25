@@ -223,6 +223,7 @@ export default{
     let height_1=JSON.parse(window.sessionStorage.getItem('initData')).capacity_y;//货架实际宽度
     let avg1=JSON.parse(window.sessionStorage.getItem('initData')).avg;//货架实际宽度
     let proportion=1000/width_1;//按照屏幕大小计算比例
+    console.log(proportion);
     let width_new=proportion*width_1;//屏幕画面像素大小
     let height_new=proportion*height_1;
     this.app = new PIXI.Application({
@@ -324,9 +325,11 @@ export default{
         let avgplace=avgplace1;
         console.log("yes?");
         spr.anchor.set(0.5,0.5);
-        spr.scale.set(0.08,0.08)
-        spr.x=avgplace[0];
-        spr.y=avgplace[1];
+        spr.scale.set(0.08,0.08);
+        spr.x=0;
+        spr.y=0;
+        // spr.x=avgplace[0];
+        // spr.y=avgplace[1];
         spr.vx = 0;
         spr.vy = 0;
         this.app.stage.addChild(spr);
@@ -609,7 +612,7 @@ export default{
               // this.avgList = res.data.avgList
               console.log(res.data.avgList)
               console.log(res.data.avgList[0].route[0])
-              let tempAvg = res.data.avgList
+              let tempAvg = res.data.avgList;
               window.sessionStorage.setItem("All",JSON.stringify({
                 // avgList:res.data.avgList,
                 parcelList:res.data.parcelList
@@ -617,9 +620,14 @@ export default{
               //循环路径，将其按比例放大，放到avgList里
               for(let i=0;i<res.data.avgList.length;i++){
                 for (let j =0;j<res.data.avgList[i].route.length;j++){//几个拐点
-                 
+                  for(let h=0;h<<res.data.avgList[i].route[j].length;h++){
+                  //tempAvg[i].route[j][h]=((res.data.avgList[i].route[j][h])*_this.pixi.p);
+                  //this.$set(this.tempAvgtempAvg[i].route[j][h],_this.pixi.p)
+                  }
                 }
               }
+              console.log(_this.pixi.p);
+              console.log(tempAvg);
          
 
               this.loading = false
@@ -639,9 +647,9 @@ export default{
                 //加入动画的位置
                 // console.log(_this.pixi.avgList);
                 // let avglist=_this.pixi.avgList;
-                // let bili_p=_this.pixi.p;
-                // console.log(bili_p);
-                // this.avgrun_in(avglist,bili_p);//这个就是入库按钮触发的小车的动画
+                let bili_p=_this.pixi.p;
+                console.log(bili_p);
+                this.avgrun_in(tempAvg,bili_p);//这个就是入库按钮触发的小车的动画
                 for (let i =0;i<this.InData.parcelInList.length;i++){
                   if (this.InData.parcelInList[i].result == "el-icon-loading"){
                     this.InData.parcelInList[i].result = "el-icon-success"
@@ -720,13 +728,13 @@ export default{
         }
         temp.token = JSON.parse(window.localStorage.getItem('Token')).token
         temp.parcelList = parcelList
-        other.sendSaveDB(temp).then(res=>{
+        // other.sendSaveDB(temp).then(res=>{
 
-        }).catch({
+        // }).catch({
 
-        }).finally({
+        // }).finally({
 
-        })
+        // })
 
       },      //切换
       handleClick(tab, event) {
@@ -794,7 +802,7 @@ export default{
                   }
                   case 4:{
                     this.setsprite(sprite4,avglist[3].route[0]);
-                    this.createStickerCanvas_2(sprite4,avglist[2].route);
+                    this.createStickerCanvas_2(sprite4,avglist[3].route);
                   }
                   case 3:{
                     this.setsprite(sprite3,avglist[2].route[0]);
