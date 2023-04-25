@@ -219,12 +219,11 @@
   }
   .loginText,
   .textInput.el-form-item__label {
-    color: #2e2c2c;
+    color: #080808;
   }
   .login {
     background-color: transparent !important;
     height: 100%;
-  
     display: flex;
     justify-content: center;
     align-items: center;
@@ -238,9 +237,9 @@
     height: 300px;
     width: 500px;
     box-sizing: border-box;
-    background-color:#ffffff;
+    background-color:rgba(255, 255, 255, 0.742);
     border-radius: 10px;
-    opacity: 0.7;
+    opacity: 0.9;
     padding: 10px 50px;
   }
   

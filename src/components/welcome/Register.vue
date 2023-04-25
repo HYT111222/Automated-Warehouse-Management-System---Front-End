@@ -141,8 +141,8 @@
       height: 350px;
       width: 500px;
       box-sizing: border-box;
-      background-color:#ffffff;
-      opacity: 0.8;
+      background-color:rgba(255, 255, 255, 0.742);
+      opacity: 0.9;
       border-radius: 10px;
       padding: 10px 50px;
     }
