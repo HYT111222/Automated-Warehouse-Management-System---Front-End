@@ -2,7 +2,7 @@
     <div class="register_container">
       <div class="register">
         <div class="register-form">
-          <h2>注册</h2>
+          <h2 class="registerText">注册</h2>
           <el-form :model="registerForm" :rules="rules" ref="registerForm" label-width="70px">
             <el-form-item label="用户名" prop="username">
             <el-input prefix-icon="el-icon-user" placeholder="请填写用户名" maxlength="32" v-model="registerForm.username" ></el-input>
@@ -96,7 +96,7 @@
           if (valid) {
             this.loading = true
             user.register(this.registerForm).then(res => {
-              if (res.data.status_code =="true") {
+              if (res.data.status_code == true ) {
                 // 注册成功
                 this.$message({
                   message: '注册成功',
@@ -121,13 +121,18 @@
   
     <style>
     .register_container {
-      background-image: url("../../assets/welcome.jpg");
-      height: 900px;
+      background-image: url("../../assets/welcome7.jpg");
+      height: 100%;
+      width: 100%;
+      position:fixed;
+      background-size:100% 100%;
   }
+  /* .registerText {
+    color: aliceblue;
+  } */
     .register {
       background-color: transparent !important;
       height: 100%;
-  
       display: flex;
       justify-content: center;
       align-items: center;
@@ -136,7 +141,7 @@
       height: 350px;
       width: 500px;
       box-sizing: border-box;
-      background-color: #fff;
+      background-color:#ffffff;
       opacity: 0.8;
       border-radius: 10px;
       padding: 10px 50px;

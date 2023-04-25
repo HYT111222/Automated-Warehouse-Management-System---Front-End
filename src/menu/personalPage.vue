@@ -26,7 +26,7 @@
             </el-form-item>
         </el-form>
     </div>
-        <el-dialog width="450px" title="修改个人信息" :visible.sync="dialogFormVisible">
+        <el-dialog width="450px" title="修改个人信息" :visible.sync="dialogFormVisible" append-to-body>
             <el-form :model="changeInfo" ref="changeInfo" :rules="rules">
                 <el-form-item label="电话号码:" label-width="100px" prop="phone">
                    <el-input v-model="changeInfo.phone" placeholder="11位数手机号"></el-input>
@@ -40,7 +40,7 @@
                 <el-button type="primary" :loading="loading" @click="modify('changeInfo')">确 定</el-button>
             </div>
             </el-dialog>
-            <el-dialog width="450px" title="修改密码" :visible.sync="changePasswordDialog">
+            <el-dialog width="450px" title="修改密码" :visible.sync="changePasswordDialog" append-to-body>
             <el-form :model="changePassword" ref="changePassword" :rules="rules">
                 <el-form-item label="旧密码:" label-width="100px" prop="pre_password">
                    <el-input prefix-icon="el-icon-lock" placeholder="长度3-16个字符,包含数字、大小写字母" type="password" maxlength="18" v-model="changePassword.pre_password" show-password></el-input>
@@ -217,9 +217,8 @@ export default{
 .personalInfo {
     margin-top: 2%;
 }
-.personalPageWhole {
-    margin-left: 20px;
-}
+
+
 .welcome {
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 50px;

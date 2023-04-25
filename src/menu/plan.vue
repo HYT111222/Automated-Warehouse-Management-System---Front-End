@@ -2,7 +2,7 @@
   <div>
     <div class="whole_container">
           <div class="inputData">
-            <el-tabs v-model="defaultTab" @tab-click="handleClick" >
+            <el-tabs v-model="defaultTab" @tab-click="handleClick" class="tabs" >
               <el-tab-pane label="入库" name="first">
                 <el-form :inline="true" :model="InData" ref="InData" class="mag" :rules="rules">
                  <el-row :gutter="20" v-for= "(item,index) in InData.parcelInList" :key="index">
@@ -60,7 +60,7 @@
                       <i class="el-icon-delete"></i>&nbsp;删除</el-button>
                       <i :class="item.result"  style="color:black"></i>
                   </el-row >
-                <el-form-item  >
+                <el-form-item  class="btr">
                     <el-button  size="mini" @click="resetForm('InData')">重 置</el-button>
                     <el-button type="primary" size="mini" :loading="loading" @click="avgPlace('InData')">入库</el-button>
                 </el-form-item>
@@ -74,7 +74,7 @@
                     <el-input v-model="item2.id" size="mini" placeholder="只能由数字构成"></el-input>
                 </el-form-item>
                 <el-form-item label="包裹目的地：" :prop="'parcelInList.'+index2+'.place'" :rules="rules.place">
-                  <el-select v-model="item2.place" size="mini" placeholder="目的地">
+                  <el-select v-model="item2.place" size="mini" placeholder="请选择目的地">
                     <!--香港澳门台湾是否在业务范围内-->
                     <el-option label="北京" value="1"></el-option>
                     <el-option label="上海" value="2"></el-option>
@@ -124,14 +124,16 @@
                       <i class="el-icon-delete"></i>&nbsp;删除</el-button>
                       <i :class="item2.result"  style="color:black"></i>
               </el-row>
-                <el-form-item >
+                <el-form-item class="btr2">
                   <el-button  size="mini" @click="resetForm('OutData')">重 置</el-button>
                     <el-button type="success" size="mini" :loading="loading" @click="avgFetch('OutData')">出库</el-button>
-                </el-form-item>
+                  </el-form-item>
             </el-form>
               </el-tab-pane>
             </el-tabs>
+            <el-divider></el-divider>
           </div>
+          
     </div>
     <div class="canvas">
         <div ref="page_canvas"></div>
@@ -724,7 +726,18 @@ export default{
 
         })
 
-      },      //切换
+      },
+      //入库成功提示
+      successMag(parcelList){
+        for(let i=0;i<parcelList.length;i++){
+          this.$notify({
+          title: '提示',
+          message: parcelList[i].id+'成功入库到('+parcelList[i].location_x+","+parcelList[i].location_y+")货架",
+          duration: 0
+        });
+        }
+      },
+      //切换
       handleClick(tab, event) {
         console.log(tab, event);
       },
@@ -743,16 +756,19 @@ export default{
                     this.setsprite(sprite5,avglist[4].route[0]);
                     this.createStickerCanvas(sprite5,avglist[4].route[0]);
                     this.sendSaveDB(avglist[4].parcelList);
+                    this.successMag(avglist[4].parcelList);
                   }
                   case 4:{
                     this.setsprite(sprite4,avglist[3].route[0]);
                     this.createStickerCanvas(sprite4,avglist[3].route);
                     this.sendSaveDB(avglist[3].parcelList);
+                    this.successMag(avglist[3].parcelList);
                   }
                   case 3:{
                     this.setsprite(sprite3,avglist[2].route[0]);
                     this.createStickerCanvas(sprite3,avglist[2].route);
                     this.sendSaveDB(avglist[2].parcelList);
+                    this.successMag(avglist[2].parcelList);
                   }
                   case 2:{
                   
@@ -760,6 +776,7 @@ export default{
                     //console.log(avglist_avg2[0]);
                     this.createStickerCanvas(sprite2,avglist[1].route);
                     this.sendSaveDB(avglist[1].parcelList);
+                    this.successMag(avglist[1].parcelList);
                   }
                   case 1:{
                     
@@ -767,6 +784,7 @@ export default{
                     console.log(avglist[0].route);
                     this.createStickerCanvas(sprite1,avglist[0].route);
                     this.sendSaveDB(avglist[0].parcelList);
+                    this.successMag(avglist[0].parcelList);
                   
                   }
                   
@@ -832,9 +850,15 @@ export default{
     border: 1px solid rgb(190, 206, 50);
     
 }
+.inputData {
+  width: 800px;
+}
 .el-form-item{
     margin-bottom: 8px;
 } 
+.btr,.btr2 {
+  margin-bottom: 0px;
+}
   .el-carousel__item:nth-child(2n) {
      background-color: #fdfdea;
   }
@@ -853,6 +877,11 @@ export default{
   left:200pt;
   top:100pt;
 
+}
+.canvas {
+     background-color: transparent !important;
+     opacity: 0.7;
+     background-color:#ffffff  ;
 }
 </style>
 

@@ -1,31 +1,14 @@
 <template>
     <el-container class="home-container">
-      <!-- <el-header>
-        <div class="header">
-          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-        </div> 
-      </el-header> -->
-    <!-- 页面主体区域 -->
     <el-container class="all">
-      <!-- 侧边栏 -->
-      <el-aside width="200px">
-        <!-- 侧边栏菜单区 -->
-        <el-menu 
-          background-color=#69a7e5
-          text-color="#EAEDF1"
-          active-text-color="#b2b2b2"
+      <el-aside width="140px">
+        <!-- background-color=#69a7e5   text-color="#EAEDF1"-->
+        <el-menu class="menu"
+          text-color= #ffffff
+          active-text-color="#3f3a3a"
           :collapse-transition="false"
           router="true" 
           >
-          <!-- 一级菜单1 -->
-          <el-submenu  >
-            <!-- 一级菜单的模板区域 -->
-            <template slot="title">
-              <!-- 图标 -->
-              <i class="el-icon-s-home"></i>
-              <!-- 文本 -->
-              <span>功能主页</span>
-            </template>
               <el-menu-item index="plan">
                 <template slot="title">
                   <i class="el-icon-video-camera"></i>
@@ -38,17 +21,6 @@
                   <span>包裹信息查询</span>
                 </template>
               </el-menu-item>
-        </el-submenu>
-        <el-submenu >
-            <template slot="title">
-              <!-- 图标 -->
-              <i class="el-icon-user"></i>
-              <!-- 文本 -->
-              <span>个人中心</span>
-            </template>
-            <!-- 二级菜单 -->
-            <el-menu-item-group>
-              <!-- <template slot="title">个人信息中心</template> -->
               <el-menu-item index="personalPage">
                 <template slot="title">
                   <i class="el-icon-user"></i>
@@ -61,8 +33,6 @@
                   <span>消费中心</span>
                 </template>
               </el-menu-item>
-            </el-menu-item-group>
-        </el-submenu>
         <el-menu-item index="data" class="test">
         <i class="el-icon-place"></i>
         <span slot="title">数据统计</span>
@@ -113,27 +83,51 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.all {
-  height: 900px;
+.home-container {
+      background-image: url("../assets/welcome8.jpg");
+      height: 100%;
+      width: 100%;
+      position:fixed;
+      background-size:100% 100%;
 }
+// .all {
+//   height: 660px;
+// }
 .el-aside{
-  background-color: #69a7e5;
+  // opacity: 0.4;
+  // background-color:#55585a+7a  ;
+  background-color:  rgba(155, 147, 147, 0.7);
+  color: #3f3a3a;
+  // background-color: transparent !important;
   height: 100%;
+  margin-top: 1%;
+  border-radius: 3%;
 }
 .el-main{
-  background-color: #e8f2fa;
+  // background-color: transparent !important;
   height: 100%;
+  margin-left: 1.5%;
+  margin-top: 1%;
+  border-radius: 3%;
+  // margin-right: 2%;
+  // opacity: 0.7;
+  // background-color:#ffffff  ;
+  background-color:  rgba(212, 204, 204, 0.83);
+}
+.menu {
+  background-color: transparent !important;
 }
 .el-header {
   height: 30px;
   background-color: #d8e9f7;
 }
 .el-menu-item.is-active {
-  color: #ffffff !important;
-  background: #8ab9e8 !important;
+  color: #edeaea !important;
+  background: #adb3b9 !important;
+  background-color:  rgba(133, 134, 103, 0.485);
 }
 
 .el-icon-s-home,.el-icon-video-camera,.el-icon-user,.el-icon-user-solid,.el-icon-edit,.el-icon-place,.test{
-    color: #e8f2fa;
+    color: #ffffff;
 }
 </style>

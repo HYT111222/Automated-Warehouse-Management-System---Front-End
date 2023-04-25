@@ -62,15 +62,18 @@
   
   <style lang="less" scoped>
     .welcome_container {
-      // background-image: url("../../assets/welcome.jpg");
-      height: 665px;
+      background-image: url("../../assets/welcome7.jpg");
+      height: 100%;
       width: 100%;
+      position:fixed;
+      background-size:100% 100%;
   }
   
   .welcome_box{
-      width: 600px;
-      height: 600px;
-      background-color: transparent !important;
+      width: 300px;
+      height: 350px;
+      background-color:  rgba(111, 98, 98, 0.4);
+      // background-color: transparent !important;
       border-radius: 10px;
       position: absolute;
       left: 50%;
@@ -79,9 +82,9 @@
   }
   
   .el-button{
-  color: rgb(17, 66, 88);
-  background-color: #f0f4d2;
-  border-color: rgb(17, 66, 88);
+  color: rgb(235, 241, 244);
+  background-color:  rgba(200, 199, 199, 0.142);
+  border-color: rgb(235, 241, 244);
   height: 50px;
   width: 250px;
   font-size: 17px;
@@ -91,18 +94,20 @@
   .button_box{
         //设置到中间
     position: absolute;
-    width: 400px;
-    height: 300px;
-    left:65%;
+    left:50%;
     top:53%;
     transform: translate(-50%,-50%);
   }
   
   .titleBox{
-  font-size: 150px;
-  font-family: 华文行楷;
-  color: white;
-  margin-left: 15%;
+  font-size: 80px;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  // font-family:monospace;
+  color: rgb(235, 241, 244);
+  left: 12%;
+  // bottom: 10px;
+  // margin-left: 15%;
+  // transform: translate(-50%,-50%);
   position: absolute;
   // top:10%;
   }

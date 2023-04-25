@@ -2,14 +2,16 @@
     <div class="login_container">
       <div class="login">
         <div class="login-form">
-          <h2>登录</h2>
+          <h2 class="loginText">登录</h2>
           <!--model数据对象，rules整体表单验证规则，ref用来引用整体表单，prop整体规则中的单项规则-->
           <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="70px">
-            <el-form-item label="用户名" prop="username">
+            <el-form-item  prop="username" class="textInput">
+              <span slot="label"  style="color: #403b3b"> 用户名</span>
               <el-input prefix-icon="el-icon-user" placeholder="请填写用户名" maxlength="32" v-model="loginForm.username" ></el-input>
             </el-form-item>
   
-            <el-form-item label="密码" prop="password"  v-show="!isCode">
+            <el-form-item  prop="password"  v-show="!isCode">
+              <span slot="label"  style="color: #403b3b"> 密码</span>
               <el-input prefix-icon="el-icon-lock" placeholder="请填写 3-18 位密码" type="password" maxlength="18" v-model="loginForm.password" show-password></el-input>
             </el-form-item>
   
@@ -25,7 +27,7 @@
           </el-form>
         </div>
         <!--初始化仓库-->
-        <el-dialog @close="clearForm('initStock')" title="仓库初始化设置" :visible.sync="initVisible" width="40%" class="initDialog">
+        <el-dialog @close="clearForm('initStock')" title="仓库初始化设置" :visible.sync="initVisible" width="40%" class="initDialog" append-to-body>
           <el-form :model="initStock" ref="initStock"  label-width="100px">
 
              <el-form-item label="仓库长度：" >
@@ -206,12 +208,19 @@
   }
   </script>
   
-  <style>
+  <style lang="less" scoped>
   .login_container {
-      background-image: url("../../assets/welcome.jpg");
-      height: 665px;
+     background-image: url("../../assets/welcome7.jpg");
+      height: 100%;
+      width: 100%;
+      position:fixed;
+      
+      background-size:100% 100%;
   }
-  
+  .loginText,
+  .textInput.el-form-item__label {
+    color: #2e2c2c;
+  }
   .login {
     background-color: transparent !important;
     height: 100%;
@@ -229,9 +238,9 @@
     height: 300px;
     width: 500px;
     box-sizing: border-box;
-    background-color: #fff;
+    background-color:#ffffff;
     border-radius: 10px;
-    opacity: 0.8;
+    opacity: 0.7;
     padding: 10px 50px;
   }
   
@@ -253,7 +262,9 @@
     width: 100px;
     float: left;
   }
-  
+  .initDialog {
+    // background-color: #ffffff;
+  }
   .b span {
     font-size: 12px;
     cursor: pointer;

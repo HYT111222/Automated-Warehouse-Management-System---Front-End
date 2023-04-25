@@ -1,9 +1,9 @@
 <template>
     <div>
     <div class="Checkform">
-        <el-form :inline="true" :model="checkMag" :rules="rules" ref="checkMag">
+        <el-form :inline="true" :model="checkMag" rules="rules" ref="checkMag">
          <el-form-item label="包裹ID:" prop="ID">
-            <el-input v-model="checkMag.ID" placeholder="输入包裹id" maxlength="32"></el-input>
+            <el-input v-model="checkMag.ID" placeholder="数字组成" maxlength="32"></el-input>
          </el-form-item>
          <el-form-item >
             <el-button icon="el-icon-search"  type="primary" circle @click="onSubmit('checkMag')"></el-button>
@@ -12,22 +12,22 @@
     </div>
     <el-tabs type="border-card">
     <el-tab-pane label="入库记录">
-        <el-table :data="inTableData" stripe style="width: 100%">
-        <el-table-column prop="id" label="ID"  width="180"></el-table-column>
-        <el-table-column prop="time" label="入库时间"  width="180"></el-table-column>
+        <el-table :data="inTableData"  height="500"  border stripe style="width: 100%">
+        <el-table-column prop="id" label="ID"  ></el-table-column>
+        <el-table-column prop="time" label="入库时间"  ></el-table-column>
         <el-table-column prop="location_xy" label="存放货架"></el-table-column>
         <el-table-column prop="address" label="目的地"></el-table-column>
       </el-table>
     </el-tab-pane>
     <el-tab-pane label="出库记录">
-      <el-table :data="outTableData" stripe style="width: 100%">
-        <el-table-column prop="id" label="ID"  width="180"></el-table-column>
-        <el-table-column prop="time" label="入库时间"  width="180"></el-table-column>
+      <el-table :data="outTableData" height="500"  border  stripe style="width: 100%">
+        <el-table-column prop="id" label="ID"  ></el-table-column>
+        <el-table-column prop="time" label="入库时间" ></el-table-column>
         <el-table-column prop="location_xy" label="存放货架"></el-table-column>
         <el-table-column prop="address" label="目的地"></el-table-column>
       </el-table>
     </el-tab-pane>
-    <el-dialog title="包裹详情" :visible.sync="dialogTableVisible">
+    <el-dialog title="包裹详情" :visible.sync="dialogTableVisible" style="width: 500px">
     <el-table :data="parcel">
         <el-table-column property="id" label="包裹id" ></el-table-column>
         <el-table-column property="status" label="姓名" ></el-table-column>
@@ -92,27 +92,32 @@ export default{
         //查询包裹
         onSubmit(formName){
             //表单验证-加载-发送请求-获得结果（）-利用弹窗展现结果-结束加载
-            const _this = this
-            console.log(_this.$refs[formName])
-            _this.$refs[formName].validate((valid)=>{
+            console.log(this.$refs[formName])
+            this.$refs[formName].validate((valid)=>{
                 if(valid){
-                    _this.loading = true
-                    other.checkParcel(_this.checkMag).then(res=>{
+                    this.loading = true
+                    other.checkParcel(this.checkMag).then(res=>{
                         if (res.data.status_code== true) {
                             //保存数据
+                            console.log(res)
+                            this.parcel.id= this.checkMag.ID
+                            this.parcel.in_time=res.data.in_time
+                            this.parcel.location_xy=res.data.location_xy
+                            this.parcel.out_time=res.data.out_time
+                            this.parcel.place=res.data.place
+                            this.parcel.status=res.data.status
+                            this.dialogTableVisible = true
 
-                            _this.dialogTableVisible = true
                         } else {
-                            _this.$message({
+                            this.$message({
                                 message:'查询异常',
                                 type: 'error'
                             })
                         }
                     }).finally(res=>{
-                        _this.loading = false
+                        this.loading = false
                     })
                 }
-
             })
         },
         //表格数据请求
