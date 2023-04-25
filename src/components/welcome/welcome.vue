@@ -2,12 +2,18 @@
     <div class="welcome_container">
      
           <h3 class="titleBox" >
-            自 动 化 仓 库 管 理 系 统
+            Welcome to Automated warehouse management system
           </h3>
      
-      
       <div class="welcome_box">
-        
+        <div class="welcome">
+          <h3 class="pText">自动化仓库管理系统</h3>
+          <h3 class="pText">Automated warehouse management system</h3>
+          <div class="welcomeP">
+            <img class="img" src="../../assets/welcome7.jpg" alt="">
+          </div>
+          
+        </div>
           <div class="button_box" >
           
               <el-col key="1">
@@ -68,10 +74,24 @@
       position:fixed;
       background-size:100% 100%;
   }
-  
+  .img {
+    border-radius: 10px;
+    margin-left: 10%;
+    width: 100%;
+    height: 100%;
+  }
+  .pText{
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    width: 300px;
+    color: #ffffff;
+    margin-left: 20%;
+  }
+  .welcome {
+    width: 20%;
+  }
   .welcome_box{
-      width: 300px;
-      height: 350px;
+      width: 600px;
+      height: 400px;
       background-color:  rgba(111, 98, 98, 0.4);
       // background-color: transparent !important;
       border-radius: 10px;
@@ -80,31 +100,36 @@
       top:44%;
       transform: translate(-50%, -20%);
   }
-  
+  .welcomeP {
+    width: 250px;
+    height: 200px;
+  }
   .el-button{
   color: rgb(235, 241, 244);
   background-color:  rgba(200, 199, 199, 0.142);
   border-color: rgb(235, 241, 244);
   height: 50px;
-  width: 250px;
+  width: 200px;
   font-size: 17px;
   font-family: Youyuan;
   margin-bottom: 20px;
+  margin-left: 0%;
   }
   .button_box{
+    width: 300px;
         //设置到中间
     position: absolute;
-    left:50%;
+    left:70%;
     top:53%;
-    transform: translate(-50%,-50%);
+    transform: translate(-20%,-50%);
   }
   
   .titleBox{
-  font-size: 80px;
+  font-size: 60px;
   font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   // font-family:monospace;
   color: rgb(235, 241, 244);
-  left: 12%;
+  left: 10%;
   // bottom: 10px;
   // margin-left: 15%;
   // transform: translate(-50%,-50%);
