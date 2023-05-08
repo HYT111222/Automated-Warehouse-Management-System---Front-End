@@ -7,7 +7,7 @@ const service = axios.create({
   baseURL: BASE_API, // api 的 base_url
   timeout: 5000 // request timeout
 })
-
+//请求头配置
 // 响应拦截器
 service.interceptors.response.use(
   // response => response,

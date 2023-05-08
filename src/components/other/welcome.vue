@@ -4,7 +4,6 @@
           <h3 class="titleBox" >
             Welcome to Automated warehouse management system
           </h3>
-     
       <div class="welcome_box">
         <div class="welcome">
           <h3 class="pText">自动化仓库管理系统</h3>
@@ -12,7 +11,7 @@
           <div class="welcomeP">
             <img class="img" src="../../assets/welcome7.jpg" alt="">
           </div>
-          
+           
         </div>
           <div class="button_box" >
           

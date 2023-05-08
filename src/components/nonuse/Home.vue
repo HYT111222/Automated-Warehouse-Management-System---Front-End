@@ -84,7 +84,7 @@ export default {
 
 <style lang="less" scoped>
 .home-container {
-      background-image: url("../assets/welcome8.jpg");
+      background-image: url("@/assets/welcome8.jpg");
       height: 100%;
       width: 100%;
       position:fixed;

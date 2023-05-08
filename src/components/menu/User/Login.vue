@@ -210,7 +210,7 @@
   
   <style lang="less" scoped>
   .login_container {
-     background-image: url("../../assets/welcome7.jpg");
+     background-image: url("@/assets/welcome7.jpg");
       height: 100%;
       width: 100%;
       position:fixed;
