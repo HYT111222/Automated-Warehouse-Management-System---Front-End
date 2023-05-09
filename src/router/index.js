@@ -48,18 +48,19 @@ const router = new VueRouter({
 })
 
 // 路由守卫
-// router.beforeEach((to, from, next) => {
-  
-//   if(to.path == '/login' || to.path == '/register'|| to.path == '/welcome'){
-//       next()
-//   }else {
-//     let token = JSON.parse(window.localStorage.getItem("Token"))
-//     if ( token.token != ""){
-//       next()
-//     }else {
-//       alert("请先进行登录操作")
-//       next('/login')
-//     }
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  if(to.path == '/login' || to.path == '/register'|| to.path == '/welcome'){
+      next()
+  }else {
+    // let token = JSON.parse(window.localStorage.getItem("Token"))
+    let token = localStorage.getItem('Authorization')
+    console.log(token)
+    if (  token == null || token === '' ){
+      alert("请先进行登录操作")
+      next('/login')
+    }else {
+      next()
+    }
+  }
+})
 export default router

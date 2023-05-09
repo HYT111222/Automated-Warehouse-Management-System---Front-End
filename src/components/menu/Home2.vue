@@ -2,6 +2,13 @@
     <div class="whole">
         <el-container class="whole">
         <el-header class="header">
+            <div class="header-left">
+                <div class="logo-box">
+                    <div class="logo"><img src="@/assets/logo.png" width="50px" height="50px"  class="img"/></div>
+                        <span class="system-name">xxx仓库管理系统</span>
+                </div>
+               
+            </div>
             <div class="header-right">
                 <div class="header-user-con">
                     <!-- 客服聊天 -->
@@ -11,8 +18,8 @@
                     <!-- 用户名下拉菜单 -->
                     <el-dropdown class="user-name" trigger="click" @command="handleCommand">
                         <span class="el-dropdown-link">
-                            <!-- {{ username }} -->
-                            HYTYYYYY
+                            {{ username }}
+                            
                             <i class="el-icon-caret-bottom"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
@@ -79,6 +86,7 @@
 export default{
     data() {
       return {
+        username:'HYT',
        
       };
     },
@@ -89,16 +97,16 @@ export default{
       handleClose(key, keyPath) {
         console.log(key, keyPath);
       },
-           // 用户名下拉菜单选择事件
-           handleCommand(command) { 
-            if (command == 'loginout') {
-                localStorage.removeItem('ms_username');
-                this.$router.push('/login');
-            }
+        // 用户名下拉菜单选择事件
+        handleCommand(command) { 
+        if (command == 'loginout') {
+            localStorage.removeItem('ms_username');
+            this.$router.push('/login');
+        }
         },
         // 联系客服
         contact() {
-            this.$router.push('/contact');
+            this.$router.push('/contact');//跳转
         },
         personal(){
             this.$router.push('/personalPage')
@@ -113,6 +121,8 @@ export default{
     height: 100%;
     width: 100%;
 }
+/* --------------- 左侧导航栏 --------------------- */
+
 .aside {
     height: 100%;
 }
@@ -120,8 +130,30 @@ export default{
 .header {
     height: 70px;
     background-color: antiquewhite;
-    position: relative;
+    position: relative;//内部元素可以使用 top、bottom、left、right 属性来调整它的位置。
 }
+/* -------------左-------------*/
+.logo-box {
+    display: flex;
+    align-items: center;
+    height: 65px;
+}
+.system-name {
+    margin-left: 10px;
+    font-size: medium;
+    font-style: italic;
+}
+.img {
+    margin-left: 10px;
+    border-radius: 20%;
+}
+.header-left {
+    float: left;
+    position: absolute;//相对于最近的已定位祖先元素进行定位。如果没有已定位的祖先元素，则相对于浏览器窗口进行定位
+    left: 0px;
+}
+
+/* -------------右-------------*/
 .header-right {
     float: right;
 }

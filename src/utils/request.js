@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 
+import store from '@/router'
+
 const BASE_API = 'http://localhost:7070'
 // create an axios instance
 const service = axios.create({
@@ -8,6 +10,20 @@ const service = axios.create({
   timeout: 5000 // request timeout
 })
 //请求头配置
+
+//添加请求拦截器
+service.interceptors.request.use(
+  config => {
+    if(store.state.token){
+      config.headers.common['token'] = store.state.token.token
+    }
+    return config;
+  },
+  error => {
+    //请求错误
+    return Promise.reject(error);
+  }
+);
 // 响应拦截器
 service.interceptors.response.use(
   // response => response,
