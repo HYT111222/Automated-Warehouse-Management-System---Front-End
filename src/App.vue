@@ -1,10 +1,9 @@
 <template>
   <div id="app">
-    
-    <!-- <router-view/> -->
-    <transition name="slide-fade">
+    <router-view/>
+    <!-- <transition name="slide-fade">
 	<router-view v-if="isRouterAlive"></router-view>
- </transition>
+ </transition> -->
   
   </div>
 </template>
@@ -34,7 +33,7 @@ export default {
 </script>
 
 <style >
-.slide-fade {
+/* .slide-fade {
   position: fixed;
   left: 0;
   right: 0;
@@ -55,7 +54,7 @@ export default {
   transition: all 0.5s ease;
   transform: translateX(-100%);
   z-index: 100;
-}
+} */
 
 
 </style>
