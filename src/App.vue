@@ -8,6 +8,7 @@
   </div>
 </template>
 <script>
+
 export default {
   name: "App",
   provide() {
@@ -33,6 +34,16 @@ export default {
 </script>
 
 <style >
+@import url('@/assets/icon/iconfont.css');
+/**删除浏览器滚动条 */
+::-webkit-scrollbar {
+  width: 0 !important;
+}
+::-webkit-scrollbar {
+  width: 0 !important;
+  /* height: 0; */
+}
+/**动画 */
 /* .slide-fade {
   position: fixed;
   left: 0;

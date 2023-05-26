@@ -9,7 +9,7 @@
           <h3 class="pText">自动化仓库管理系统</h3>
           <h3 class="pText">Automated warehouse management system</h3>
           <div class="welcomeP">
-            <img class="img" src="../../assets/welcome7.jpg" alt="">
+            <img class="img" src="../../assets/image/welcome7.jpg" alt="">
           </div>
            
         </div>
@@ -67,7 +67,7 @@
   
   <style lang="less" scoped>
     .welcome_container {
-      background-image: url("../../assets/welcome7.jpg");
+      background-image: url("../../assets/image/welcome7.jpg");
       height: 100%;
       width: 100%;
       position:fixed;

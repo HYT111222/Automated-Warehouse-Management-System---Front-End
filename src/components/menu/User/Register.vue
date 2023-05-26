@@ -7,14 +7,12 @@
             <el-form-item label="用户名" prop="username">
             <el-input prefix-icon="el-icon-user" placeholder="请填写用户名" maxlength="32" v-model="registerForm.username" ></el-input>
           </el-form-item>
-          
           <el-form-item label="密码" prop="password">
             <el-input prefix-icon="el-icon-lock" placeholder="请填写 3-16 位密码" type="password" maxlength="18" v-model="registerForm.password" show-password></el-input>
           </el-form-item>
           <el-form-item label="确认密码" prop="passwordConfirm">
             <el-input prefix-icon="el-icon-lock" placeholder="请填写 3-16 位密码" type="password" maxlength="18"  v-model="registerForm.passwordConfirm" show-password></el-input>
           </el-form-item>
-      
           <el-form-item class="btn-r" label-width="0px">
             <el-button type="danger" icon="el-icon-s-promotion" :loading="loading" @click="submitForm('registerForm')">注 册</el-button>
           </el-form-item>
@@ -121,7 +119,7 @@
   
     <style>
     .register_container {
-      background-image: url("@/assets/welcome7.jpg");
+      background-image: url("@/assets/image/welcome7.jpg");
       height: 100%;
       width: 100%;
       position:fixed;

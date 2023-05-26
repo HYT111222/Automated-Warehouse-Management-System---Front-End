@@ -14,9 +14,13 @@ const service = axios.create({
 //添加请求拦截器
 service.interceptors.request.use(
   config => {
-    if(store.state.token){
-      config.headers.common['token'] = store.state.token.token
+    console.log(localStorage.getItem("token"))
+    if(localStorage.getItem("token")){
+      config.headers['token'] = localStorage.getItem("token")
     }
+    // if(store.state.token){
+    //   config.headers.common['token'] = store.state.token.token
+    // }
     return config;
   },
   error => {

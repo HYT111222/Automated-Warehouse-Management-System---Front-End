@@ -60,7 +60,7 @@
 <script>
 import other from '@/api/other.js'
 import user from '@/api/user'
-import jpg from '@/assets/R.jpg'
+import jpg from '@/assets//image/R.jpg'
 
 export default{
     data(){
