@@ -224,7 +224,7 @@
                 size="small"
                 :options="options"
                 v-model="parcel.toAddrSelect"
-                @change="handleChange">
+                @change="handleChange_to">
                 </el-cascader>
             </el-form-item>
             <el-form-item label="详细地址"  style="margin: 13px;margin-top: 18px;">
@@ -245,8 +245,8 @@
  * 编辑状态：与新增一样界面（但是一些数据从请求得来），保存则发送请求（与新增一样），修改对应订单
  * 查看状态：不可编辑
  */
-import { regionData, CodeToText, TextToCode } from 'element-china-area-data'
-
+import { regionData, codeToText, TextToCode } from 'element-china-area-data'
+//时间获取
 function addZero(s) {
             return s < 10 ? ('0' + s) : s;
 }
@@ -268,6 +268,14 @@ function getNowTime() {
     console.log(time)
     return time;
 }
+//解码
+function getCodeToText (codeStr) {
+        let temp = ''
+        for (let i=0;i<codeStr.length;i++){
+            temp+=codeToText[codeStr[i]]
+        }
+        return temp;
+}
 export default {
     //修改、查看、添加都是一样的界面
     data(){
@@ -279,7 +287,6 @@ export default {
             }
         }
         return{
-            
             currentCell: null,
             dialogFormVisible:false,
             inPeopleNameList:['王小龙','李小虎'],
@@ -327,10 +334,12 @@ export default {
                 fromPeople: "",
                 fromPhone: "",
                 fromAddrSelect: [],
+                fromAddrSelect2:'',
                 fromAddrDetail: "",
                 toPeople: "",
                 toPhone: "",
                 toAddrSelect:[],
+                toAddrSelect2:'',
                 toAddrDetail: "",
            },
             rules:{
@@ -342,68 +351,25 @@ export default {
                 fromPhone:[{}],
                 fromAddrDetail:[{}]
             },
+            //表格分页
             multipleSelection: [],//选中的信息
             currentPage: 1, // 当前页码
             total: 20, // 总条数
             pageSize: 5 // 每页的数据条数
         }
     },
-    created(){//扫描不到methods里面的函数，要用的函数必须放在export外面
+    created(){
         this.newInOrder.inID = getNowTime()
-        
     },
     methods:{
-          // 在获取详情信息接口中使用 TextToCode 将字符串转换成编码赋给 selectedOptions 
-    projectInfo () {
-      var that = this;
-      getProjectInfo({ token: getToken(), id: that.id }).then(res => {
-        this.addForm = {
-          id: res.id,
-          // 基础信息
-          p_name: res.p_name,   //项目名
-          p_message: res.p_message,   //项目信息
-          area: res.area,   //地区
-          remark: res.remark,   //备注
-        }
-        this.selectedOptions = TextToCode[this.addForm.area.split('/')[0]][this.addForm.area.split('/')[1]][this.addForm.area.split('/')[2]].code;
-
-      }).catch(err => {
-        Message.error(err)
-      })
-    },
+    //解码
     handleChange (value) {
-        console.log(value)
-        this.getCodeToText(null, value)
-        },
-    getCodeToText (codeStr, codeArray) {
-        if (null === codeStr && null === codeArray) {
-            return null;
-        } else if (null === codeArray) {
-            codeArray = codeStr.split(",");
-        }
-        let area = "";
-        switch (codeArray.length) {
-            case 1:
-            area += CodeToText[codeArray[0]];
-            break;
-            case 2:
-            area += CodeToText[codeArray[0]] + "/" + CodeToText[codeArray[1]];
-            break;
-            case 3:
-            area +=
-                CodeToText[codeArray[0]] +
-                "/" +
-                CodeToText[codeArray[1]] +
-                "/" +
-                CodeToText[codeArray[2]];
-            break;
-            default:
-            break;
-        }
-        console.log(area)
-        this.addForm.area = area
-        return area;
-        },
+        this.parcel.fromAddrSelect2 = getCodeToText(value)
+    },
+    handleChange_to (value) {
+        this.parcel.toAddrSelect2 = getCodeToText(value)
+    },
+    /**-----------------------------------------表格操作------------------------------------------------ */
      //每页条数改变时触发 选择一页显示多少行
      handleSizeChange(val) {
          console.log(`每页 ${val} 条`);
@@ -456,29 +422,30 @@ export default {
     clearForm (formName) {
     this.$refs[formName].resetFields()
     this.dialogFormVisible=false
-    }, 
+    },
+    /**----------------------------------------普通操作方法------------------------------------------------- */
     //确定添加
     sureAdd(formName){
-    //表单验证后
-    let temp={
-            parcelID :"",
-            fromPeople: "",
-            fromPhone: "",
-            fromAddr: "",
-            toPeople: "",
-            toPhone: "",
-            toAddr: "",
-    }
-    temp.parcelID=this.parcel.parcelID
-    temp.fromPeople=this.parcel.fromPeople
-    temp.fromPhone=this.parcel.fromPhone
-    temp.fromAddr=this.parcel.fromAddrSelect+this.parcel.fromAddrDetail
-    temp.toPeople=this.parcel.toPeople
-    temp.toPhone=this.parcel.toPhone
-    temp.toAddr=this.parcel.toAddrSelect+this.parcel.toAddrDetail
-    this.newInOrder.parcelList.push(temp)
-    this.dialogFormVisible=false
-    this.clearForm(formName)
+        //表单验证后
+        let temp={
+                parcelID :"",
+                fromPeople: "",
+                fromPhone: "",
+                fromAddr: "",
+                toPeople: "",
+                toPhone: "",
+                toAddr: "",
+        }
+        temp.parcelID=this.parcel.parcelID
+        temp.fromPeople=this.parcel.fromPeople
+        temp.fromPhone=this.parcel.fromPhone
+        temp.fromAddr=this.parcel.fromAddrSelect2+this.parcel.fromAddrDetail
+        temp.toPeople=this.parcel.toPeople
+        temp.toPhone=this.parcel.toPhone
+        temp.toAddr=this.parcel.toAddrSelect2+this.parcel.toAddrDetail
+        this.newInOrder.parcelList.push(temp)
+        this.dialogFormVisible=false
+        this.clearForm(formName)
     },
     //返回入库界面
     backToInSock(){
