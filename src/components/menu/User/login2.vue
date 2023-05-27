@@ -86,20 +86,6 @@
                         <el-button type="primary" icon="el-icon-s-promotion" :loading="loading" class="btn " style="margin-top: 0px;">立即注册</el-button>
                         </el-form-item>
                     </el-form>
-                    <!-- <div class="input-field">
-                        <i><font-awesome-icon icon="fa-solid fa-user" /></i>
-                        <input type="text" placeholder="用户名" />
-                    </div>
-                    <div class="input-field">
-                        <i><font-awesome-icon icon="fa-solid fa-envelope" /></i>
-                        <input type="email" placeholder="邮箱" />
-                    </div>
-                    <div class="input-field">
-                        <i><font-awesome-icon icon="fa-solid fa-lock" /></i>
-                        <input type="password" placeholder="密码" />
-                    </div>
-                    <input type="submit" class="btn" value="立即注册" /> -->
-                    <!-- <p class="social-text">通过其他方式</p>
                     <div class="social-media">
                         <a href="#" class="social-icon">
                             <font-awesome-icon icon="fa-brands fa-qq" />
@@ -143,14 +129,15 @@
     </div>
 </template>
 
-<script lang="ts">
+<script >
+import user from '@/api/user.js'
 export default {
     name: 'Login',
     
     data() {
         var username = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('请输入用户名'))
+          return callback(new Error('用户名不可为空'))
         } else {
           callback()
         }
@@ -166,14 +153,28 @@ export default {
         }
       }
 
+      var passwordConfirm = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('请输入确认密码！'))
+        } else if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{3,16}$/.test(value)) {
+          return callback(new Error('密码长度在3-16个字符,只能包含数字、大小写字母'))
+        } else if (value !== this.registerForm.password) {
+          return callback(new Error('两次输入的密码不一致！'))
+        } else {
+          return callback()
+        }
+      }
+
       return {
         isCode: false,
         isLogin: false,
         loading: false,//加载效果
+        //登录参数
         loginForm: {
           username: '',
           password: ''
         },
+        //注册参数
         registerForm: {
           userID: '',
           password: '',
@@ -190,6 +191,61 @@ export default {
             { validator: password, trigger: 'blur' }
           ]
         }
+        }
+    },
+    methods:{
+        //登录
+        loginToHome(formName){
+            this.$refs[formName].validate((valid) => {
+            if (valid) {
+                this.loading = true
+                user.login(this.loginForm).then(res => {
+                    console.log(res)
+                if (res.success === true ) {
+                    // 注册成功
+                    this.$message({
+                    message: '登录成功',
+                    type: 'success'
+                    })
+                    window.localStorage.setItem('token',res.data.token)
+                    this.$router.push('/home')
+                } else {
+                    this.$message({
+                    message: '登录失败，用户名或密码错误',
+                    type: 'error'
+                    })
+                }
+                }).finally(res => {
+                this.loading = false
+                })
+            }
+        })
+        },
+        //注册
+        register(formName){
+            this.$refs[formName].validate((valid) => {
+            if (valid) {
+                this.loading = true
+                user.register(this.registerForm).then(res => {
+                    console.log(res)
+                if (res.success ===true ) {
+                    // 注册成功
+                    this.$message({
+                    message: '注册成功',
+                    type: 'success'
+                    })
+                    this.isLogin = !this.isLogin
+                } else {
+                    this.$message({
+                    message: '注册失败，该用户已存在',
+                    type: 'error'
+                    })
+                }
+                }).finally(res => {
+                this.loading = false
+                })
+            }
+        })
         }
     }
 }
