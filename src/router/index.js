@@ -15,6 +15,7 @@ import Shelf from '@/components/menu/StockManage/Shelf.vue'
 import data from '@/components/menu/data.vue'
 import Parcel from '@/components/menu/parcelManage.vue'
 import inNeedToCheck from '@/components/menu/outAndIn/managerCheck.vue'
+import addNewOUt from '@/components/menu/outAndIn/addOutOrder.vue'
 //https://registry.npm.taobao.org
 import Register from '@/components/menu/User/Register.vue';
 import User from '@/components/menu/personalPage.vue'
@@ -44,7 +45,8 @@ const routes = [
       { path: '/data', component: data},
       { path: '/inStock', component: inStock },
       { path: '/HomePage', component: HomePage},
-      { path: '/managerCheck', component: inNeedToCheck}
+      { path: '/managerCheck', component: inNeedToCheck},
+      { path: '/addNewOut', component: addNewOUt},
     ]
   }
 ]
