@@ -43,7 +43,7 @@
                     <div v-else>
                         <div>
                             <el-badge :value="inList.length" class="item">
-                            <el-button type="success" icon="el-icon-s-order" plain  circle style="padding:5px; font-size: 30px;" @click=""></el-button>
+                            <el-button type="success" icon="el-icon-s-order" @click="userToDealIn" plain  circle style="padding:5px; font-size: 30px;" ></el-button>
                             </el-badge>
                         </div>
                         <div style="margin-top: 7px;">
@@ -65,7 +65,7 @@
                     <div v-else>
                         <div>
                             <el-badge :value="outList.length" class="item">
-                            <el-button type="success" icon="el-icon-s-management" plain  circle style="padding:5px; font-size: 30px;"></el-button>
+                            <el-button type="success" icon="el-icon-s-management" @click="userToDealOut" plain  circle style="padding:5px; font-size: 30px;"></el-button>
                             </el-badge>
                         </div>
                         <div style="margin-top: 7px;">
@@ -147,6 +147,8 @@
     </div>
 </template>
 <script >
+import user from '@/api/user.js'
+import outAndIn from '@/api/outAndIn.js'
 
 function nowTime(){
             var current = new Date();//实例化Date对象
@@ -168,7 +170,7 @@ export default{
             icon:'',
             userName:'HYT',
             authority:'仓库管理员',
-            managerName: "string",//普通特有
+            managerName: "",//普通特有
             staffNum: 0,//管理员特有
             //共同
             shelfNum: 0,
@@ -176,37 +178,82 @@ export default{
             inPeopleNum: 0,
             outPeopleNum: 0,
             //在登录后就发送请求并保存下来的数据(普通和管理员参数都一样，只是发送的请求不同)
-            inList:[
-            {
-                inID: "string",
-                orderID: "string",
-                inPeopleName: "string",
-                inStatus: "string",
-                inTime: "string",
-                userName: "string"
-            }
-            ],
-            outList: [
-                {
-                    outID: "string",
-                    orderID: "string",
-                    outPeopleName: "string",
-                    outStatus: "string",
-                    outTime: "string",
-                    userName: "string"
-                }
-            ]
+            inList:[{}],
+            outList: [ {} ]
 
         }
     },
     created(){
         this.time=nowTime()
-       // this.authority="仓库管理员"
+        this.userName = window.sessionStorage.getItem('userName')
+        if (window.sessionStorage.getItem('authority') === 'manager'){//管理员
+            this.authority= '仓库管理员'
+            user.managerHomePage().then(res=>{
+                if (res.data.status_code == true){
+                    this.staffNum = res.data.staffNum
+                    this.shelfNum = res.data.shelfNum
+                    this.companyNum = res.data.companyNum
+                    this.inPeopleNum = res.data.inPeopleNum
+                    this.outPeopleNum = res.data.outPeopleNum
+                }else {
+                    this.$message({
+                    message: '获取主页信息异常',
+                    type: 'error'
+                    })
+                }
+            })
+            outAndIn.InNeedTocheck().then(res=>{
+                if (res.data.status_code === true){
+                    this.inList = res.data.inList
+                }
+            })
+            outAndIn.OutNeedTocheck().then(res=>{
+                if (res.data.status_code === true){
+                    this.outList = res.data.outList
+                }
+            })
+        } else {                                //普通员工
+            this.authority= '普通员工'
+            user.userHomePage().then(res=>{
+                if (res.data.status_code == true){
+                    this.managerName = res.data.managerName
+                    this.shelfNum = res.data.shelfNum
+                    this.companyNum = res.data.companyNum
+                    this.inPeopleNum = res.data.inPeopleNum
+                    this.outPeopleNum = res.data.outPeopleNum
+                }else {
+                    this.$message({
+                    message: '获取主页信息异常',
+                    type: 'error'
+                    })
+                }
+            })
+            outAndIn.InNeedToEnter().then(res=>{
+                if (res.data.status_code === true){
+                    this.inList = res.data.inList
+                }
+            })
+            outAndIn.OutNeedToOut().then(res=>{
+                if (res.data.status_code === true){
+                    this.outList = res.data.outList
+                }
+            })
+            
+        }
+       
     },
     methods:{
         managerToDeal(){
             this.$router.push('/managerCheck')
+        },
+        //普通用户直接跳到出入库界面
+        userToDealIn(){
+            this.$router.push('/inStock')
+        },
+        userToDealOut(){
+            this.$router.push('/outStock')
         }
+
     }
 
 }

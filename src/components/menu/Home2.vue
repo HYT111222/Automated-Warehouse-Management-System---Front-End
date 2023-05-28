@@ -106,6 +106,9 @@ export default{
        
       };
     },
+    created(){
+        this.username = window.sessionStorage.getItem('userName')
+    },
     methods:{
         reload() {
         this.isRouterAlive = false;
