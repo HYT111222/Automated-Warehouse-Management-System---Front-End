@@ -1,9 +1,14 @@
 <template>
-    <div>库区货架管理</div>
+    <div>
+     仓库管理模块
+    </div>
   </template>
   
   <script>
   export default{
+    data(){
+      
+    }
       
   }
   </script>

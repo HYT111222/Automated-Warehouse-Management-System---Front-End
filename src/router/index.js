@@ -11,7 +11,6 @@ import inStock from '@/components/menu/outAndIn/inStock.vue'
 import addIn from '@/components/menu/outAndIn/addInOrder.vue'
 import outStock from '@/components/menu/outAndIn/outStock.vue'
 import Area from '@/components/menu/StockManage/Area.vue'
-import Shelf from '@/components/menu/StockManage/Shelf.vue'
 import data from '@/components/menu/data.vue'
 import Parcel from '@/components/menu/parcelManage.vue'
 import inNeedToCheck from '@/components/menu/outAndIn/managerCheck.vue'
@@ -40,7 +39,6 @@ const routes = [
       { path: '/addNewIn', component: addIn},
       { path: '/outStock', component: outStock},
       { path: '/area', component: Area},
-      { path: '/shelf', component: Shelf},
       { path: '/parcel', component: Parcel},
       { path: '/data', component: data},
       { path: '/inStock', component: inStock },
