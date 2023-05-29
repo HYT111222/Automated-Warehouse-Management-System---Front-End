@@ -25,28 +25,28 @@
                     </el-form-item>
                     <el-form-item  prop="orderID" class="textInput2 el-form-item">
                     <span slot="label"  style="color: #403b3b; ">订 单 号:</span>
-                    <el-input placeholder="只能由数字组成" size="small" v-model="queryConditions.orderID" clearable></el-input>
+                    <el-input placeholder="只能由数字组成,5-16位" size="small" v-model="queryConditions.orderID" clearable></el-input>
                     </el-form-item>
                     <el-form-item  prop="inID" class="textInput el-form-item">
                     <span slot="label"  style="color: #403b3b">入 库 单 号:</span>
                     <el-input placeholder="14个字符,如20230510195801" size="small" v-model="queryConditions.inID" clearable style="width: 220px;"></el-input>
                     </el-form-item>
-                    
         </el-form>
         <div style="display: flex;float: right;margin-bottom:10px;">
-                    <el-button type="primary"  icon="el-icon-search"  round size="small">搜索</el-button>
-                    <el-button type="info" plain icon="el-icon-refresh-right" round size="small">重置</el-button> 
+                    <el-button type="primary" :loading="Loading" @click="searchMag('queryConditions')" icon="el-icon-search"  round size="small">搜索</el-button>
+                    <el-button type="info" plain icon="el-icon-refresh-right" round size="small" @click="clearFilter('queryConditions')">重置</el-button> 
         </div>
-        
     </el-card>
     <el-card style="margin-top: 10px;">
             <el-button type="primary" icon="el-icon-plus" size="small" style="float:left;padding: 6px;margin-bottom: 10px;" @click="addNew">新建入库单</el-button>
-            <el-button type="danger" icon="el-icon-delete" size="small" plain style="float:right;padding: 6px; margin-bottom: 10px;">批量删除</el-button>
-            <el-tooltip class="item" effect="light" content="清除所有筛选条件以及排序" placement="top-start">
-            <el-button type="primary" icon="el-icon-refresh-right" plain size="small" circle style="padding:5px;float: right;"></el-button>
+            <el-button type="danger" @click="deleteMultitude" :loading="Loading" icon="el-icon-delete" size="small" plain style="float:right;padding: 6px; margin-bottom: 10px;">批量删除</el-button>
+            <el-tooltip class="item" effect="light" content="清除所有筛选条件、恢复默认排序、清空选择" placement="top-start">
+            <el-button type="primary" icon="el-icon-refresh-right" @click="resetDateFilter" plain size="small" circle style="padding:5px;float: right;"></el-button>
             </el-tooltip>
-            <!--表头等操作-->
-            <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" style="width: 100%" @selection-change="handleSelectionChange" 
+            <!--表头等操作@filter-change="handleFilterChange"-->
+            <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" style="width: 100%" 
+            ref="tableData"
+            @selection-change="handleSelectionChange" 
             :header-row-style="{height:'30px'}" 
             :header-cell-style="{background:'#f5f7fa',padding:'0px',textAlign: 'center'}"
             :row-style="{height:'40px'}" :cell-style="{padding:'0px', textAlign: 'center' }" 
@@ -67,34 +67,34 @@
             </el-table-column>
             <el-table-column prop="userName" sortable label="申请人" >
             </el-table-column>
+            <!-- column-key="aStatus"-->
             <el-table-column prop="inStatus" label="入库状态" 
-            :filters="[{ text: '待入库', value: '待入库' }, { text: '已入库', value: '已入库' }]"
+            :filters="[{ text: '待入库', value: '待入库' }, { text: '已入库', value: '已入库' },
+                       { text: '待审核', value: '待审核' }, { text: '已拒绝', value: '已拒绝' }]"
             :filter-method="filterTag"
-            filter-placement="bottom-end">
+            filter-placement="bottom-end"
+            >
             <template slot-scope="scope">
-                <!-- <el-tag
-                size="small"
-                :type="scope.row.inStatus === '待入库' ? 'primary' : 'success'"
-                disable-transitions>{{scope.row.inStatus}}</el-tag> -->
-                <el-tooltip class="item" :disabled="scope.row.inStatus === '待入库' ? false : true" effect="light" :content="scope.row.inStatus === '待入库' ? '点击修改状态' : '已成功入库'" placement="top-start">
+                <el-tooltip class="item" :disabled="scope.row.inStatus === '已入库' ? true : false" effect="light" 
+                :content="scope.row.inStatus === '已入库' ? '已成功入库' : '点击查看详情并修改状态'" placement="top-start">
                 <el-button 
                 plain
                 round
                 size="small"
                 style="height: 30px;width: auto; padding: 4px;"
-                @click="handleClick(scope.row)"
-                :type="scope.row.inStatus === '待入库' ? 'warning' : 'success'"
-                >{{scope.row.inStatus}}<i :class="scope.row.inStatus === '待入库' ? 'el-icon-edit' : ''"></i></el-button>
+                :disabled="scope.row.inStatus === '已入库'? true:false"
+                @click="modifyAndView(scope.row)"
+                :type="scope.row.inStatus === '已入库' ? 'success' : 'warning'"
+                >{{scope.row.inStatus}}<i :class="scope.row.inStatus === '已入库' ? '' : 'el-icon-edit'"></i></el-button>
             </el-tooltip>
-                <!-- <el-button type="primary" icon="el-icon-edit" circle size="small"></el-button> -->
             </template>
         </el-table-column>
         <el-table-column
             label="操作">
         <template slot-scope="scope">
             <div style=" display: flex;">
-                <el-button @click="handleClick(scope.row)" type="text" size="small" >查看/编辑</el-button>
-                <el-button @click="handleClick(scope.row)" type="text" size="small" >删除</el-button>
+                <el-button @click="modifyAndView(scope.row)" type="text" size="small" >查看/编辑</el-button>
+                <el-button @click="deleteOne(scope.row)" type="text" size="small" >删除</el-button>
             </div>
         </template>
         </el-table-column>
@@ -114,11 +114,20 @@
 </template>
 <script>
 /**
- * 普通用户只能修改自己申请的订单，编辑已拒绝/待入库/待审批的订单内容，删除已拒绝的订单，能够查看所有订单
- * 普通用户：待入库——》已入库
- * 管理员：能查看所有订单，并且编辑已拒绝/待入库/待审批的订单内容，删除已拒绝/待入库的订单，
- * 修改所有订单是状态，待审核——>已拒绝/待入库，已拒绝/待入库——>已拒绝/待入库，待入库——>已入库
+ * 共同：待入库——>已入库，查看所有订单 ，删除已拒绝/待入库的订单
+ * 普通用户：修改自己申请的订单（已拒绝/待审批）
+ * 管理员：修改所有订单（已拒绝/待审批），待审核——>已拒绝/待入库，已拒绝——>待入库
  */
+import outAndIn from '@/api/outAndIn.js'
+//判断待删除的订单的状态
+function judgeState(arry){
+        for (let i=0;i<arry.length;i++){
+            if (arry[i].inStatus != '待入库'|| '已拒绝'){
+                return false
+            }
+        }
+        return true
+}
 export default{
     data(){
         var inID = (rule, value, callback) => {
@@ -131,11 +140,13 @@ export default{
         var orderID = (rule, value, callback) => {
             if (!value) {
                 callback()
-            }else if (!/^[0-9]*$/.test(value)){
+            }else if (!/^[0-9]{5,16}$/.test(value)){
                 return callback(new Error('只能由数字组成'))
             }
         }
         return{
+            
+            Loading:false,
             queryConditions:{
                 inStatus: '全部状态',
                 inID: '',
@@ -251,47 +262,146 @@ export default{
             pageSize: 5 // 每页的数据条数
         }
     },
+    created(){
+       this.fetchNewTable()
+    },
     methods:{
-        //每页条数改变时触发 选择一页显示多少行
+      /**----------------------------------通用方法--------------------------------- */
+      //刷新表格
+      fetchNewTable(){
+            outAndIn.showIn().then(res=>{
+                if (res.data.status_code == true){
+                    this.tableData = res.data.inList
+                }
+            })
+      },
+      /**---------------------------------------普通方法----------------------------------------- */
+      //新建
+      addNew(){
+        window.sessionStorage.setItem('isNew','true')
+        this.$router.push({ path: '/addNewIn' })
+      },
+      //查询
+      searchMag(formName){
+        this.$refs[formName].validate((valid) => {
+            if (valid) {
+                this.Loading = true
+                outAndIn.searchIn(this.queryConditions).then(res=>{
+                    if(res.data.status_code === true){
+                        this.tableData = res.data.inList
+                    }else {
+                        this.$message({
+                            message:"查询异常",
+                            type:"error"
+                        })
+                    }
+                }).finally(res=>{
+                    this.Loading =false
+                })
+            }
+        })
+      },
+      //批量删除
+      deleteMultitude(){
+        if (judgeState(this.multipleSelection) == true){
+            var temp = []
+            for (let i=0;i<this.multipleSelection.length;i++){
+                temp.push(this.multipleSelection[i].inID)
+            }
+            console.log(temp)
+            outAndIn.InDelMultitude(temp).then(res=>{
+                if(res.data.status_code ==true){
+                    this.fetchNewTable()
+                    this.$message({
+                        message:"删除成功",
+                        type:"success"
+                    })
+                }else{
+                    this.$message({
+                        message:"删除异常",
+                        type:"error"
+                    })
+                }
+            })
+        } else {
+            this.$message({
+                message:"只能删除已拒绝或待入库的订单",
+                type:"error"
+            })
+        }
+      },
+      //删除一条
+      deleteOne(row){
+        var temp_ = []
+        temp_.push(row)
+        if (judgeState(temp_) == true){
+            var temp = []
+            temp.push(row.inID)
+            outAndIn.InDelMultitude(temp).then(res=>{
+                if(res.data.status_code ==true){
+                    this.fetchNewTable()
+                    this.$message({
+                        message:"删除成功",
+                        type:"success"
+                    })
+                }else{
+                    this.$message({
+                        message:"删除异常",
+                        type:"error"
+                    })
+                }
+            })
+        }else {
+            this.$message({
+                message:"只能删除已拒绝或待入库的订单",
+                type:"error"
+            })
+        }
+      },
+      //查看编辑、修改状态
+      modifyAndView(row){
+        window.sessionStorage.setItem('isNew','false')
+        window.sessionStorage.setItem('row',row.inID)
+        this.$router.push({ path: '/addNewIn' })
+      },
+     /**----------------------表格相关方法-------------------------------- */
+     //全表筛选器
+     handleFilterChange(filters) {
+        console.log(filters)
+        const _this = this;
+        if (filters.aStatus.length > 0) {
+
+        } else {
+
+        }
+     },
+     //每页条数改变时触发 选择一页显示多少行
      handleSizeChange(val) {
-         console.log(`每页 ${val} 条`);
          this.currentPage = 1;
          this.pageSize = val;
      },
      //当前页改变时触发 跳转其他页
      handleCurrentChange(val) {
-         console.log(`当前页: ${val}`);
          this.currentPage = val;
      },
-        //清除筛选器
+        //清除筛选器等
         resetDateFilter() {
-        this.$refs.filterTable.clearFilter('date');
+        this.$refs['tableData'].clearFilter()
+        this.$refs['tableData'].clearSort()
+        this.$refs['tableData'].clearSelection();
       },
-      clearFilter() {
-        this.$refs.filterTable.clearFilter();
+      //表单清空
+      clearFilter(formName) {
+        this.$refs[formName].resetFields()
       },
       //状态标签筛选器
       filterTag(value, row) {
         return row.inStatus === value;
       },
-      //取消选择
-        toggleSelection(rows) {
-        if (rows) {
-          rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
-          });
-        } else {
-          this.$refs.multipleTable.clearSelection();
-        }
-      },
       //多选
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      //新建
-      addNew(){
-        this.$router.push({ path: '/addNewIn' })
-      }
     }
 
 }

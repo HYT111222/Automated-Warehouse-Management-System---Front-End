@@ -127,6 +127,8 @@ export default{
         if (command == 'loginout') {
             localStorage.removeItem('ms_username');
             this.$router.push('/login');
+            window.localStorage.clear()
+            window.sessionStorage.clear()
         }
         },
         // 联系客服
