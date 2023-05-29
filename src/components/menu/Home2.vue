@@ -58,14 +58,20 @@
                         <el-menu-item index="outStock" >出库</el-menu-item> 
                         <el-menu-item index="managerCheck" >审批中心</el-menu-item> 
                     </el-submenu>
-                    <el-submenu index="3" class="test">
+                    <el-menu-item index="area" >
+                        <template slot="title">
+                        <i class="el-icon-s-home"></i>
+                        <span>仓库管理模块</span>
+                        </template>
+                    </el-menu-item>
+                    <!-- <el-submenu index="3" class="test">
                         <template slot="title">
                         <i class="el-icon-s-home"></i>
                         <span slot="title">仓库管理模块</span>
                         </template>
                         <el-menu-item index="area" >库区管理</el-menu-item>
                         <el-menu-item index="shelf" >货架管理</el-menu-item>
-                    </el-submenu>
+                    </el-submenu> -->
                     <el-menu-item index="parcel" >
                         <template slot="title">
                         <i class="el-icon-s-cooperation"></i>
