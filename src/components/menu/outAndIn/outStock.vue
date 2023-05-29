@@ -34,41 +34,41 @@
                     
         </el-form>
         <div style="display: flex;float: right;margin-bottom:10px;">
-                    <el-button type="primary"  icon="el-icon-search"  round size="small">搜索</el-button>
-                    <el-button type="info" plain icon="el-icon-refresh-right" round size="small">重置</el-button> 
+                    <el-button type="primary" @click="searchMag('queryConditions')" :loading="Loading" icon="el-icon-search"  round size="small">搜索</el-button>
+                    <el-button type="info" @click="clearFilter('queryConditions')" plain icon="el-icon-refresh-right" round size="small">重置</el-button> 
         </div>
         
     </el-card>
     <el-card style="margin-top: 10px;">
             <el-button type="primary" icon="el-icon-plus" size="small" style="float:left;padding: 6px;margin-bottom: 10px;" @click="addNew">新建出库单</el-button>
-            <el-button type="danger" icon="el-icon-delete" size="small" plain style="float:right;padding: 6px; margin-bottom: 10px;">批量删除</el-button>
-            <el-tooltip class="item" effect="light" content="清除所有筛选条件以及排序" placement="top-start">
-            <el-button type="primary" icon="el-icon-refresh-right" plain size="small" circle style="padding:5px;float: right;"></el-button>
+            <el-button type="danger" @click="deleteMultitude" :loading="Loading" icon="el-icon-delete" size="small" plain style="float:right;padding: 6px; margin-bottom: 10px;">批量删除</el-button>
+            <el-tooltip class="item" effect="light" content="清除所有筛选条件、恢复默认排序、清空选择" placement="top-start">
+            <el-button type="primary" @click="resetDateFilter" icon="el-icon-refresh-right" plain size="small" circle style="padding:5px;float: right;"></el-button>
             </el-tooltip>
             <!--表头等操作-->
-            <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" style="width: 100%" @selection-change="handleSelectionChange" 
+            <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" style="width: 100%" 
+            ref="tableData"
+            @selection-change="handleSelectionChange" 
             :header-row-style="{height:'30px'}" 
             :header-cell-style="{background:'#f5f7fa',padding:'0px',textAlign: 'center'}"
             :row-style="{height:'40px'}" :cell-style="{padding:'0px', textAlign: 'center' }" 
             size='small' 
-            :default-sort = "{prop: 'outID', order: 'increasing'}"
-            >
+            :default-sort = "{prop: 'outID', order: 'increasing'}">
             <!--排序、操作按钮、下拉详情tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)-->
             <el-table-column
-            type="selection"
-            >
+            type="selection">
             </el-table-column>
-            <el-table-column  prop="outID" sortable label="入库单号"  >
+            <el-table-column  prop="outID" sortable label="出库单号"  >
             </el-table-column>
             <el-table-column  prop="orderID" sortable label="订单号">
             </el-table-column>
-            <el-table-column prop="outPeopleName" label="入库交接人" ></el-table-column>
-            <el-table-column prop="outTime" sortable label="入库时间" >
+            <el-table-column prop="outPeopleName" label="出库交接人" ></el-table-column>
+            <el-table-column prop="outTime" sortable label="出库时间" >
             </el-table-column>
             <el-table-column prop="userName" sortable label="申请人" >
             </el-table-column>
             <!--状态待修改-->
-            <el-table-column prop="outStatus" label="入库状态" 
+            <el-table-column prop="outStatus" label="出库状态" 
             :filters="[{ text: '待出库', value: '待出库' }, { text: '已出库', value: '已出库' }
             , { text: '待审核', value: '待审核' }, { text: '已拒绝', value: '已拒绝' }]"
             :filter-method="filterTag"
@@ -94,7 +94,7 @@
         <template slot-scope="scope">
             <div style=" display: flex;">
                 <el-button @click="handleClick(scope.row)" type="text" size="small" >查看/编辑</el-button>
-                <el-button @click="handleClick(scope.row)" type="text" size="small" >删除</el-button>
+                <el-button @click="deleteOne(scope.row)" type="text" size="small" >删除</el-button>
             </div>
         </template>
         </el-table-column>
@@ -114,11 +114,20 @@
 </template>
 <script>
 /**
- * 普通用户只能修改自己申请的订单，编辑已拒绝/待出库/待审批的订单内容，删除已拒绝的订单，能够查看所有订单
- * 普通用户：待出库——》已出库
- * 管理员：能查看所有订单，并且编辑已拒绝/待出库/待审批的订单内容，删除已拒绝/待出库的订单，
- * 修改所有订单的状态：待审核——>已拒绝/待入库，已拒绝/待入库——>已拒绝/待入库，待入库——>已入库
+ * 共同：待入库——>已入库，查看所有订单 ，删除已拒绝/待入库的订单
+ * 普通用户：修改自己申请的订单（已拒绝/待入库/待审批）
+ * 管理员：修改所有订单（已拒绝/待入库/待审批），待审核——>已拒绝/待入库，已拒绝/待入库——>已拒绝/待入库
  */
+import outAndIn from '@/api/outAndIn.js'
+//判断待删除的订单的状态
+function judgeState(arry){
+        for (let i=0;i<arry.length;i++){
+            if (arry[i].outStatus != '待入库'|| '已拒绝'){
+                return false
+            }
+        }
+        return true
+}
 export default{
     data(){
         var outID = (rule, value, callback) => {
@@ -131,114 +140,115 @@ export default{
         var orderID = (rule, value, callback) => {
             if (!value) {
                 callback()
-            }else if (!/^[0-9]*$/.test(value)){
+            }else if (!/^[0-9]{5,16}$/.test(value)){
                 return callback(new Error('只能由数字组成'))
             }
         }
         return{
+            Loading:false,
             queryConditions:{
                 outStatus: '全部状态',
                 outID: '',
                 orderID: '',
                 outPeopleName: ''
             },
-            tableData:[
-                {
-                    outID: "20230510192800",
-                    orderID: "20230510192801",
-                    outPeopleName: "王小利",
-                    outStatus:'已入库',
-                    outTime: "2023-05-10-19:58:01",
-                    userName: "小李"
-                },
-                {
-                    outID: "20230510192800",
-                    orderID: "20230510192801",
-                    outPeopleName: "王小利",
-                    outStatus:'已入库',
-                    outTime: "2023-05-10-19:58:01",
-                    userName: "小李"
-                },
-                {
-                    outID: "20230510192800",
-                    orderID: "20230510192801",
-                    outPeopleName: "王小利",
-                    outStatus:'已入库',
-                    outTime: "2023-05-10-19:58:01",
-                    userName: "小李"
-                },
-                {
-                    outID: "20230510192800",
-                    orderID: "20230510192801",
-                    outPeopleName: "王小利",
-                    outStatus:'已入库',
-                    outTime: "2023-05-10-19:58:01",
-                    userName: "小李"
-                },
-                {
-                    outID: "20230510192800",
-                    orderID: "20230510192801",
-                    outPeopleName: "王小利",
-                    outStatus:'已入库',
-                    outTime: "2023-05-10-19:58:01",
-                    userName: "小李"
-                },
-                {
-                    outID: "20230510192800",
-                    orderID: "20230510192801",
-                    outPeopleName: "王小利",
-                    outStatus:'已入库',
-                    outTime: "2023-05-10-19:58:01",
-                    userName: "小李"
-                },
-                {
-                    outID: "20230510192800",
-                    orderID: "20230510192801",
-                    outPeopleName: "王小利",
-                    outStatus:'已入库',
-                    outTime: "2023-05-10-19:58:01",
-                    userName: "小李"
-                },
-                {
-                    outID: "20230510192800",
-                    orderID: "20230510192801",
-                    outPeopleName: "王小利",
-                    outStatus:'已入库',
-                    outTime: "2023-05-10-19:58:01",
-                    userName: "小李"
-                },
-                {
-                    outID: "20230510192800",
-                    orderID: "20230510192801",
-                    outPeopleName: "王小利",
-                    outStatus:'已入库',
-                    outTime: "2023-05-10-19:58:01",
-                    userName: "小李"
-                },
-                {
-                    outID: "20230510192800",
-                    orderID: "20230510192801",
-                    outPeopleName: "王小利",
-                    outStatus:'已入库',
-                    outTime: "2023-05-10-19:58:01",
-                    userName: "小李"
-                },
-                {
-                    outID: "20230510192800",
-                    orderID: "20230510192801",
-                    outPeopleName: "王小利",
-                    outStatus:'已入库',
-                    outTime: "2023-05-10-19:58:01",
-                    userName: "小李"
-                },
-                {
-                    outID: "20230510192800",
-                    orderID: "20230510192801",
-                    outPeopleName: "王小利",
-                    outStatus:'已入库',
-                    outTime: "2023-05-10-19:58:01",
-                    userName: "小李"
-                },
+            tableData:[{}
+                // {
+                //     outID: "20230510192800",
+                //     orderID: "20230510192801",
+                //     outPeopleName: "王小利",
+                //     outStatus:'已入库',
+                //     outTime: "2023-05-10-19:58:01",
+                //     userName: "小李"
+                // },
+                // {
+                //     outID: "20230510192800",
+                //     orderID: "20230510192801",
+                //     outPeopleName: "王小利",
+                //     outStatus:'已入库',
+                //     outTime: "2023-05-10-19:58:01",
+                //     userName: "小李"
+                // },
+                // {
+                //     outID: "20230510192800",
+                //     orderID: "20230510192801",
+                //     outPeopleName: "王小利",
+                //     outStatus:'已入库',
+                //     outTime: "2023-05-10-19:58:01",
+                //     userName: "小李"
+                // },
+                // {
+                //     outID: "20230510192800",
+                //     orderID: "20230510192801",
+                //     outPeopleName: "王小利",
+                //     outStatus:'已入库',
+                //     outTime: "2023-05-10-19:58:01",
+                //     userName: "小李"
+                // },
+                // {
+                //     outID: "20230510192800",
+                //     orderID: "20230510192801",
+                //     outPeopleName: "王小利",
+                //     outStatus:'已入库',
+                //     outTime: "2023-05-10-19:58:01",
+                //     userName: "小李"
+                // },
+                // {
+                //     outID: "20230510192800",
+                //     orderID: "20230510192801",
+                //     outPeopleName: "王小利",
+                //     outStatus:'已入库',
+                //     outTime: "2023-05-10-19:58:01",
+                //     userName: "小李"
+                // },
+                // {
+                //     outID: "20230510192800",
+                //     orderID: "20230510192801",
+                //     outPeopleName: "王小利",
+                //     outStatus:'已入库',
+                //     outTime: "2023-05-10-19:58:01",
+                //     userName: "小李"
+                // },
+                // {
+                //     outID: "20230510192800",
+                //     orderID: "20230510192801",
+                //     outPeopleName: "王小利",
+                //     outStatus:'已入库',
+                //     outTime: "2023-05-10-19:58:01",
+                //     userName: "小李"
+                // },
+                // {
+                //     outID: "20230510192800",
+                //     orderID: "20230510192801",
+                //     outPeopleName: "王小利",
+                //     outStatus:'已入库',
+                //     outTime: "2023-05-10-19:58:01",
+                //     userName: "小李"
+                // },
+                // {
+                //     outID: "20230510192800",
+                //     orderID: "20230510192801",
+                //     outPeopleName: "王小利",
+                //     outStatus:'已入库',
+                //     outTime: "2023-05-10-19:58:01",
+                //     userName: "小李"
+                // },
+                // {
+                //     outID: "20230510192800",
+                //     orderID: "20230510192801",
+                //     outPeopleName: "王小利",
+                //     outStatus:'已入库',
+                //     outTime: "2023-05-10-19:58:01",
+                //     userName: "小李"
+                // },
+                // {
+                //     outID: "20230510192800",
+                //     orderID: "20230510192801",
+                //     outPeopleName: "王小利",
+                //     outStatus:'已入库',
+                //     outTime: "2023-05-10-19:58:01",
+                //     userName: "小李"
+                // },
             ],
             outPeopleNameList:["小李",'小猪'],
             rules:{
@@ -251,47 +261,132 @@ export default{
             pageSize: 5 // 每页的数据条数
         }
     },
+    created(){
+        this.fetchNewTable()
+    },
     methods:{
+      /**----------------------------------通用方法--------------------------------- */
+      //刷新表格
+      fetchNewTable(){
+            outAndIn.showIn().then(res=>{
+                if (res.data.status_code == true){
+                    this.tableData = res.data.inList
+                }
+            })
+      },
+       
+      /**------------------------------------------普通方法------------------------------------------- */
+      //新建
+      addNew(){
+        this.$router.push({ path: '/addNewOut' })
+      },
+      //查询
+      searchMag(formName){
+        this.$refs[formName].validate((valid) => {
+            if (valid) {
+                this.Loading = true
+                outAndIn.searchOut(this.queryConditions).then(res=>{
+                    if(res.data.status_code === true){
+                        this.tableData = res.data.outList
+                    }else {
+                        this.$message({
+                            message:"查询异常",
+                            type:"error"
+                        })
+                    }
+                }).finally(res=>{
+                    this.Loading =false
+                })
+            }
+        })
+      },
+       //批量删除
+       deleteMultitude(){
+        if (judgeState(this.multipleSelection) == true ){
+            var temp = []
+            for (let i=0;i<this.multipleSelection.length;i++){
+                temp.push(this.multipleSelection[i].inID)
+            }
+            outAndIn.OutDelMultitude(temp).then(res=>{
+                if(res.data.status_code ==true){
+                    this.fetchNewTable()
+                    this.$message({
+                        message:"删除成功",
+                        type:"success"
+                    })
+                }else{
+                    this.$message({
+                        message:"删除异常",
+                        type:"error"
+                    })
+                }
+            })
+        }else {
+            this.$message({
+                message:"只能删除待出库和已拒绝的订单",
+                type:'error'
+            })
+        }
+        
+      },
+       //删除一条
+       deleteOne(row){
+        var temp_ = []
+        temp_.push(row)
+        if (judgeState(temp_) == true ){
+            var temp = []
+            temp.push(row.inID)
+            console.log(temp)
+            outAndIn.OutDelMultitude(temp).then(res=>{
+                if(res.data.status_code ==true){
+                    this.fetchNewTable()
+                    this.$message({
+                        message:"删除成功",
+                        type:"success"
+                    })
+                }else{
+                    this.$message({
+                        message:"删除异常",
+                        type:"error"
+                    })
+                }
+            })
+        }else {
+            this.$message({
+                message:"只能删除待出库和已拒绝的订单",
+                type:'error'
+            })
+        }
+        
+      },
+       /**-------------------------------表格操作等------------------------------------------ */
         //每页条数改变时触发 选择一页显示多少行
      handleSizeChange(val) {
-         console.log(`每页 ${val} 条`);
          this.currentPage = 1;
          this.pageSize = val;
      },
      //当前页改变时触发 跳转其他页
      handleCurrentChange(val) {
-         console.log(`当前页: ${val}`);
          this.currentPage = val;
      },
-        //清除筛选器
-        resetDateFilter() {
-        this.$refs.filterTable.clearFilter('date');
+     //清除筛选器、排序
+     resetDateFilter() {
+        this.$refs['tableData'].clearFilter()
+        this.$refs['tableData'].clearSort()
+        this.$refs['tableData'].clearSelection()
       },
-      clearFilter() {
-        this.$refs.filterTable.clearFilter();
+      //表单重置
+      clearFilter(formName) {
+        this.$refs[formName].resetFields()
       },
       //状态标签筛选器
       filterTag(value, row) {
         return row.outStatus === value;
       },
-      //取消选择
-        toggleSelection(rows) {
-        if (rows) {
-          rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
-          });
-        } else {
-          this.$refs.multipleTable.clearSelection();
-        }
-      },
       //多选
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      //新建
-      addNew(){
-        this.$router.push({ path: '/addNewOut' })
-      }
     }
 
 }

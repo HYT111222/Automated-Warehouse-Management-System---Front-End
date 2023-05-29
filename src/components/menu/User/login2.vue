@@ -198,7 +198,8 @@ export default {
                     //保存token、用户权限类型、用户名
                     window.localStorage.setItem('token',res.data.token)
                     window.sessionStorage.setItem('authority',res.data.authority)
-                    window.sessionStorage.setItem('userName',this.loginForm.userID)
+                    window.sessionStorage.setItem('userID',this.loginForm.userID)
+                    window.sessionStorage.setItem('userName',res.data.userName)
                     // 登录成功
                     this.$message({
                     message: '登录成功',

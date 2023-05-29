@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Welcome from '@/components/other/welcome.vue'
 import Login from '@/components/menu/User/login2.vue'
 import Home from '@/components/menu/Home2.vue'
 import HomePage from '@/components/menu/User/HomePage.vue'
@@ -18,15 +17,12 @@ import Parcel from '@/components/menu/parcelManage.vue'
 import inNeedToCheck from '@/components/menu/outAndIn/managerCheck.vue'
 import addNewOUt from '@/components/menu/outAndIn/addOutOrder.vue'
 //https://registry.npm.taobao.org
-import Register from '@/components/menu/User/Register.vue';
 import User from '@/components/menu/personalPage.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
-  // { path: '/welcome', redirect: '/Login'},
   { path: '/login', component: Login ,},
-  // { path: '/register', component: Register },
   { path: '/', redirect: '/Login' },
   {
     path: '/home',
@@ -57,7 +53,7 @@ const router = new VueRouter({
   routes
 })
 
-// 路由守卫
+// 路由守卫（加别的页面跳转判断，如添加等）
 // router.beforeEach((to, from, next) => {
 //   if(to.path == '/login' || to.path == '/'){
 //       next()

@@ -185,7 +185,7 @@ export default{
     },
     created(){
         this.time=nowTime()
-        this.userName = window.sessionStorage.getItem('userName')
+        this.userName = window.sessionStorage.getItem('userID')
         if (window.sessionStorage.getItem('authority') === 'manager'){//管理员
             this.authority= '仓库管理员'
             user.managerHomePage().then(res=>{
