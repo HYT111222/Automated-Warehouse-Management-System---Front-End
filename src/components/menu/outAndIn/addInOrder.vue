@@ -11,8 +11,7 @@
             <div style="float: right;">
                 <el-button icon="el-icon-d-arrow-right" size="large" circle style="border: transparent !important;" @click="backToInSock"></el-button>
             </div>
-            <el-form :model="newInOrder" label-width="100px" ref="newInOrder" :rules="rules" 
-            style="width: 500px; text-align:center;display: inline-block;height: 170px;">
+            <el-form :model="newInOrder" label-width="100px" ref="newInOrder" :rules="rules" style="width: 500px; text-align:center;display: inline-block;height: 170px;">
                 <el-form-item  style="display: inline-block">
                     <span slot="label"  class="span-text">入库单号:</span>
                     <el-tag type="success" class="tag">{{ newInOrder.inID }}</el-tag>
@@ -20,14 +19,14 @@
                 <el-form-item style="display: inline-block">
                     <span slot="label"  class="span-text">订单号:</span>
                     <el-tag v-if="isEdit===false" class="tag">{{ newInOrder.orderID }}</el-tag>
-                    <el-input  placeholder="数字组成" clearable v-model="newInOrder.orderID" class="tag"
+                    <el-input placeholder="数字组成" v-model="newInOrder.orderID" style="width: 250px;font-size: 18px;" 
                     v-else></el-input>
                 </el-form-item>
                 <el-form-item prop="" class="" style="display: inline-block">
                     <span slot="label"  class="span-text">入库交接人:</span>
                     <el-tag v-if="isEdit===false" class="tag">{{ newInOrder.inPeopleName }}</el-tag>
                     <el-select v-else v-model="newInOrder.inPeopleName"  clearable placeholder="请选择" 
-                    class="tag">
+                    style="width: 250px;font-size: 18px">
                         <el-option
                         v-for="item in inPeopleNameList"
                         :key="item"
@@ -40,7 +39,7 @@
                 <el-form-item  class="el-form-item-span" v-if="isNew=='false'">
                     <!--可修改：处于编辑状态，管理员，状态为待审核/已拒绝-->
                     <span slot="label"  class="span-text">订单状态:</span>
-                    <el-tag v-if="isEdit===false" class="tag">{{ newInOrder.inStatus }}</el-tag>
+                    <el-tag v-if="isEdit===false" style="width: 250px;height: 40px; text-align: center; font-size: 16px;padding: 4px;">{{ newInOrder.inStatus }}</el-tag>
                     <el-radio-group v-model="newInOrder.inStatus" size="medium" v-else>
                     <el-radio-button label="已拒绝" ></el-radio-button>
                     <el-radio-button label="待审核"></el-radio-button>
@@ -83,6 +82,7 @@
         :row-style="{height:'40px'}" :cell-style="{padding:'0px', textAlign: 'center' }"
         :cell-class-name="tableCellClassName"
         @row-dblclick="dbclick"
+        @row-contextmenu="rightClick" 
         v-if="isEdit===true">
             <el-table-column
             type="selection">
@@ -183,6 +183,7 @@
             <el-table-column prop="toAddr"  label="收货地址" >
                 <template slot-scope="scope">
                     <el-tooltip class="item" effect="light" content="双击编辑" placement="top-start">
+                    <!--v-if去判断双击的是不是当前单元格-->
                     <el-input 
                         @blur="hideInput" 
                         size="mini" 
@@ -230,8 +231,8 @@
         style="margin-top: 7px;">
         </el-pagination>
         <div style="text-align: center;margin-top: 10px;">
-            <el-button round type="primary" :loading="Loading" @click="saveOrder('newInOrder')" style="padding: 10px;" :disabled="isEdit===false?true:false">保 存</el-button>
-            <el-button round type="success" :loading="Loading" @click="enter" style="padding: 10px;" v-if="enterOp===true">入 库</el-button>
+            <el-button round type="primary" style="padding: 10px;" :disabled="isEdit===false?true:false">保 存</el-button>
+            <el-button round type="success" style="padding: 10px;" v-if="enterOp===true">入 库</el-button>
             <el-popover
             placement="top"
             width="160"
@@ -250,18 +251,18 @@
             <div style="text-align: center;">
                 <el-form-item label-width="70px" prop="parcelID" style="margin-top: 0%; display: inline-block;">
                 <span slot="label"  style="color: #403b3b;font-size: 16px;">包裹ID</span>
-                <el-input class="id-input" v-model="parcel.parcelID" size="small" placeholder="由5-20位数字组成" autocomplete="off" style="width: 200px;" ></el-input>
+                <el-input class="id-input" v-model="parcel.parcelID" size="small" autocomplete="off" style="width: 200px;" ></el-input>
                 </el-form-item>
             </div>
             
             <el-card style="float: left; " class="add-order">
-                <el-form-item label="发货人" prop="fromPeople"  style="margin: 13px;">
-                <el-input v-model="parcel.fromPeople" size="small" placeholder="只能包含汉字、字母、数字" autocomplete="off"></el-input>
+                <el-form-item label="发货人"  style="margin: 13px;">
+                <el-input v-model="parcel.fromPeople" size="small" placeholder="姓名（校验是否要中文）" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="发货人电话" prop="fromPhone" style="margin: 13px;">
-                <el-input v-model="parcel.fromPhone" placeholder="请输入合法电话号码" size="small" autocomplete="off"></el-input>
+                <el-form-item label="发货人电话"  style="margin: 13px;">
+                <el-input v-model="parcel.fromPhone" size="small" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="省区" prop="fromAddrSelect" style="margin: 13px;"><!-- :options="options"-->
+                <el-form-item label="省区"  style="margin: 13px;"><!-- :options="options"-->
                     <el-cascader
                     size="small"
                     :options="options"
@@ -269,18 +270,18 @@
                     @change="handleChange">
                 </el-cascader>
                 </el-form-item>
-                <el-form-item label="详细地址" prop="fromAddrDetail" style="margin: 13px;margin-top: 18px;">
-                <el-input v-model="parcel.fromAddrDetail" placeholder="请填写详细地址" size="small" autocomplete="off" type="textarea"></el-input>
+                <el-form-item label="详细地址"  style="margin: 13px;margin-top: 18px;">
+                <el-input v-model="parcel.fromAddrDetail" size="small" autocomplete="off" type="textarea"></el-input>
                 </el-form-item>
             </el-card>
             <el-card style="float:right;"  class="add-order">
-                <el-form-item label=" 收货人" prop="toPeople" style="margin: 13px;">
-            <el-input v-model="parcel.toPeople" placeholder="只能包含汉字、字母、数字" size="small" autocomplete="off"></el-input>
+                <el-form-item label=" 收货人"  style="margin: 13px;">
+            <el-input v-model="parcel.toPeople" placeholder="姓名（校验是否要中文）" size="small" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="收货人电话" prop="toPhone" style="margin: 13px;">
-            <el-input v-model="parcel.toPhone" size="small" placeholder="请输入合法的电话号码" autocomplete="off"></el-input>
+            <el-form-item label="收货人电话"  style="margin: 13px;">
+            <el-input v-model="parcel.toPhone" size="small" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="省/市/区" prop="toAddrSelect" placeholder="请选择省市区" style="margin: 13px;">
+            <el-form-item label="省/市/区"  style="margin: 13px;">
                 <el-cascader
                 size="small"
                 :options="options"
@@ -288,8 +289,8 @@
                 @change="handleChange_to">
                 </el-cascader>
             </el-form-item>
-            <el-form-item label="详细地址" prop="toAddrDetail" style="margin: 13px;margin-top: 18px;">
-                <el-input v-model="parcel.toAddrDetail" size="small" placeholder="请填写具体地址" autocomplete="off" type="textarea"></el-input>
+            <el-form-item label="详细地址"  style="margin: 13px;margin-top: 18px;">
+                <el-input v-model="parcel.toAddrDetail" size="small" autocomplete="off" type="textarea"></el-input>
                 </el-form-item>
             </el-card>
         </el-form>
@@ -338,57 +339,17 @@ function getCodeToText (codeStr) {
         }
         return temp;
 }
-//回显 str=北京市/直辖市/海淀区/XXXXXX
-function getTextToCode (str) {
-    
-}
 export default {
     //修改、查看、添加都是一样的界面
     data(){
         var parcelID = (rule, value, callback) => {
             if (!value) {
-                return callback(new Error('不可为空'))
-            }else if (!/^[0-9]{5,20}$/.test(value)){
-                return callback(new Error('只能由数字组成,5-20位'))
-            }else {
                 callback()
+            }else if (!/^[0-9]*$/.test(value)){
+                return callback(new Error('只能由数字组成'))
             }
         }
-        var phone = ( rule, value, callback) => {
-            if (!value) {
-                return callback(new Error('请输入电话号码'))
-            }else if (!/^[1][3,4,5,6,7,8,9][0-9]{9}$/.test(value)){
-                return callback(new Error('手机号不合法'))
-            }else {
-                callback()
-            }
-        }
-        var inPeople = ( rule, value, callback) => {
-            if (!value) {
-                return callback(new Error('请选择入库交接人'))
-            }else {
-                callback()
-            }
-        }
-        var name = (rule, value, callback) => {
-            if (!value) {
-            return callback(new Error('请输入姓名'))
-            } else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]{2,20}$/.test(value)) {
-            return callback(new Error('只含汉字、数字、字母,2-20位'))
-            } else {
-            callback()
-            }
-       }
-       var addrDetail = (rule, value, callback) => {
-            if (!value) {
-              return callback(new Error('请输入详细地址'))
-            } else {
-              callback()
-            }
-       }
-       
         return{
-            Loading:false,
             isEdit:true,//控制内容修改
             isNew:'true',//控制是否为空以及组件是否出现
             switch_disable:true,//控制是否可编辑
@@ -419,26 +380,26 @@ export default {
                     toPhone: "12345678911",
                     toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
                     },
-                    // {
-                    // parcelID: "234567890344",
-                    // fromPeople: "小王李",
-                    // fromPhone: "12345678911",
-                    // fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    // //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    // toPeople: "胡晓",
-                    // toPhone: "12345678911",
-                    // toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    // },
-                    // {
-                    // parcelID: "234567890345",
-                    // fromPeople: "小王李",
-                    // fromPhone: "12345678911",
-                    // fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    // //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    // toPeople: "胡晓",
-                    // toPhone: "12345678911",
-                    // toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    // }
+                    {
+                    parcelID: "234567890344",
+                    fromPeople: "小王李",
+                    fromPhone: "12345678911",
+                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
+                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
+                    toPeople: "胡晓",
+                    toPhone: "12345678911",
+                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
+                    },
+                    {
+                    parcelID: "234567890345",
+                    fromPeople: "小王李",
+                    fromPhone: "12345678911",
+                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
+                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
+                    toPeople: "胡晓",
+                    toPhone: "12345678911",
+                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
+                    }
                 ]
             },
             parcel:{
@@ -448,7 +409,6 @@ export default {
                 fromAddrSelect: [],
                 fromAddrSelect2:'',
                 fromAddrDetail: "",
-                
                 toPeople: "",
                 toPhone: "",
                 toAddrSelect:[],
@@ -457,18 +417,12 @@ export default {
            },
             rules:{
                 inID:[{}],
-                orderID:[{validator: parcelID, trigger: 'blur'}],
-                inPeopleName:[{validator: inPeople, trigger: 'blur'}],
-                //对话框
+                orderID:[{}],
+                inPeopleName:[{}],
                 parcelID:[{validator: parcelID, trigger: 'blur'}],
-                fromPeople:[{validator: name, trigger: 'blur'}],
-                fromPhone:[{validator: phone, trigger: 'blur'}],
-                fromAddrSelect: [{required: true, message: '请选择', trigger: 'blur'}],
-                fromAddrDetail:[{validator: addrDetail, trigger: 'blur'}],
-                toPeople:[{validator: name, trigger: 'blur'}],
-                toPhone:[{validator: phone, trigger: 'blur'}],
-                toAddrSelect: [{required: true, message: '请选择', trigger: 'blur'}],
-                toAddrDetail:[{validator: addrDetail, trigger: 'blur'}]
+                fromPeople:[{}],
+                fromPhone:[{}],
+                fromAddrDetail:[{}]
             },
             //表格分页
             multipleSelection: [],//选中的信息
@@ -530,38 +484,26 @@ export default {
     /**----------------------------------------普通操作方法------------------------------------------------- */
     //确定添加
     sureAdd(formName){
-        console.log(formName)
-        this.$refs[formName].validate((valid) => {
-            console.log(valid)
-            if (valid){
-                //表单验证后
-                let temp={
-                    parcelID :"",
-                    fromPeople: "",
-                    fromPhone: "",
-                    fromAddr: "",
-                    toPeople: "",
-                    toPhone: "",
-                    toAddr: "",
-                }
-                temp.parcelID=this.parcel.parcelID
-                temp.fromPeople=this.parcel.fromPeople
-                temp.fromPhone=this.parcel.fromPhone
-                temp.fromAddr=this.parcel.fromAddrSelect2+this.parcel.fromAddrDetail
-                temp.toPeople=this.parcel.toPeople
-                temp.toPhone=this.parcel.toPhone
-                temp.toAddr=this.parcel.toAddrSelect2+this.parcel.toAddrDetail
-                this.newInOrder.parcelList.push(temp)
-                this.dialogFormVisible=false
-                this.clearForm(formName)
-            }else {
-                this.$message({
-                    message:'填写不完全或输入不合法',
-                    type:'error'
-                })
-            }
-        })
-        
+        //表单验证后
+        let temp={
+                parcelID :"",
+                fromPeople: "",
+                fromPhone: "",
+                fromAddr: "",
+                toPeople: "",
+                toPhone: "",
+                toAddr: "",
+        }
+        temp.parcelID=this.parcel.parcelID
+        temp.fromPeople=this.parcel.fromPeople
+        temp.fromPhone=this.parcel.fromPhone
+        temp.fromAddr=this.parcel.fromAddrSelect2+this.parcel.fromAddrDetail
+        temp.toPeople=this.parcel.toPeople
+        temp.toPhone=this.parcel.toPhone
+        temp.toAddr=this.parcel.toAddrSelect2+this.parcel.toAddrDetail
+        this.newInOrder.parcelList.push(temp)
+        this.dialogFormVisible=false
+        this.clearForm(formName)
     },
     //返回入库界面
     backToInSock(){
@@ -579,83 +521,16 @@ export default {
         }
         console.log(this.newInOrder.parcelList)
     },
-    //保存新订单或者保存修改
-    saveOrder(formName){
-        this.$refs[formName].validate(valid=>{
-            if(valid){ 
-                if (this.isNew == 'true'){
-                    this.Loading =true
-                    outAndIn.addInOrder(this.newInOrder).then(res=>{
-                    console.log(res)
-                    if(res.data.status_code == true){
-                        this.$message({
-                            message:"申请成功，待审批",
-                            type:'success'
-                        })
-                        this.$router.push('/inStock')
-                    }else {
-                        this.$message({
-                            message:"申请异常",
-                            type:'error'
-                        })
-                    }
-                }).finally(res=>{
-                    this.Loading =false
-                })
-                }else {
-                    this.$refs[formName].validate(valid=>{
-                    if(valid){
-                        this.Loading =true
-                        outAndIn.ExamineIn(this.newInOrder).then(res=>{
-                            console.log(res)
-                            if(res.data.status_code == true){
-                                this.$message({
-                                    message:"修改成功",
-                                    type:'success'
-                                })
-                            }else {
-                                this.$message({
-                                    message:"修改失败",
-                                    type:'error'
-                                })
-                            }
-                        }).finally(res=>{
-                            this.Loading =false
-                        })
-                    }
-                })
-                }
-                
-            }
-        })
+    dealStatusDisable(){
+        if(this.isEdit == true && this.authority==='manager'){
+            return true
+        }
+        return false
+        
     },
-    //入库操作
-    enter(formName){
-        this.newInOrder.inStatus = '已入库'
-        this.$refs[formName].validate(valid=>{
-            if(valid){
-                this.Loading =true
-                outAndIn.ExamineIn(this.newInOrder).then(res=>{
-                    console.log(res)
-                    if(res.data.status_code == true){
-                        this.$message({
-                            message:"入库成功",
-                            type:'success'
-                        })
-                    }else {
-                        this.$message({
-                            message:"入库失败",
-                            type:'error'
-                        })
-                    }
-                })
-            }
-        })
-    },
-    
     /**-----------------------------------------表格操作------------------------------------------------ */
      //解码
-    handleChange (value) {
+     handleChange (value) {
         this.parcel.fromAddrSelect2 = getCodeToText(value)
     },
     handleChange_to (value) {
@@ -680,17 +555,20 @@ export default {
     // 获得当前双击的单元格的横竖index，然后拼接成一个唯一字符串用于判断，并赋给currentCell
     // 拼接后类似这样："1,0","1,1",
     dbclick(row,column) {
-        // this.dialogFormVisible = true
         this.currentCell = row.index + ',' + column.index;
-      //  这里必须要setTimeout，因为在点击的时候，input才刚被v-if显示出来，不然拿不到dom
+        // 这里必须要setTimeout，因为在点击的时候，input才刚被v-if显示出来，不然拿不到dom
         setTimeout(() => {
             // 双击后自动获得焦点
             this.$refs[row.index + ',' + column.index].focus();
         })
     },
-   // 当input失去焦点的时候，隐藏input
+    // 当input失去焦点的时候，隐藏input
     hideInput(){
         this.currentCell = null;
+    },
+    // 表格右击的功能
+    rightClick(row, column, event) {
+        console.log(row.index,column.index)
     },
     //取消选择
     toggleSelection(rows) {
