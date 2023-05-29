@@ -6,6 +6,7 @@ import Home from '@/components/menu/Home2.vue'
 import HomePage from '@/components/menu/User/HomePage.vue'
 import Enter from '@/components/menu/peopleManage/Enter.vue'
 import Outer from '@/components/menu/peopleManage/Outer.vue'
+import Staff from '@/components/menu/peopleManage/Staff.vue'
 import Company from '@/components/menu/peopleManage/Company.vue'
 import inStock from '@/components/menu/outAndIn/inStock.vue'
 import addIn from '@/components/menu/outAndIn/addInOrder.vue'
@@ -35,6 +36,7 @@ const routes = [
       // 写子路由  显示在主区域
       { path: '/enter', component: Enter },
       { path: '/outer', component: Outer },
+      { path: '/staff', component: Staff},
       { path: '/personalPage', component: User},
       { path: '/company', component: Company},
       { path: '/addNewIn', component: addIn},

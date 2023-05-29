@@ -12,6 +12,7 @@
     "core-js": "^3.8.3",
     "element-china-area-data": "^6.0.2",
     "element-ui": "^2.15.13",
+    "js-md5": "^0.7.3",
     "pixi.js": "^7.2.4",
     "svg-sprite-loader": "^6.0.11",
     "svg.js": "^2.7.1",
