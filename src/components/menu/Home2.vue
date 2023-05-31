@@ -7,7 +7,7 @@
                     <div class="logo"><img src="@/assets/image/logo.png" width="40px" height="40px"  class="img"/></div>
                         <span class="system-name text">xxx仓库管理系统</span>
                 </div>
-
+               
             </div>
             <div class="header-right">
                 <div class="header-user-con">
@@ -19,7 +19,7 @@
                     <el-dropdown class="user-name text-shadow" trigger="click" @command="handleCommand" >
                         <span class="el-dropdown-link text" >
                             {{ username }}
-
+                            
                             <i class="el-icon-caret-bottom"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
@@ -48,7 +48,6 @@
                         <el-menu-item index="enter" class="el-menu-item">入库交接人</el-menu-item>
                         <el-menu-item index="outer" >出库交接人</el-menu-item>
                         <el-menu-item index="company" >客户</el-menu-item>
-                        <el-menu-item index="staff" >员工</el-menu-item>
                     </el-submenu>
                     <el-submenu index="2" class="test">
                         <template slot="title">
@@ -56,8 +55,8 @@
                         <span slot="title">出/入库管理模块</span>
                         </template>
                         <el-menu-item index="inStock" >入库</el-menu-item>
-                        <el-menu-item index="outStock" >出库</el-menu-item>
-                        <el-menu-item index="managerCheck" >审批中心</el-menu-item>
+                        <el-menu-item index="outStock" >出库</el-menu-item> 
+                        <el-menu-item index="managerCheck" >审批中心</el-menu-item> 
                     </el-submenu>
                     <el-submenu index="3" class="test">
                         <template slot="title">
@@ -104,7 +103,7 @@ export default{
       return {
         username:'HYT',
         isRouterAlive: true,
-
+       
       };
     },
     created(){
@@ -124,7 +123,7 @@ export default{
             console.log(key, keyPath);
         },
         // 用户名下拉菜单选择事件
-        handleCommand(command) {
+        handleCommand(command) { 
         if (command == 'loginout') {
             localStorage.removeItem('ms_username');
             this.$router.push('/login');
@@ -146,41 +145,41 @@ export default{
 
 <style lang="less" scoped>
 /**动画 */
-// .text-shadow2:hover{
-//     transform: scale(107%,107%);
-//     // text-shadow: 3px 5px 5px #8f929a;
-// }
-// .text-shadow:hover{
-//     transform: scale(110%,110%);
-//     text-shadow: 3px 5px 5px #8f929a;
-// }
-// .test:hover,
-// .el-menu-item:hover{
-//     transform: scale(110%,110%);
-//     box-shadow:5px 5px 10px rgba(0,0,0,0.5);
-// }
-//  .slide-fade {
-//   position: fixed;
-//   left: 0;
-//   right: 0;
-//   width: 100%;
-// }
-// .slide-fade-enter,
-// .slide-fade-leave-to {
-//   left: 0;
-//   top: 0;
-//   right: 0;
-//   position:relative;
-//   transform: translateY(100%);
-// }
-// .slide-fade-enter-active {
-//   transition: all 0.5s linear;
-// }
-// .slide-fade-leave-active {
-//   transition: all 0.5s linear;
-//   transform: translateY(-100%);
-//   z-index: 9;
-// }
+.text-shadow2:hover{
+    transform: scale(107%,107%);
+    // text-shadow: 3px 5px 5px #8f929a;
+}
+.text-shadow:hover{
+    transform: scale(110%,110%);
+    text-shadow: 3px 5px 5px #8f929a;
+}
+.test:hover,
+.el-menu-item:hover{
+    transform: scale(110%,110%);
+    text-shadow:5px 5px 10px rgba(21, 118, 208, 0.5);
+}
+ .slide-fade {
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+.slide-fade-enter,
+.slide-fade-leave-to {
+  left: 0;
+  top: 0;
+  right: 0;
+  position:relative;
+  transform: translateY(100%);
+}
+.slide-fade-enter-active {
+  transition: all 0.5s linear;
+}
+.slide-fade-leave-active {
+  transition: all 0.5s linear;
+  transform: translateY(-100%);
+  z-index: 9;
+} 
 /**------------------总------------------------ */
 .whole {
     height: 100%;
@@ -250,7 +249,7 @@ export default{
 }
 .user-name {
     margin-left: 15px;
-
+  
 }
 .el-dropdown-link {
     cursor: pointer;
