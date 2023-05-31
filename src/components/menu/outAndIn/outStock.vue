@@ -3,7 +3,7 @@
         <el-card class="box-card">
         <el-form :model="queryConditions" :rules="rules" ref="queryConditions" label-width="90px" class="form" :inline="true">
                     <el-form-item class="el-form-item">
-                    <span slot="label" style="color: #403b3b">入库单状态:</span>
+                    <span slot="label" style="color: #403b3b">出库单状态:</span>
                     <el-radio-group v-model="queryConditions.outStatus" class="status-group" size="small">
                     <el-radio-button label="待审核" ></el-radio-button>
                     <el-radio-button label="待出库"></el-radio-button>
@@ -13,7 +13,7 @@
                     </el-radio-group>
                     </el-form-item>
                     <el-form-item prop="" class="textInput el-form-item">
-                    <span slot="label"  style="color: #403b3b;">   出库人姓名:</span>
+                    <span slot="label"  style="color: #403b3b;">   出库交接人:</span>
                     <el-select  v-model="queryConditions.outPeopleName" size="small" clearable placeholder="请选择" style="width: 150px;">
                         <el-option
                         v-for="item in outPeopleNameList"
@@ -75,25 +75,24 @@
             filter-placement="bottom-end">
             <template slot-scope="scope">
              <!--处理待修改-->
-                <el-tooltip class="item" :disabled="scope.row.outStatus === '待入库' ? false : true" effect="light" 
-                :content="scope.row.outStatus === '待入库' ? '点击修改状态' : '已成功入库'" placement="top-start">
+                <el-tooltip class="item" :disabled="scope.row.outStatus === '待出库' ? true : false" effect="light" 
+                :content="scope.row.outStatus === '待出库' ? '已成功入库' : '点击修改状态'" placement="top-start">
                 <el-button 
                 plain
                 round
                 size="small"
                 style="height: 30px;width: auto; padding: 4px;"
-                @click="handleClick(scope.row)"
-                :type="scope.row.outStatus === '待入库' ? 'warning' : 'success'"
-                >{{scope.row.outStatus}}<i :class="scope.row.outStatus === '待入库' ? 'el-icon-edit' : ''"></i></el-button>
+                @click="modifyAndView(scope.row)"
+                :type="scope.row.outStatus === '待出库' ? 'success' : 'warning'"
+                >{{scope.row.outStatus}}<i :class="scope.row.outStatus === '待出库' ? '' : 'el-icon-edit'"></i></el-button>
             </el-tooltip>
-    
             </template>
         </el-table-column>
         <el-table-column
             label="操作">
         <template slot-scope="scope">
             <div style=" display: flex;">
-                <el-button @click="handleClick(scope.row)" type="text" size="small" >查看/编辑</el-button>
+                <el-button @click="modifyAndView(scope.row)" type="text" size="small" >查看/编辑</el-button>
                 <el-button @click="deleteOne(scope.row)" type="text" size="small" >删除</el-button>
             </div>
         </template>
@@ -152,15 +151,15 @@ export default{
                 orderID: '',
                 outPeopleName: ''
             },
-            tableData:[{}
-                // {
-                //     outID: "20230510192800",
-                //     orderID: "20230510192801",
-                //     outPeopleName: "王小利",
-                //     outStatus:'已入库',
-                //     outTime: "2023-05-10-19:58:01",
-                //     userName: "小李"
-                // },
+            tableData:[
+                {
+                    outID: "20230510192800",
+                    orderID: "20230510192801",
+                    outPeopleName: "王小利",
+                    outStatus:'已入库',
+                    outTime: "2023-05-10-19:58:01",
+                    userName: "小李"
+                },
                 // {
                 //     outID: "20230510192800",
                 //     orderID: "20230510192801",
@@ -268,9 +267,9 @@ export default{
       /**----------------------------------通用方法--------------------------------- */
       //刷新表格
       fetchNewTable(){
-            outAndIn.showIn().then(res=>{
+            outAndIn.showOut().then(res=>{
                 if (res.data.status_code == true){
-                    this.tableData = res.data.inList
+                    this.tableData = res.data.outList
                 }
             })
       },
@@ -278,6 +277,7 @@ export default{
       /**------------------------------------------普通方法------------------------------------------- */
       //新建
       addNew(){
+        window.sessionStorage.setItem('isNew_out','true')
         this.$router.push({ path: '/addNewOut' })
       },
       //查询
@@ -358,6 +358,12 @@ export default{
             })
         }
         
+      },
+      //查看编辑、修改状态
+      modifyAndView(row){
+        window.sessionStorage.setItem('isNew_out','false')
+        window.sessionStorage.setItem('row_out',row.outID)
+        this.$router.push({ path: '/addNewOut' })
       },
        /**-------------------------------表格操作等------------------------------------------ */
         //每页条数改变时触发 选择一页显示多少行
