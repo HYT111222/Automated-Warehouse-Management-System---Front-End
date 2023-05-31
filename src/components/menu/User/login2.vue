@@ -54,7 +54,7 @@
                         <el-input class=" register-input"  placeholder="中文组成,长度在2以上"  v-model="registerForm.userName" style="width: 300px;"></el-input>
                             </div>   
                         </el-form-item>
-                        <el-form-item  prop="managerID" class="hover"  v-show="!isCode" style="margin-top: 0px;margin-bottom: 13px;" v-if="registerForm.isManager=='true'">
+                        <el-form-item  prop="managerID" class="hover"  v-show="!isCode" style="margin-top: 0px;margin-bottom: 13px;" v-if="registerForm.isManager=='false'">
                             <div style="display: flex;justify-content: center; align-items: center;">
                                 <span slot="label" class="register-span" >管理员ID</span>
                         <el-input class="register-input"  placeholder="长度为2-16，数字或字母组成" v-model="registerForm.managerID"  style="width: 300px;"></el-input>

@@ -11,7 +11,8 @@
             <div style="float: right;">
                 <el-button icon="el-icon-d-arrow-right" size="large" circle style="border: transparent !important;" @click="backToInSock"></el-button>
             </div>
-            <el-form :model="newInOrder" label-width="100px" ref="newInOrder" :rules="rules" style="width: 500px; text-align:center;display: inline-block;height: 170px;">
+            <el-form :model="newInOrder" label-width="100px" ref="newInOrder" :rules="rules" 
+            style="width: 500px; text-align:center;display: inline-block;height: 170px;">
                 <el-form-item  style="display: inline-block">
                     <span slot="label"  class="span-text">入库单号:</span>
                     <el-tag type="success" class="tag">{{ newInOrder.inID }}</el-tag>
@@ -19,14 +20,14 @@
                 <el-form-item style="display: inline-block">
                     <span slot="label"  class="span-text">订单号:</span>
                     <el-tag v-if="isEdit===false" class="tag">{{ newInOrder.orderID }}</el-tag>
-                    <el-input placeholder="数字组成" v-model="newInOrder.orderID" style="width: 250px;font-size: 18px;" 
+                    <el-input  placeholder="数字组成" clearable v-model="newInOrder.orderID" class="tag"
                     v-else></el-input>
                 </el-form-item>
                 <el-form-item prop="" class="" style="display: inline-block">
                     <span slot="label"  class="span-text">入库交接人:</span>
                     <el-tag v-if="isEdit===false" class="tag">{{ newInOrder.inPeopleName }}</el-tag>
                     <el-select v-else v-model="newInOrder.inPeopleName"  clearable placeholder="请选择" 
-                    style="width: 250px;font-size: 18px">
+                    class="tag">
                         <el-option
                         v-for="item in inPeopleNameList"
                         :key="item"
@@ -39,7 +40,7 @@
                 <el-form-item  class="el-form-item-span" v-if="isNew=='false'">
                     <!--可修改：处于编辑状态，管理员，状态为待审核/已拒绝-->
                     <span slot="label"  class="span-text">订单状态:</span>
-                    <el-tag v-if="isEdit===false" style="width: 250px;height: 40px; text-align: center; font-size: 16px;padding: 4px;">{{ newInOrder.inStatus }}</el-tag>
+                    <el-tag v-if="isEdit===false" class="tag">{{ newInOrder.inStatus }}</el-tag>
                     <el-radio-group v-model="newInOrder.inStatus" size="medium" v-else>
                     <el-radio-button label="已拒绝" ></el-radio-button>
                     <el-radio-button label="待审核"></el-radio-button>
@@ -82,7 +83,6 @@
         :row-style="{height:'40px'}" :cell-style="{padding:'0px', textAlign: 'center' }"
         :cell-class-name="tableCellClassName"
         @row-dblclick="dbclick"
-        @row-contextmenu="rightClick" 
         v-if="isEdit===true">
             <el-table-column
             type="selection">
@@ -230,8 +230,8 @@
         style="margin-top: 7px;">
         </el-pagination>
         <div style="text-align: center;margin-top: 10px;">
-            <el-button round type="primary" style="padding: 10px;" :disabled="isEdit===false?true:false">保 存</el-button>
-            <el-button round type="success" style="padding: 10px;" v-if="enterOp===true">入 库</el-button>
+            <el-button round type="primary" :loading="Loading" @click="saveOrder('newInOrder')" style="padding: 10px;" :disabled="isEdit===false?true:false">保 存</el-button>
+            <el-button round type="success" :loading="Loading" @click="enter" style="padding: 10px;" v-if="enterOp===true">入 库</el-button>
             <el-popover
             placement="top"
             width="160"
@@ -338,6 +338,10 @@ function getCodeToText (codeStr) {
         }
         return temp;
 }
+//回显 str=北京市/直辖市/海淀区/XXXXXX
+function getTextToCode (str) {
+    
+}
 export default {
     //修改、查看、添加都是一样的界面
     data(){
@@ -375,13 +379,6 @@ export default {
             callback()
             }
        }
-       var addrSelect = (rule, value, callback) => {
-            if (!value) {
-              return callback(new Error('请选择地区'))
-            } else {
-              callback()
-            }
-       }
        var addrDetail = (rule, value, callback) => {
             if (!value) {
               return callback(new Error('请输入详细地址'))
@@ -391,6 +388,7 @@ export default {
        }
        
         return{
+            Loading:false,
             isEdit:true,//控制内容修改
             isNew:'true',//控制是否为空以及组件是否出现
             switch_disable:true,//控制是否可编辑
@@ -581,6 +579,80 @@ export default {
         }
         console.log(this.newInOrder.parcelList)
     },
+    //保存新订单或者保存修改
+    saveOrder(formName){
+        this.$refs[formName].validate(valid=>{
+            if(valid){ 
+                if (this.isNew == 'true'){
+                    this.Loading =true
+                    outAndIn.addInOrder(this.newInOrder).then(res=>{
+                    console.log(res)
+                    if(res.data.status_code == true){
+                        this.$message({
+                            message:"申请成功，待审批",
+                            type:'success'
+                        })
+                        this.$router.push('/inStock')
+                    }else {
+                        this.$message({
+                            message:"申请异常",
+                            type:'error'
+                        })
+                    }
+                }).finally(res=>{
+                    this.Loading =false
+                })
+                }else {
+                    this.$refs[formName].validate(valid=>{
+                    if(valid){
+                        this.Loading =true
+                        outAndIn.ExamineIn(this.newInOrder).then(res=>{
+                            console.log(res)
+                            if(res.data.status_code == true){
+                                this.$message({
+                                    message:"修改成功",
+                                    type:'success'
+                                })
+                            }else {
+                                this.$message({
+                                    message:"修改失败",
+                                    type:'error'
+                                })
+                            }
+                        }).finally(res=>{
+                            this.Loading =false
+                        })
+                    }
+                })
+                }
+                
+            }
+        })
+    },
+    //入库操作
+    enter(formName){
+        this.newInOrder.inStatus = '已入库'
+        this.$refs[formName].validate(valid=>{
+            if(valid){
+                this.Loading =true
+                outAndIn.ExamineIn(this.newInOrder).then(res=>{
+                    console.log(res)
+                    if(res.data.status_code == true){
+                        this.$message({
+                            message:"入库成功",
+                            type:'success'
+                        })
+                    }else {
+                        this.$message({
+                            message:"入库失败",
+                            type:'error'
+                        })
+                    }
+                })
+            }
+        })
+    },
+    
     /**-----------------------------------------表格操作------------------------------------------------ */
      //解码
     handleChange (value) {
@@ -619,10 +691,6 @@ export default {
    // 当input失去焦点的时候，隐藏input
     hideInput(){
         this.currentCell = null;
-    },
-    // 表格右击的功能
-    rightClick(row, column, event) {
-        console.log(row.index,column.index)
     },
     //取消选择
     toggleSelection(rows) {

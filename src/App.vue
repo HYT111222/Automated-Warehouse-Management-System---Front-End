@@ -34,6 +34,7 @@ export default {
 </script>
 
 <style >
+@import url('@/assets/icon/iconfont.css');
 /**删除浏览器滚动条 */
 ::-webkit-scrollbar {
   width: 0 !important;
