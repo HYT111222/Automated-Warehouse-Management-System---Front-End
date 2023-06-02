@@ -64,7 +64,7 @@
       </el-card>
 
       <el-card style="margin-top: 10px;">
-            <el-button type="danger" icon="el-icon-delete" size="small" plain style="float:right;padding: 6px; margin-bottom: 10px;">批量删除</el-button>
+            <el-button type="danger" icon="el-icon-delete" size="small" plain style="float:right;padding: 6px; margin-bottom: 10px;">删除</el-button>
             <!--表头等操作-->
             <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" style="width: 100%" @selection-change="handleSelectionChange" 
             :header-row-style="{height:'30px'}" 
@@ -89,8 +89,22 @@
             label="操作">
         <template slot-scope="scope">
             <div style=" display: flex;">
-                <el-button @click="handleClick(scope.row)" type="text" size="small" >查看详情</el-button>
-                <el-button @click="handleClick(scope.row)" type="text" size="small" >删除</el-button>
+                <el-button @click="dialogTableVisible = true" type="text" size="small" >查看详情  </el-button>
+                    <el-dialog title="包裹详细信息" :visible.sync="dialogTableVisible">
+                        <el-descriptions>
+                        <el-descriptions-item label="包裹号">{{parcelinformation.parcelId}}</el-descriptions-item>
+                        <el-descriptions-item label="入库时间">{{parcelinformation.inTime}}</el-descriptions-item>
+                        <el-descriptions-item label="出库时间">{{parcelinformation.outTime}}</el-descriptions-item>
+                        <el-descriptions-item label="所在货架编号">{{parcelinformation.shelfId}}</el-descriptions-item>
+                        <el-descriptions-item label="所在货架位置">{{parcelinformation.shelfNumber}}</el-descriptions-item>
+                        <el-descriptions-item label="包裹状态">{{parcelinformation.parcelState}}</el-descriptions-item>
+                    </el-descriptions>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogTableVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="dialogTableVisible = false">确 定</el-button>
+                    </div>
+                    </el-dialog>
+                <el-button @click="handleClick(scope.row)" type="text" size="small" > 删除</el-button>
             </div>
         </template>
         </el-table-column>
@@ -127,6 +141,16 @@
             }
         }
     return{
+        parcelinformation:{
+            parcelId:'78913347',
+            inTime:'2023-5-28',
+            outTime:'',
+            shelfId:'23',
+            shelfNumber:'789',
+            parcelState:'未出库'
+        },
+        formLabelWidth:'120px',
+        dialogTableVisible: false,
         parcelConditions:{
             parcelId:'',
             parcelState:'全部状态',
