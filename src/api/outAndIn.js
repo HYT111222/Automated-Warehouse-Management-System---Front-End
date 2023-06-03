@@ -125,7 +125,7 @@ export default {
     })
   },
   /**
-   * 12.修改入库单状态
+   * 12.修改入库单
    * @param {*} data 
    * @returns 
    */
@@ -137,7 +137,7 @@ export default {
     })
   },
   /**
-   * 13.修改出库单状态
+   * 13.修改出库单
    * @param {*} data 
    * @returns 
    */
@@ -209,6 +209,15 @@ export default {
     return request({
       url: '/outAndIn/OutNeedToOut',
       method: 'get'
+    })
+  },
+  /**
+   * 20.根据ID获取包裹信息
+   */
+  searchParcel() {
+    return request({
+      url: '/parcel/searchParcel',
+      method: 'post'
     })
   },
 }
