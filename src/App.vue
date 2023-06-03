@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <router-view/>
-    <!-- <transition name="slide-fade">
+    <!-- <router-view/> -->
+    <transition name="slide-fade">
 	<router-view v-if="isRouterAlive"></router-view>
- </transition> -->
+ </transition>
   
   </div>
 </template>
@@ -39,10 +39,9 @@ export default {
 ::-webkit-scrollbar {
   width: 0 !important;
 }
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 0 !important;
-  /* height: 0; */
-}
+} */
 /**动画 */
 /* .slide-fade {
   position: fixed;
@@ -56,16 +55,14 @@ export default {
   top: 0;
   right: 0;
   position: absolute;
-  transform: translateX(100%);
+  transform: translateY(100%);
 }
 .slide-fade-enter-active {
   transition: all 0.5s ease;
 }
 .slide-fade-leave-active {
   transition: all 0.5s ease;
-  transform: translateX(-100%);
+  transform: translateY(-100%);
   z-index: 100;
 } */
-
-
 </style>

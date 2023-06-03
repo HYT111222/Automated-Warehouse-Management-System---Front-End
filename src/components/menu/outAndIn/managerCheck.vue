@@ -29,10 +29,7 @@
             </el-table-column>
             <el-table-column  prop="orderID" sortable label="订单号">
             </el-table-column>
-            <el-table-column prop="inPeopleName" label="入库交接人"  
-            :filters="inPeopleNameList"
-            :filter-method="filterTag"
-            filter-placement="bottom-end">
+            <el-table-column prop="inPeopleName" sortable label="入库交接人"  >
             <template slot-scope="scope">
                 <el-tag
                 size="small"
@@ -41,6 +38,11 @@
             </template>
         </el-table-column>
             <el-table-column prop="userName" sortable label="申请人" >
+                <template slot-scope="scope">
+                <el-tag
+                size="small"
+              >{{scope.row.userName}}</el-tag> 
+            </template>
             </el-table-column>
             <el-table-column prop="inStatus" label="入库状态" >
             <template slot-scope="scope">
@@ -82,18 +84,20 @@
             </el-table-column>
             <el-table-column  prop="orderID" sortable label="订单号">
             </el-table-column>
-            <el-table-column prop="outPeopleName" label="入库交接人" 
-            :filters="outPeopleNameList"
-            :filter-method="filterTag_out"
-            filter-placement="bottom-end">
-            <template slot-scope="scope">
+            <el-table-column prop="outPeopleName"  sortable label="入库交接人" >
+                <template slot-scope="scope">
                 <el-tag
                 size="small"
                 type="success"
                 disable-transitions>{{scope.row.outPeopleName}}</el-tag>
             </template>
-        </el-table-column>
+            </el-table-column>
             <el-table-column prop="userName" sortable label="申请人" >
+                <template slot-scope="scope">
+                <el-tag
+                size="small"
+              >{{scope.row.userName}}</el-tag> 
+            </template>
             </el-table-column>
             <el-table-column prop="outStatus" label="入库状态" >
             <template slot-scope="scope">
@@ -123,13 +127,17 @@
         </el-tab-pane>
         </el-tabs>
             </el-card>
-            <el-dialog :title="isInOrder === 'true' ? '入库申请单':'出库申请单'" :visible.sync="dialogFormVisible" :width="'700px'">
+            <el-dialog :title="isInOrder === 'true' ? '入库申请单':'出库申请单'" :visible.sync="dialogFormVisible" :width="'800px'">
                 <div >
                   <el-card style="text-align:center;margin-top: 0px;">
-                    <div style="float: right;">
-                <el-button icon="el-icon-d-arrow-right" size="large" circle style="border: transparent !important;" @click="backToInSock"></el-button>
-              
-            </div>
+                    <!-- <div style="float: right;">
+                        <el-tooltip class="item" effect="dark" content="" placement="top-start">
+                           <el-button icon="el-icon-d-arrow-right" size="large" circle style="border: transparent !important;" @click="leapToNext"></el-button>
+                        </el-tooltip>
+                    </div> -->
+                    <!-- <div style="float: left;">
+                       <el-button icon="el-icon-d-arrow-left" size="large" circle style="border: transparent !important;" @click="backToInSock"></el-button>
+                    </div> -->
             <el-form :model="dialogue" label-width="100px" ref="dialogue" :rules="rules" style="width: 500px; text-align:center;display: inline-block;height: 150px;">
                 <el-form-item  style="display: inline-block;margin-bottom: 0%;" >
                     <span slot="label"  style="color: #403b3b;" v-if="isInOrder === 'true'">入库单号:</span>
@@ -187,8 +195,8 @@
         style="margin-top: 7px;">
         </el-pagination>
         <div style="text-align: center;margin-top: 10px;">
-            <el-button round type="success" style="padding: 10px;">同 意</el-button>
-            <el-popover
+            <el-button round type="success" @click="agree" style="padding: 10px;">同 意</el-button>
+            <!-- <el-popover
             placement="top"
             width="160"
             v-model="dialogue.visible">
@@ -197,19 +205,19 @@
             <div style="text-align: right; margin: 0">
                 <el-button size="mini" type="text" style="padding: 4px;" @click="dialogue.visible = false">取消</el-button>
                 <el-button type="primary" size="mini" style="padding: 4px;" @click="dialogue.visible = false">确定</el-button>
-            </div>
-            <el-button round type="danger" style="padding: 10px;margin-left: 10px;"  slot="reference">拒 绝</el-button>
-            </el-popover>
-            <el-button round style="padding: 10px; margin-left: 10px;" slot="reference">取 消</el-button>
+            </div> -->
+            <el-button round type="danger" style="padding: 10px;margin-left: 10px;" @click="disagree">拒 绝</el-button>
+            <!-- </el-popover> -->
+            <el-button round style="padding: 10px; margin-left: 10px;" @click="dialogFormVisible=false">取 消</el-button>
         </div>
         </el-card>
     </div>
-   </el-dialog>
-        
+   </el-dialog> 
 </div>
 </template>
 <script>
-//计算百分比
+import outAndIn from '@/api/outAndIn.js'
+//计算百分比(每审批一个就调用一次)
 function calPercentage(percentage,list){
         var temp = percentage + 100/length(list)
         return temp
@@ -219,16 +227,18 @@ export default{
     data(){
         //未处理数量，
         return{
+            isIn:true,
             dialogFormVisible:false,
             /**入库 */
             currentPage: 1, // 当前页码
             pageSize: 10, // 每页的数据条数
-            percentage:40,//每处理一次订单就计算一次（percentage+100/inList的长度）
+            percentage:0,//每处理一次订单就计算一次（percentage+100/inList的长度）
             
             /**出库 */
             currentPage_out: 1, // 当前页码
             pageSize_out: 10, // 每页的数据条数
-            percentage_out:70,
+            percentage_out:0,
+
             outPeopleNameList:[{text: '小王', value: '小王'},{text: '小李', value: '小李'}],//从数据存储获得
             inPeopleNameList:[{text: '小王', value: '小王'},{text: '小李', value: '小李'}],//从数据存储获得
             inList:[
@@ -304,8 +314,6 @@ export default{
             isInOrder:'true',
             
             dialogue:{
-                visible:false,
-                input_dia:'',
                 //以下需要请求获得
                 inID: "string",
                 orderID: "string",
@@ -362,16 +370,33 @@ export default{
                     }
                 ]
             },
+            
             currentPage_dia: 1, // 当前页码
             pageSize_dia: 10, // 每页的数据条数
 
         }
     },
     created(){
-        
+        outAndIn.InNeedTocheck().then(res=>{
+            if(res.data.status_code){
+                this.inList = res.data.inList
+            }
+        })
+        outAndIn.OutNeedTocheck().then(res=>{
+            if(res.data.status_code){
+                this.outList = res.data.outList
+            }
+        })
+        if(this.inList.length == 0){
+            this.percentage =100
+        }
+        if(this.outList.length == 0){
+            this.percentage_out =100
+        }
     },
     methods:{
         /**---------------------------------整体适用---------------------------------------- */
+        //进度条颜色
         customColorMethod(percentage) {
             if (percentage < 30) {
             return '#909399';
@@ -382,71 +407,159 @@ export default{
             }
         },
         /**--------------------------待审核入库单表格操作---------------------------- */
+        //每页条数改变时触发 选择一页显示多少行
+        handleSizeChange(val) {
+            this.currentPage = 1;
+            this.pageSize = val;
+        },
+        //当前页改变时触发 跳转其他页
+        handleCurrentChange(val) {
+            this.currentPage = val;
+        },
+        //入库审阅
+        handleClick_dia(row){
+            //赋予对话框数据
+            outAndIn.singleInOrderDetail(row.inID).then(res=>{
+                if(res.data.status_code){
+                    this.dialogue.inID = res.data.inID
+                    this.dialogue.inPeopleName = res.data.inPeopleName
+                    this.dialogue.inStatus =res.data.inStatus
+                    this.dialogue.inTime =res.data.inTime
+                    this.dialogue.managerName = res.data.managerName
+                    this.dialogue.orderID = res.data.orderID
+                    this.dialogue.parcelList = res.data.parcelList
+                }
+            })
+            this.isIn = true
+            this.dialogFormVisible=true
+        },
+        /**-------------------------------------待审核出库单操作----------------------------------- */
+            //每页条数改变时触发 选择一页显示多少行
+        handleSizeChange_out(val) {
+            this.currentPage_out = 1;
+            this.pageSize_out = val;
+        },
+        //当前页改变时触发 跳转其他页
+        handleCurrentChange_out(val) {
+            this.currentPage_out = val;
+        },
+        //出库审核按钮
+        handleClick_dia_out(row){
+            //赋予对话框数据
+            outAndIn.singleOutOrderDetail(row.outID).then(res=>{
+                if(res.data.status_code){
+                    this.dialogue.inID = res.data.outID
+                    this.dialogue.inPeopleName = res.data.outPeopleName
+                    this.dialogue.inStatus =res.data.outStatus
+                    this.dialogue.inTime =res.data.outTime
+                    this.dialogue.managerName = res.data.managerName
+                    this.dialogue.orderID = res.data.orderID
+                    this.dialogue.parcelList = res.data.parcelList
+                }
+            })
+            this.isIn = false
+            this.dialogFormVisible=true
+        },
+        /**---------------------------------------对话框--------------------------------------- */
+        //每页条数改变时触发 选择一页显示多少行
+        handleSizeChange_dia(val) {
+            this.currentPage_dia = 1;
+            this.pageSize_dia = val;
+        },
+        //当前页改变时触发 跳转其他页
+        handleCurrentChange_dia(val) {
+            this.currentPage_dia = val;
+        },
+        //同意操作
+        agree(){
+           const _this = this
+           if(this.isIn){
+            this.dialogue.inStatus = '待入库'
+            outAndIn.ExamineIn(this.dialogue).then(res=>{
+                if(res.data.status_code){
+                    this.$message({
+                        message:"处理结果成功保存",
+                        type:'success'
+                    })
+                }else{
+                    this.$message({
+                        message:"处理异常",
+                        type:'success'
+                    })
+                }
+            })
+           }else {
+            let dialogue_out={
+                outID: _this.dialogue.inID,
+                orderID: _this.dialogue.orderID,
+                outPeopleName: _this.dialogue.inPeopleName,
+                outStatus: '待出库',
+                outTime: _this.dialogue.inTime,
+                userName: _this.dialogue.userName,
+                managerName: _this.dialogue.managerName,
+                parcelList: _this.dialogue.parcelList
+            }
+            outAndIn.ExamineOut(dialogue_out).then(res=>{
+                if(res.data.status_code){
+                    this.$message({
+                        message:"处理结果成功保存",
+                        type:'success'
+                    })
+                }else{
+                    this.$message({
+                        message:"处理异常",
+                        type:'success'
+                    })
+                }
+            })
+           }
+        },
+        //拒绝操作
+         disagree(){
+           const _this = this
+           if(this.isIn){
+            this.dialogue.inStatus = '已拒绝'
+            outAndIn.ExamineIn(this.dialogue).then(res=>{
+                if(res.data.status_code){
+                    this.$message({
+                        message:"处理结果成功保存",
+                        type:'success'
+                    })
+                }else{
+                    this.$message({
+                        message:"处理异常",
+                        type:'success'
+                    })
+                }
+            })
+           }else {
+            let dialogue_out={
+                outID: _this.dialogue.inID,
+                orderID: _this.dialogue.orderID,
+                outPeopleName: _this.dialogue.inPeopleName,
+                outStatus: '已拒绝',
+                outTime: _this.dialogue.inTime,
+                userName: _this.dialogue.userName,
+                managerName: _this.dialogue.managerName,
+                parcelList: _this.dialogue.parcelList
+            }
+            outAndIn.ExamineOut(dialogue_out).then(res=>{
+                if(res.data.status_code){
+                    this.$message({
+                        message:"处理结果成功保存",
+                        type:'success'
+                    })
+                }else{
+                    this.$message({
+                        message:"处理异常",
+                        type:'success'
+                    })
+                }
+            })
+           }
+        }
+    },
         
-     //每页条数改变时触发 选择一页显示多少行
-     handleSizeChange(val) {
-         console.log(`每页 ${val} 条`);
-         this.currentPage = 1;
-         this.pageSize = val;
-     },
-     //当前页改变时触发 跳转其他页
-     handleCurrentChange(val) {
-         console.log(`当前页: ${val}`);
-         this.currentPage = val;
-     },
-        //清除筛选器
-        resetDateFilter() {
-        this.$refs.filterTable.clearFilter('date');
-      },
-      clearFilter() {
-        this.$refs.filterTable.clearFilter();
-      },
-      //标签筛选器
-      filterTag(value, row) {
-        return row.inPeopleName === value;
-      },
-      //入库审阅
-      handleClick_dia(row){
-        //赋予对话框数据
-        this.dialogFormVisible=true
-      },
-      /**-------------------------------------待审核出库单操作----------------------------------- */
-          //每页条数改变时触发 选择一页显示多少行
-     handleSizeChange_out(val) {
-         console.log(`每页 ${val} 条`);
-         this.currentPage_out = 1;
-         this.pageSize_out = val;
-     },
-     //当前页改变时触发 跳转其他页
-     handleCurrentChange_out(val) {
-         console.log(`当前页: ${val}`);
-         this.currentPage_out = val;
-     },
-        //清除筛选器
-      resetDateFilter() {
-        this.$refs.filterTable.clearFilter('date');
-      },
-      clearFilter() {
-        this.$refs.filterTable.clearFilter();
-      },
-    //标签筛选器
-    filterTag_out(value, row) {
-        return row.outPeopleName === value;
-      },
-    },
-    handleClick_dia_out(row){
-
-    },
-    /**---------------------------------------对话框--------------------------------------- */
-    //每页条数改变时触发 选择一页显示多少行
-    handleSizeChange_dia(val) {
-        this.currentPage_dia = 1;
-        this.pageSize_dia = val;
-     },
-     //当前页改变时触发 跳转其他页
-     handleCurrentChange_dia(val) {
-         this.currentPage_dia = val;
-     },
 
 }
 </script>

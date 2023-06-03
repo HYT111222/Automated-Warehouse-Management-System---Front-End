@@ -128,6 +128,8 @@ export default{
         if (command == 'loginout') {
             localStorage.removeItem('ms_username');
             this.$router.push('/login');
+            window.localStorage.clear()
+            window.sessionStorage.clear()
         }
         },
         // 联系客服
@@ -144,41 +146,41 @@ export default{
 
 <style lang="less" scoped>
 /**动画 */
-// .text-shadow2:hover{
-//     transform: scale(107%,107%);
-//     // text-shadow: 3px 5px 5px #8f929a;
-// }
-// .text-shadow:hover{
-//     transform: scale(110%,110%);
-//     text-shadow: 3px 5px 5px #8f929a;
-// }
-// .test:hover,
-// .el-menu-item:hover{
-//     transform: scale(110%,110%);
-//     box-shadow:5px 5px 10px rgba(0,0,0,0.5);
-// }
-//  .slide-fade {
-//   position: fixed;
-//   left: 0;
-//   right: 0;
-//   width: 100%;
-// }
-// .slide-fade-enter,
-// .slide-fade-leave-to {
-//   left: 0;
-//   top: 0;
-//   right: 0;
-//   position:relative;
-//   transform: translateY(100%);
-// }
-// .slide-fade-enter-active {
-//   transition: all 0.5s linear;
-// }
-// .slide-fade-leave-active {
-//   transition: all 0.5s linear;
-//   transform: translateY(-100%);
-//   z-index: 9;
-// }
+.text-shadow2:hover{
+    transform: scale(107%,107%);
+    // text-shadow: 3px 5px 5px #8f929a;
+}
+.text-shadow:hover{
+    transform: scale(110%,110%);
+    text-shadow: 3px 5px 5px #8f929a;
+}
+.test:hover,
+.el-menu-item:hover{
+    transform: scale(110%,110%);
+    text-shadow:5px 5px 10px rgba(21, 118, 208, 0.5);
+}
+ .slide-fade {
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+.slide-fade-enter,
+.slide-fade-leave-to {
+  left: 0;
+  top: 0;
+  right: 0;
+  position:relative;
+  transform: translateY(100%);
+}
+.slide-fade-enter-active {
+  transition: all 0.5s linear;
+}
+.slide-fade-leave-active {
+  transition: all 0.5s linear;
+  transform: translateY(-100%);
+  z-index: 9;
+}
 /**------------------总------------------------ */
 .whole {
     height: 100%;
