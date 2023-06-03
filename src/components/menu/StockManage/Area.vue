@@ -172,6 +172,7 @@
   </template>
   
   <script>
+  import regionAndShelf from '@/api/regionAndShelf';
   export default{
     data(){
       return {

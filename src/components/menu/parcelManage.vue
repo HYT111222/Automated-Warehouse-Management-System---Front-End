@@ -59,7 +59,7 @@
         </el-form>
         <div style="display: flex;float: right;margin-bottom:10px;">
             <el-button type="primary"  icon="el-icon-search"  round size="small">搜索</el-button>
-            <el-button type="info" plain icon="el-icon-refresh-right" round size="small">重置</el-button> 
+            <el-button type="info" plain icon="el-icon-refresh-right" round size="small" @click="clearFilter('parcelConditions')">重置</el-button> 
         </div>
       </el-card>
 
@@ -124,6 +124,7 @@
   </template>
   
   <script>
+  import parcel from '@/api/parcel.js'
   export default{
     data(){
         var parcelId = (rule, value, callback) => {
@@ -268,6 +269,9 @@
     },
 
     methods:{
+    clearFilter(formName) {   //清空表单
+        this.$refs[formName].resetFields()
+    },
         //每页条数改变时触发 选择一页显示多少行
      handleSizeChange(val) {
          console.log(`每页 ${val} 条`);
