@@ -272,6 +272,11 @@ export default{
                     this.tableData = res.data.outList
                 }
             })
+            outAndIn.fetchOutPeopleNameList().then(res=>{
+                if (res.data.status_code ==true){
+                    this.outPeopleNameList =res.data.outPeopleNameList
+                }
+            })
       },
        
       /**------------------------------------------普通方法------------------------------------------- */
