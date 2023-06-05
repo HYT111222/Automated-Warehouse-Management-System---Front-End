@@ -14,7 +14,7 @@
                     </el-form-item>
                     <el-form-item prop="" class="textInput el-form-item">
                     <span slot="label"  style="color: #403b3b;">   入库人姓名:</span>
-                    <el-select  v-model="queryConditions.inPeopleName" size="small" clearable placeholder="请选择" style="width: 150px;h">
+                    <el-select  v-model="queryConditions.inPeopleName" size="small" clearable placeholder="请选择" style="width: 150px;">
                         <el-option
                         v-for="item in inPeopleNameList"
                         :key="item"
@@ -33,8 +33,8 @@
                     </el-form-item>
         </el-form>
         <div style="display: flex;float: right;margin-bottom:10px;">
-                    <el-button type="primary" :loading="Loading" @click="searchMag('queryConditions')" icon="el-icon-search"  round size="small">搜索</el-button>
-                    <el-button type="info" plain icon="el-icon-refresh-right" round size="small" @click="clearFilter('queryConditions')">重置</el-button> 
+          <el-button type="primary" :loading="Loading" @click="searchMag('queryConditions')" icon="el-icon-search"  round size="small">搜索</el-button>
+          <el-button type="info" plain icon="el-icon-refresh-right" round size="small" @click="clearFilter('queryConditions')">重置</el-button>
         </div>
     </el-card>
     <el-card style="margin-top: 10px;">
@@ -44,13 +44,13 @@
             <el-button type="primary" icon="el-icon-refresh-right" @click="resetDateFilter" plain size="small" circle style="padding:5px;float: right;"></el-button>
             </el-tooltip>
             <!--表头等操作@filter-change="handleFilterChange"-->
-            <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" style="width: 100%" 
+            <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" style="width: 100%"
             ref="tableData"
-            @selection-change="handleSelectionChange" 
-            :header-row-style="{height:'30px'}" 
+            @selection-change="handleSelectionChange"
+            :header-row-style="{height:'30px'}"
             :header-cell-style="{background:'#f5f7fa',padding:'0px',textAlign: 'center'}"
-            :row-style="{height:'40px'}" :cell-style="{padding:'0px', textAlign: 'center' }" 
-            size='small' 
+            :row-style="{height:'40px'}" :cell-style="{padding:'0px', textAlign: 'center' }"
+            size='small'
             :default-sort = "{prop: 'inID', order: 'increasing'}"
             >
             <!--排序、操作按钮、下拉详情tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)-->
@@ -68,16 +68,16 @@
             <el-table-column prop="userName" sortable label="申请人" >
             </el-table-column>
             <!-- column-key="aStatus"-->
-            <el-table-column prop="inStatus" label="入库状态" 
+            <el-table-column prop="inStatus" label="入库状态"
             :filters="[{ text: '待入库', value: '待入库' }, { text: '已入库', value: '已入库' },
                        { text: '待审核', value: '待审核' }, { text: '已拒绝', value: '已拒绝' }]"
             :filter-method="filterTag"
             filter-placement="bottom-end"
             >
             <template slot-scope="scope">
-                <el-tooltip class="item" :disabled="scope.row.inStatus === '已入库' ? true : false" effect="light" 
+                <el-tooltip class="item" :disabled="scope.row.inStatus === '已入库' ? true : false" effect="light"
                 :content="scope.row.inStatus === '已入库' ? '已成功入库' : '点击查看详情并修改状态'" placement="top-start">
-                <el-button 
+                <el-button
                 plain
                 round
                 size="small"
@@ -99,13 +99,13 @@
         </template>
         </el-table-column>
         </el-table>
-        <el-pagination align='center' 
-        @size-change="handleSizeChange" 
+        <el-pagination align='center'
+        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage" 
-        :page-sizes="[5,10,20]" 
-        :page-size="pageSize" 
-        layout="total, sizes, prev, pager, next, jumper" 
+        :current-page="currentPage"
+        :page-sizes="[5,10,20]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
         :total="tableData.length"
         style="margin-top: 7px;">
         </el-pagination>
@@ -145,7 +145,7 @@ export default{
             }
         }
         return{
-            
+
             Loading:false,
             queryConditions:{
                 inStatus: '全部状态',
