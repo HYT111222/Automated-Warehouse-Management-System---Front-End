@@ -11,11 +11,11 @@ body,
 
 .el-button:hover{
     transform: scale(110%,110%);
-    box-shadow: 3px 5px 5px #8f929a;
+    text-shadow: 3px 5px 5px #b5dcf3;
 }
-.el-form-item:hover{
+/* .el-form-item:hover{
     transform: scale(110%,110%);
-}
+} */
 /* *{
     margin:0;
     padding:0;

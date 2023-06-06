@@ -289,6 +289,7 @@ export default{
       },
       //查询
       searchMag(formName){
+        
         this.$refs[formName].validate((valid) => {
             if (valid) {
                 this.Loading = true

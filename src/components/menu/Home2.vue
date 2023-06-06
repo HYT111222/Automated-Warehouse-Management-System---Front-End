@@ -5,8 +5,17 @@
             <div class="header-left">
                 <div class="logo-box">
                     <div class="logo"><img src="@/assets/image/logo.png" width="40px" height="40px"  class="img"/></div>
-                        <span class="system-name text">xxx仓库管理系统</span>
+                        <span class="system-name text">自动化仓库管理系统</span>
+                        <!-- <div style="margin-left: 40px;">
+                            <el-breadcrumb separator="/">
+                            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                            <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
+                            <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+                            <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+                            </el-breadcrumb>
+                        </div> -->
                 </div>
+                
                
             </div>
             <div class="header-right">
@@ -56,7 +65,7 @@
                         </template>
                         <el-menu-item index="inStock" >入库</el-menu-item>
                         <el-menu-item index="outStock" >出库</el-menu-item> 
-                        <el-menu-item index="managerCheck" >审批中心</el-menu-item> 
+                        <el-menu-item index="managerCheck" v-if="isManager==true">审批中心</el-menu-item> 
                     </el-submenu>
                     <el-menu-item index="area" >
                         <template slot="title">
@@ -88,10 +97,10 @@
             </el-aside>
             <el-main class="main">
                     <!-- 路由占位符 -->
-            <!-- <router-view></router-view> -->
-            <transition name="slide-fade">
-	<router-view v-if="isRouterAlive"></router-view>
- </transition>
+            <router-view></router-view>
+            <!-- <transition name="slide-fade">
+                <router-view v-if="isRouterAlive"></router-view>
+            </transition> -->
             </el-main>
         </el-container>
         </el-container>
@@ -108,12 +117,19 @@ export default{
     data() {
       return {
         username:'HYT',
+        isManager:true,
         isRouterAlive: true,
        
       };
     },
     created(){
         this.username = window.sessionStorage.getItem('userName')
+        if (window.sessionStorage.getItem('authority') == "manager"){
+            this.isManager=true
+        }else{
+            this.isManager=false
+        }
+        
     },
     methods:{
         reload() {

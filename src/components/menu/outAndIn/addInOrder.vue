@@ -581,7 +581,8 @@ export default {
     },
     //保存新订单或者保存修改
     saveOrder(formName){
-        this.$refs[formName].validate(valid=>{
+        if(this.newInOrder.parcelList.length>0){
+            this.$refs[formName].validate(valid=>{
             if(valid){ 
                 if (this.isNew == 'true'){
                     this.Loading =true
@@ -628,6 +629,13 @@ export default {
                 
             }
         })
+        }else {
+            this.$message({
+                message:"包裹数量必须大于0，请添加包裹",
+                type:"error"
+            })
+        }
+        
     },
     //入库操作
     enter(formName){
