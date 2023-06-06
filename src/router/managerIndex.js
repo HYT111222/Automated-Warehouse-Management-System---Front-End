@@ -42,7 +42,7 @@ const routes = [
       { path: '/data', component: data},
       { path: '/inStock', component: inStock },
       { path: '/HomePage', component: HomePage},
-      // { path: '/managerCheck', component: inNeedToCheck},//路由懒加载
+      { path: '/managerCheck', component: inNeedToCheck},//路由懒加载
       { path: '/addNewOut', component: addNewOUt},
     ]
   }

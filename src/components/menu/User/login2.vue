@@ -76,8 +76,8 @@
         <div class="panels-container">
             <div class="panel left-panel">
                 <div class="content">
-                    <h3>加入我们</h3>
-                    <p>加入我们，成为本站的一份子。</p>
+                    <h1>自动化仓库管理系统</h1>
+                    <p>加入我们，成为我们的一份子。</p>
                     <button class="btn transparent" @click="isLogin = !isLogin">
                         去注册
                     </button>
@@ -86,7 +86,7 @@
             </div>
             <div class="panel right-panel">
                 <div class="content">
-                    <h3>已有帐号？</h3>
+                    <h1>自动化仓库管理系统</h1>
                     <p>立即登录已有帐号，享受独家权益。</p>
                     <button class="btn transparent" @click="isLogin = !isLogin">
                         去登录
@@ -100,6 +100,7 @@
 
 <script >
 import user from '@/api/user.js'
+import manager from '@/router/managerIndex.js'
 export default {
     name: 'Login',
     
@@ -197,9 +198,13 @@ export default {
                 if (res.data.status_code === true ) {
                     //保存token、用户权限类型、用户名
                     window.localStorage.setItem('token',res.data.token)
-                    window.sessionStorage.setItem('authority',res.data.authority)
+                    let authority=window.sessionStorage.setItem('authority',res.data.authority)
                     window.sessionStorage.setItem('userID',this.loginForm.userID)
                     window.sessionStorage.setItem('userName',res.data.userName)
+                    if(authority === 'manager'){//切换路由
+                        this.$router.options.routes = manager
+                        this.$router.addRoute(manager)
+                    }
                     // 登录成功
                     this.$message({
                     message: '登录成功',

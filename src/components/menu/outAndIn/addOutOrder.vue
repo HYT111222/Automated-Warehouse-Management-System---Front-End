@@ -72,7 +72,7 @@
                 v-if="isEdit===true"
                 @click="Delete">批量删除</el-button>
                 <el-tag type="primary" style="font-size: medium;font-weight:bold;">包 裹 信 息</el-tag>
-                <el-tooltip class="item" effect="light" content="双击编辑" placement="top-start">
+                <el-tooltip class="item" effect="light" content="请选择包裹进行出库" placement="top-start">
                 <el-button icon="el-icon-question" size="large" circle style="padding: 0px;float: right;margin-top: 6px;margin-right: 7px;border:transparent !important;;"></el-button>
                 </el-tooltip>
             </div>
@@ -134,7 +134,7 @@
                     <span slot="label"  class="span-text" >包裹ID:</span>
                     <el-input size="small" clearable v-model="searchMag.parcelId" class="tag"></el-input>
                     <el-button type="primary" :loading="Loading" @click="searchMag('searchMag')" icon="el-icon-search"  round size="small">搜索</el-button>
-                    <el-tooltip class="item" effect="light" content="清除所有筛选条件、恢复默认排序、清空选择" placement="top-start">
+                    <el-tooltip class="item" effect="light" content="重置表格内容" placement="top-start">
                     <el-button type="primary" icon="el-icon-refresh-right" @click="initialParcel" plain  circle style="padding:5px;"></el-button>
                     </el-tooltip>
                     </el-form-item>
@@ -164,11 +164,11 @@
             </el-table-column>
             <el-table-column prop="toAddr"  label="收货地址" >
             </el-table-column>
-            <el-table-column label="操作">
+            <!-- <el-table-column label="操作">
             <template slot-scope="scope">
                     <el-button @click="deleteOne(scope.row)" type="text" size="small" >选择</el-button>
             </template>
-            </el-table-column>
+            </el-table-column> -->
             </el-table>
             <el-pagination align='center' 
             @size-change="handleSizeChange_dia" 
@@ -577,7 +577,8 @@ export default {
     },
     //保存新订单或者保存修改
     saveOrder(formName){
-        this.$refs[formName].validate(valid=>{
+        if(this.newOutOrder.parcelList.length>0){
+            this.$refs[formName].validate(valid=>{
             if(valid){ 
                 if (this.isNew_out == 'true'){
                     this.Loading =true
@@ -624,6 +625,13 @@ export default {
                 
             }
         })
+        }else {
+            this.$message({
+                message:"包裹数量必须大于0，请添加包裹",
+                type:"error"
+            })
+        }
+       
     },
     //出库操作
     enter(formName){
