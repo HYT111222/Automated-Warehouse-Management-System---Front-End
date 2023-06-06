@@ -23,10 +23,10 @@
           <span slot="label"  style="color: #403b3b">仓库id:</span>
           <el-input v-model="staffForm.warehouseId" placeholder="请输入仓库id" size="small" clearable style="width:220px;"></el-input>
         </el-form-item>
-        <el-form-item prop="warehouseName" label-position="left" class="staff-el-form-item">
-          <span slot="label"  style="color: #403b3b">仓库名称:</span>
-          <el-input v-model="staffForm.warehouseName" placeholder="请输入仓库姓名" size="small" clearable style="width:220px;"></el-input>
-        </el-form-item>
+<!--        <el-form-item prop="warehouseName" label-position="left" class="staff-el-form-item">-->
+<!--          <span slot="label"  style="color: #403b3b">仓库名称:</span>-->
+<!--          <el-input v-model="staffForm.warehouseName" placeholder="请输入仓库姓名" size="small" clearable style="width:220px;"></el-input>-->
+<!--        </el-form-item>-->
         <el-form-item prop="phone" label-position="left" class="staff-el-form-item">
           <span slot="label"  style="color: #403b3b">员工电话:</span>
           <el-input v-model="staffForm.phone" placeholder="请输入电话" size="small" clearable style="width:220px;"></el-input>
@@ -105,7 +105,7 @@
         <el-table-column prop="userName" label="员工用户名"></el-table-column>
         <el-table-column prop="name" label="员工真实姓名"></el-table-column>
         <el-table-column prop="warehouseId" label="员工所属仓库id"></el-table-column>
-        <el-table-column prop="warehouseName" label="员工所属仓库名字"></el-table-column>
+<!--        <el-table-column prop="warehouseName" label="员工所属仓库名字"></el-table-column>-->
         <el-table-column prop="phone" label="员工电话号码"></el-table-column>
         <el-table-column prop="transferStation" label="员工所属中转站地址"></el-table-column>
         <el-table-column prop="email" label="员工邮箱"></el-table-column>
@@ -164,7 +164,7 @@ export default {
         userName: '',
         name: '',
         warehouseId: '',
-        warehouseName: '',
+        // warehouseName: '',
         phone: '',
         transferStation:'',
         email: ''
@@ -186,7 +186,7 @@ export default {
           userName: '顺丰快递员1',
           name: 'yyz',
           warehouseId:'1',
-          warehouseName: '北京交通大学',
+          // warehouseName: '北京交通大学',
           phone: '15302938395',
           transferStation: '北京交通大学',
           email: '20301029@bjtu.edu.cn',
@@ -195,7 +195,7 @@ export default {
           userName: '顺丰快递员2',
           name: 'yyz',
           warehouseId:'1',
-          warehouseName: '北京交通大学',
+          // warehouseName: '北京交通大学',
           phone: '15302938395',
           transferStation: '北京交通大学',
           email: '20301029@bjtu.edu.cn',
@@ -204,7 +204,7 @@ export default {
           userName: '顺丰快递员3',
           name: 'yyz',
           warehouseId:'1',
-          warehouseName: '北京交通大学',
+          // warehouseName: '北京交通大学'
           phone: '15302938395',
           transferStation: '北京交通大学',
           email: '20301029@bjtu.edu.cn',

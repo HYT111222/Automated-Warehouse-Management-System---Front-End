@@ -18,6 +18,7 @@ import inNeedToCheck from '@/components/menu/outAndIn/managerCheck.vue'
 import addNewOUt from '@/components/menu/outAndIn/addOutOrder.vue'
 //https://registry.npm.taobao.org
 import User from '@/components/menu/personalPage.vue'
+import Transaction from '@/components/menu/peopleManage/Transaction'
 
 Vue.use(VueRouter)
 
@@ -35,6 +36,7 @@ const routes = [
       { path: '/staff', component: Staff},
       { path: '/personalPage', component: User},
       { path: '/company', component: Company},
+      { path: '/transaction',component: Transaction} ,
       { path: '/addNewIn', component: addIn},
       { path: '/outStock', component: outStock},
       { path: '/area', component: Area},
