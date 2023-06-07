@@ -215,8 +215,9 @@ export default {
 
     return {
       Loading: false, // 加载中动画
+      // 上方查找返回
       customForm: {
-        customId: '',
+        customId: 'sss',
         userName: '',
         // 应付款
         phone:'',
@@ -240,13 +241,13 @@ export default {
       num: 1, // 计数器初始值
       dialogVisible_incAccounts: false, // 增加客户应付款对话框
       incAccountsDia: {
-        customerId:'',
+        customId:'',
         incAccounts:'1',
         notes:''
       },
       dialogVisible_balAccounts: false, // 减少客户应付款对话框
       balAccountsDia:{
-        customerId:'',
+        customId:'',
         balAccounts:'1',
         notes:''
       },
@@ -422,7 +423,7 @@ export default {
     // 保存客户id
     inc(row){
       this.dialogVisible_incAccounts = true
-      incAccountsDia.customerId = row.customId
+      incAccountsDia.customId = row.customId
     },
     // 该方法用于增加客户应付款
     incAccounts(formName){
@@ -449,7 +450,7 @@ export default {
     // 保存客户id
     bal(row){
       this.dialogVisible_balAccounts = true
-      balAccountsDia.customerId = row.customId
+      balAccountsDia.customId = row.customId
     },
     // 该方法用于客户结款
     balAccounts(formName){
@@ -476,6 +477,8 @@ export default {
     // 该方法用于查看流水
     checkDetail(row){
       window.sessionStorage.setItem('transaction','true')
+      window.sessionStorage.setItem('customId',row.customId)
+      console.log("customId: " + row.customId)
       this.$router.push({path:'/transaction'})
     },
     // 该方法用于删除信息
@@ -483,7 +486,6 @@ export default {
       console.log("触发删除信息")
       var temp = []
       temp.push(row.customId)
-      temp.push(row.userName)
       peopleManger.delCustomInformation(temp).then(res=>{
         if(res.data.status_code ==true){
           this.fetchNewTable()
