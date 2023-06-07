@@ -11,7 +11,7 @@
             <div style="float: right;">
                 <el-button icon="el-icon-d-arrow-right" size="large" circle style="border: transparent !important;" @click="backToInSock"></el-button>
             </div>
-            <el-form :model="newInOrder" label-width="100px" ref="newInOrder" :rules="rules" 
+            <el-form :model="newInOrder" label-width="100px" ref="newInOrder" :rules="rules"
             style="width: 500px; text-align:center;display: inline-block;height: 170px;">
                 <el-form-item  style="display: inline-block">
                     <span slot="label"  class="span-text">入库单号:</span>
@@ -26,7 +26,7 @@
                 <el-form-item prop="" class="" style="display: inline-block">
                     <span slot="label"  class="span-text">入库交接人:</span>
                     <el-tag v-if="isEdit===false" class="tag">{{ newInOrder.inPeopleName }}</el-tag>
-                    <el-select v-else v-model="newInOrder.inPeopleName"  clearable placeholder="请选择" 
+                    <el-select v-else v-model="newInOrder.inPeopleName"  clearable placeholder="请选择"
                     class="tag">
                         <el-option
                         v-for="item in inPeopleNameList"
@@ -36,7 +36,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                
+
                 <el-form-item  class="el-form-item-span" v-if="isNew=='false'">
                     <!--可修改：处于编辑状态，管理员，状态为待审核/已拒绝-->
                     <span slot="label"  class="span-text">订单状态:</span>
@@ -68,16 +68,16 @@
                 <el-button type="primary" icon="el-icon-plus" size="small" style="float:left;padding: 6px;"
                 v-if="isEdit===true"
                 @click="dialogFormVisible=true">添加包裹</el-button>
-                <el-button type="danger" icon="el-icon-delete" size="small" plain style="float:right;padding: 6px; " 
+                <el-button type="danger" icon="el-icon-delete" size="small" plain style="float:right;padding: 6px; "
                 v-if="isEdit===true"
                 @click="Delete">批量删除</el-button>
                 <el-tag type="primary" style="font-size: medium;font-weight:bold;">包 裹 信 息</el-tag>
                 <el-tooltip class="item" effect="light" content="双击编辑" placement="top-start">
                 <el-button icon="el-icon-question" size="large" circle style="padding: 0px;float: right;margin-top: 6px;margin-right: 7px;border:transparent !important;;"></el-button>
                 </el-tooltip>
-            </div>  
-        <el-table :data="newInOrder.parcelList.slice((currentPage-1)*pageSize,currentPage*pageSize)" 
-        @selection-change="handleSelectionChange" 
+            </div>
+        <el-table :data="newInOrder.parcelList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+        @selection-change="handleSelectionChange"
         style="width: 100%"
         :header-cell-style="{background:'#ebf3fc',padding:'0px',textAlign: 'center'}"
         :row-style="{height:'40px'}" :cell-style="{padding:'0px', textAlign: 'center' }"
@@ -91,27 +91,27 @@
                 <template slot-scope="scope" >
                     <el-tooltip class="item" effect="light" content="双击编辑"  placement="top-start">
                     <!--v-if去判断双击的是不是当前单元格-->
-                    <el-input 
-                        @blur="hideInput" 
-                        size="mini" 
-                        :ref="scope.row.index + ',' + scope.column.index" 
-                        v-model="scope.row.parcelID" 
+                    <el-input
+                        @blur="hideInput"
+                        size="mini"
+                        :ref="scope.row.index + ',' + scope.column.index"
+                        v-model="scope.row.parcelID"
                         v-if="scope.row.index + ',' + scope.column.index == currentCell">
                     </el-input>
                     <span v-else>{{scope.row.parcelID}}</span>
                 </el-tooltip>
-                
+
                 </template>
             </el-table-column>
             <el-table-column  prop="fromPeople" label="发货人" >
                 <template slot-scope="scope">
                     <!--v-if去判断双击的是不是当前单元格-->
                     <el-tooltip class="item" effect="light" content="双击编辑" placement="top-start">
-                    <el-input 
-                        @blur="hideInput" 
-                        size="mini" 
-                        :ref="scope.row.index + ',' + scope.column.index" 
-                        v-model="scope.row.fromPeople" 
+                    <el-input
+                        @blur="hideInput"
+                        size="mini"
+                        :ref="scope.row.index + ',' + scope.column.index"
+                        v-model="scope.row.fromPeople"
                         v-if="scope.row.index + ',' + scope.column.index == currentCell">
                     </el-input>
                     <span v-else>{{scope.row.fromPeople}}</span>
@@ -122,11 +122,11 @@
                 <template slot-scope="scope">
                     <el-tooltip class="item" effect="light" content="双击编辑" placement="top-start">
                     <!--v-if去判断双击的是不是当前单元格-->
-                    <el-input 
-                        @blur="hideInput" 
-                        size="mini" 
-                        :ref="scope.row.index + ',' + scope.column.index" 
-                        v-model="scope.row.fromPhone" 
+                    <el-input
+                        @blur="hideInput"
+                        size="mini"
+                        :ref="scope.row.index + ',' + scope.column.index"
+                        v-model="scope.row.fromPhone"
                         v-if="scope.row.index + ',' + scope.column.index == currentCell">
                     </el-input>
                     <span v-else>{{scope.row.fromPhone}}</span>
@@ -138,12 +138,12 @@
                     <el-tooltip class="item" effect="light" content="双击编辑" placement="top-start">
                     <!--v-if去判断双击的是不是当前单元格-->
                     <!--地址处理，还可以分为省市区和详细两部分-->
-                    <el-input 
-                        @blur="hideInput" 
-                        size="mini" 
+                    <el-input
+                        @blur="hideInput"
+                        size="mini"
                         type="textarea"
-                        :ref="scope.row.index + ',' + scope.column.index" 
-                        v-model="scope.row.fromAddr" 
+                        :ref="scope.row.index + ',' + scope.column.index"
+                        v-model="scope.row.fromAddr"
                         v-if="scope.row.index + ',' + scope.column.index == currentCell">
                     </el-input>
                     <span v-else>{{scope.row.fromAddr}}</span>
@@ -154,11 +154,11 @@
                 <template slot-scope="scope">
                     <el-tooltip class="item" effect="light" content="双击编辑" placement="top-start">
                     <!--v-if去判断双击的是不是当前单元格-->
-                    <el-input 
-                        @blur="hideInput" 
-                        size="mini" 
-                        :ref="scope.row.index + ',' + scope.column.index" 
-                        v-model="scope.row.toPeople" 
+                    <el-input
+                        @blur="hideInput"
+                        size="mini"
+                        :ref="scope.row.index + ',' + scope.column.index"
+                        v-model="scope.row.toPeople"
                         v-if="scope.row.index + ',' + scope.column.index == currentCell">
                     </el-input>
                     <span v-else>{{scope.row.toPeople}}</span>
@@ -169,11 +169,11 @@
                 <template slot-scope="scope">
                     <el-tooltip class="item" effect="light" content="双击编辑" placement="top-start">
                     <!--v-if去判断双击的是不是当前单元格-->
-                    <el-input 
-                        @blur="hideInput" 
-                        size="mini" 
-                        :ref="scope.row.index + ',' + scope.column.index" 
-                        v-model="scope.row.toPhone" 
+                    <el-input
+                        @blur="hideInput"
+                        size="mini"
+                        :ref="scope.row.index + ',' + scope.column.index"
+                        v-model="scope.row.toPhone"
                         v-if="scope.row.index + ',' + scope.column.index == currentCell">
                     </el-input>
                     <span v-else>{{scope.row.toPhone}}</span>
@@ -183,12 +183,12 @@
             <el-table-column prop="toAddr"  label="收货地址" >
                 <template slot-scope="scope">
                     <el-tooltip class="item" effect="light" content="双击编辑" placement="top-start">
-                    <el-input 
-                        @blur="hideInput" 
-                        size="mini" 
+                    <el-input
+                        @blur="hideInput"
+                        size="mini"
                         type="textarea"
-                        :ref="scope.row.index + ',' + scope.column.index" 
-                        v-model="scope.row.toAddr" 
+                        :ref="scope.row.index + ',' + scope.column.index"
+                        v-model="scope.row.toAddr"
                         v-if="scope.row.index + ',' + scope.column.index == currentCell">
                     </el-input>
                     <span v-else>{{scope.row.toAddr}}</span>
@@ -196,7 +196,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-table :data="newInOrder.parcelList.slice((currentPage-1)*pageSize,currentPage*pageSize)" 
+        <el-table :data="newInOrder.parcelList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         style="width: 100%"
         :header-cell-style="{background:'#ebf3fc',padding:'0px',textAlign: 'center'}"
         :row-style="{height:'40px'}" :cell-style="{padding:'0px', textAlign: 'center' }"
@@ -219,13 +219,13 @@
             <el-table-column prop="toAddr"  label="收货地址" >
             </el-table-column>
         </el-table>
-        <el-pagination align='center' 
-        @size-change="handleSizeChange" 
+        <el-pagination align='center'
+        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage" 
-        :page-sizes="[2,10,20]" 
-        :page-size="pageSize" 
-        layout="total, sizes, prev, pager, next, jumper" 
+        :current-page="currentPage"
+        :page-sizes="[2,10,20]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
         :total="newInOrder.parcelList.length"
         style="margin-top: 7px;">
         </el-pagination>
@@ -253,7 +253,7 @@
                 <el-input class="id-input" v-model="parcel.parcelID" size="small" placeholder="由5-20位数字组成" autocomplete="off" style="width: 200px;" ></el-input>
                 </el-form-item>
             </div>
-            
+
             <el-card style="float: left; " class="add-order">
                 <el-form-item label="发货人" prop="fromPeople"  style="margin: 13px;">
                 <el-input v-model="parcel.fromPeople" size="small" placeholder="只能包含汉字、字母、数字" autocomplete="off"></el-input>
@@ -340,7 +340,7 @@ function getCodeToText (codeStr) {
 }
 //回显 str=北京市/直辖市/海淀区/XXXXXX
 function getTextToCode (str) {
-    
+
 }
 export default {
     //修改、查看、添加都是一样的界面
@@ -386,7 +386,7 @@ export default {
               callback()
             }
        }
-       
+
         return{
             Loading:false,
             isEdit:true,//控制内容修改
@@ -448,7 +448,7 @@ export default {
                 fromAddrSelect: [],
                 fromAddrSelect2:'',
                 fromAddrDetail: "",
-                
+
                 toPeople: "",
                 toPhone: "",
                 toAddrSelect:[],
@@ -523,7 +523,7 @@ export default {
                     this.switch_disable = false
                 }
             }
-           
+
         }
     },
     methods:{
@@ -561,7 +561,7 @@ export default {
                 })
             }
         })
-        
+
     },
     //返回入库界面
     backToInSock(){
@@ -569,7 +569,7 @@ export default {
         this.$router.push({path:'/inStock'})
     },
     //批量删除
-    Delete(){ 
+    Delete(){
         for (let k = 0; k < this.multipleSelection.length; k++) {
             this.newInOrder.parcelList.splice(
                 this.newInOrder.parcelList.findIndex(
@@ -583,7 +583,7 @@ export default {
     saveOrder(formName){
         if(this.newInOrder.parcelList.length>0){
             this.$refs[formName].validate(valid=>{
-            if(valid){ 
+            if(valid){
                 if (this.isNew == 'true'){
                     this.Loading =true
                     outAndIn.addInOrder(this.newInOrder).then(res=>{
@@ -626,7 +626,7 @@ export default {
                     }
                 })
                 }
-                
+
             }
         })
         }else {
@@ -635,7 +635,7 @@ export default {
                 type:"error"
             })
         }
-        
+
     },
     //入库操作
     enter(formName){
@@ -660,7 +660,7 @@ export default {
             }
         })
     },
-    
+
     /**-----------------------------------------表格操作------------------------------------------------ */
      //解码
     handleChange (value) {
@@ -668,7 +668,7 @@ export default {
     },
     handleChange_to (value) {
         this.parcel.toAddrSelect2 = getCodeToText(value)
-    }, 
+    },
     //每页条数改变时触发 选择一页显示多少行
      handleSizeChange(val) {
          console.log(`每页 ${val} 条`);

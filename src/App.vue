@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <router-view/>
-    <!-- <transition name="slide-fade">
+    <!-- <router-view/> -->
+    <transition name="slide-fade">
 	<router-view v-if="isRouterAlive"></router-view>
- </transition> -->
+ </transition>
   
   </div>
 </template>

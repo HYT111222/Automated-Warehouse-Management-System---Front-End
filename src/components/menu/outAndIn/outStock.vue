@@ -31,13 +31,13 @@
                     <span slot="label"  style="color: #403b3b">出 库 单 号:</span>
                     <el-input placeholder="14个字符,如20230510195801" size="small" v-model="queryConditions.outID" clearable style="width: 220px;"></el-input>
                     </el-form-item>
-                    
+
         </el-form>
         <div style="display: flex;float: right;margin-bottom:10px;">
                     <el-button type="primary" @click="searchMag('queryConditions')" :loading="Loading" icon="el-icon-search"  round size="small">搜索</el-button>
-                    <el-button type="info" @click="clearFilter('queryConditions')" plain icon="el-icon-refresh-right" round size="small">重置</el-button> 
+                    <el-button type="info" @click="clearFilter('queryConditions')" plain icon="el-icon-refresh-right" round size="small">重置</el-button>
         </div>
-        
+
     </el-card>
     <el-card style="margin-top: 10px;">
             <el-button type="primary" icon="el-icon-plus" size="small" style="float:left;padding: 6px;margin-bottom: 10px;" @click="addNew">新建出库单</el-button>
@@ -46,13 +46,13 @@
             <el-button type="primary" @click="resetDateFilter" icon="el-icon-refresh-right" plain size="small" circle style="padding:5px;float: right;"></el-button>
             </el-tooltip>
             <!--表头等操作-->
-            <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" style="width: 100%" 
+            <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" style="width: 100%"
             ref="tableData"
-            @selection-change="handleSelectionChange" 
-            :header-row-style="{height:'30px'}" 
+            @selection-change="handleSelectionChange"
+            :header-row-style="{height:'30px'}"
             :header-cell-style="{background:'#f5f7fa',padding:'0px',textAlign: 'center'}"
-            :row-style="{height:'40px'}" :cell-style="{padding:'0px', textAlign: 'center' }" 
-            size='small' 
+            :row-style="{height:'40px'}" :cell-style="{padding:'0px', textAlign: 'center' }"
+            size='small'
             :default-sort = "{prop: 'outID', order: 'increasing'}">
             <!--排序、操作按钮、下拉详情tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)-->
             <el-table-column
@@ -68,16 +68,16 @@
             <el-table-column prop="userName" sortable label="申请人" >
             </el-table-column>
             <!--状态待修改-->
-            <el-table-column prop="outStatus" label="出库状态" 
+            <el-table-column prop="outStatus" label="出库状态"
             :filters="[{ text: '待出库', value: '待出库' }, { text: '已出库', value: '已出库' }
             , { text: '待审核', value: '待审核' }, { text: '已拒绝', value: '已拒绝' }]"
             :filter-method="filterTag"
             filter-placement="bottom-end">
             <template slot-scope="scope">
              <!--处理待修改-->
-                <el-tooltip class="item" :disabled="scope.row.outStatus === '待出库' ? true : false" effect="light" 
+                <el-tooltip class="item" :disabled="scope.row.outStatus === '待出库' ? true : false" effect="light"
                 :content="scope.row.outStatus === '待出库' ? '已成功入库' : '点击修改状态'" placement="top-start">
-                <el-button 
+                <el-button
                 plain
                 round
                 size="small"
@@ -98,13 +98,13 @@
         </template>
         </el-table-column>
         </el-table>
-        <el-pagination align='center' 
-        @size-change="handleSizeChange" 
+        <el-pagination align='center'
+        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage" 
-        :page-sizes="[5,10,20]" 
-        :page-size="pageSize" 
-        layout="total, sizes, prev, pager, next, jumper" 
+        :current-page="currentPage"
+        :page-sizes="[5,10,20]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
         :total="tableData.length"
         style="margin-top: 7px;">
         </el-pagination>
@@ -278,7 +278,7 @@ export default{
                 }
             })
       },
-       
+
       /**------------------------------------------普通方法------------------------------------------- */
       //新建
       addNew(){
@@ -332,7 +332,7 @@ export default{
                 type:'error'
             })
         }
-        
+
       },
        //删除一条
        deleteOne(row){
@@ -362,7 +362,7 @@ export default{
                 type:'error'
             })
         }
-        
+
       },
       //查看编辑、修改状态
       modifyAndView(row){
