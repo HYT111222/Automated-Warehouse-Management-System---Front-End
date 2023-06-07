@@ -6,7 +6,7 @@ export default {
      * @param {*} data
      * @returns 
      */
-    searchParcel(data) {
+    searchRegion(data) {
       return request({
         url: '/regionAndShelf/searchRegion',
         method: 'post',
@@ -39,7 +39,7 @@ export default {
     })
   },
    /**
-   * 4、查询货架信息
+   * 4、查询所有货架信息
    * @param {*} data 
    * @returns 
    */
