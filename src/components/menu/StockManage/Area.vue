@@ -1,6 +1,6 @@
 <template>
     <div>
-     <el-container style="height: 500px; border: 1px solid #eee">
+     <el-container style="height: 500px; ">
         <el-header>
             <span>  货架编号:</span>
             <el-input v-model="regionId" placeholder="请输入库区编号" size="medium" style="width:200px"></el-input>
@@ -113,7 +113,7 @@
         </el-menu>
       </el-aside>
       <el-container>
-        <el-main>
+        <el-main style="padding-top: 0%;">
         <el-card class="box-card">
             <el-descriptions title="库存信息">
             <el-descriptions-item label="库区id">{{ regionInformation.regionId }}</el-descriptions-item>
@@ -133,7 +133,7 @@
             </el-popconfirm>
             </template>
             <!--表头等操作-->
-            <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" style="width: 100%" @selection-change="handleSelectionChange" 
+            <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" height="250px" style="width: 100%" @selection-change="handleSelectionChange" 
             :header-row-style="{height:'30px'}" 
             :header-cell-style="{background:'#f5f7fa',padding:'0px',textAlign: 'center'}"
             :row-style="{height:'40px'}" :cell-style="{padding:'0px', textAlign: 'center' }" 

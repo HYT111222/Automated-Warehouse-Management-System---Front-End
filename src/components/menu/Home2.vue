@@ -57,6 +57,7 @@
                         <el-menu-item index="enter" class="el-menu-item">入库交接人</el-menu-item>
                         <el-menu-item index="outer" >出库交接人</el-menu-item>
                         <el-menu-item index="company" >客户</el-menu-item>
+                        <el-menu-item index="staff" >员工</el-menu-item>
                     </el-submenu>
                     <el-submenu index="2" class="test">
                         <template slot="title">
