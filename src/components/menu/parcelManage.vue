@@ -58,7 +58,7 @@
                     </el-form-item>         
         </el-form>
         <div style="display: flex;float: right;margin-bottom:10px;">
-            <el-button type="primary"  icon="el-icon-search"  round size="small">搜索</el-button>
+            <el-button type="primary" :loading="Loading" @click="searchParcel('parcelConditions')" icon="el-icon-search"  round size="small">搜索</el-button>
             <el-button type="info" plain icon="el-icon-refresh-right" round size="small" @click="clearFilter('parcelConditions')">重置</el-button> 
         </div>
       </el-card>
@@ -72,8 +72,7 @@
             :row-style="{height:'40px'}" :cell-style="{padding:'0px', textAlign: 'center' }" 
             size='small' >
             
-            <el-table-column type="selection">
-            </el-table-column>
+        
             <el-table-column  prop="shipperName"  label="发货人姓名"  >
             </el-table-column>
             <el-table-column  prop="shipperPhone"  label="发货人电话">
@@ -89,7 +88,7 @@
             label="操作">
         <template slot-scope="scope">
             <div style=" display: flex;">
-                <el-button @click="dialogTableVisible = true" type="text" size="small" >查看详情  </el-button>
+                <el-button @click="view(scope.row)"   type="text" size="small" >查看详情  </el-button>
                     <el-dialog title="包裹详细信息" :visible.sync="dialogTableVisible">
                         <el-descriptions>
                         <el-descriptions-item label="包裹号">{{parcelinformation.parcelId}}</el-descriptions-item>
@@ -104,7 +103,7 @@
                         <el-button type="primary" @click="dialogTableVisible = false">确 定</el-button>
                     </div>
                     </el-dialog>
-                <el-button @click="handleClick(scope.row)" type="text" size="small" > 删除</el-button>
+                <el-button @click="deleteOne(scope.row)" type="text" size="small" > 删除</el-button>
             </div>
         </template>
         </el-table-column>
@@ -125,6 +124,13 @@
   
   <script>
   import parcel from '@/api/parcel.js'
+  //判断待删除的包裹的状态
+  function judgeState(thing){
+        if (thing.parcelState != 未入库){
+                return false
+             }
+        return true
+}
   export default{
     data(){
         var parcelId = (rule, value, callback) => {
@@ -142,6 +148,8 @@
             }
         }
     return{
+        dialogTableVisible: false,
+        Loading:false,
         parcelinformation:{
             parcelId:'78913347',
             inTime:'2023-5-28',
@@ -151,7 +159,7 @@
             parcelState:'未出库'
         },
         formLabelWidth:'120px',
-        dialogTableVisible: false,
+        
         parcelConditions:{
             parcelId:'',
             parcelState:'全部状态',
@@ -159,7 +167,8 @@
             regionName:''
         },
         tableData:[
-                {
+                {   
+                    parcelId:"001",
                     shipperName: "美女",
                     shipperPhone: "13100009999",
                     shipperAddress: "北京海淀区北京交通大学",
@@ -168,6 +177,7 @@
                     consigneeAddress: "辽宁本溪明山区xx街"
                 },
                 {
+                    parcelId:"001",
                     shipperName: "美女",
                     shipperPhone: "13100009999",
                     shipperAddress: "北京海淀区北京交通大学",
@@ -269,6 +279,68 @@
     },
 
     methods:{
+     //查询
+     searchParcel(formName){
+        this.$refs[formName].validate((valid) => {
+            if (valid) {
+                this.Loading = true
+                parcel.searchParcel(this.parcelConditions).then(res=>{
+                    if(res.data.status_code === true){
+                        this.tableData = res.data.parcelInformation
+                    }else {
+                        this.$message({
+                            message:"查询异常",
+                            type:"error"
+                        })
+                    }
+                }).finally(res=>{
+                    this.Loading =false
+                })
+            }
+        })
+      },
+    //显示包裹详细信息
+    view(row){ 
+        this.dialogTableVisible = true
+        console.log(row.shipperName)
+        parcel.searchParcelDetail(row.parcelId).then(res=>{
+                   this.parcelinformation.parcelId = res.data.parcelId
+                   this.parcelinformation.inTime = res.data.inTime
+                   this.parcelinformation.outTime = res.data.outTime
+                   this.parcelinformation.shelfId = res.data.shelfId
+                   this.parcelinformation.shelfNumber = res.data.shelfNumber
+                   this.parcelinformation.parcelState = res.data.parcelState
+                    this.$message({
+                        message:"查看成功",
+                        type:"success"
+                    })
+            })
+       
+    },
+
+     //删除包裹
+     deleteOne(row){
+        if (judgeState(row) == true){
+            parcel.deleteParcel(row.parcelId).then(res=>{
+                if(res.data.status_code ==true){
+                    this.$message({
+                        message:"删除成功",
+                        type:"success"
+                    })
+                }else{
+                    this.$message({
+                        message:"删除异常",
+                        type:"error"
+                    })
+                }
+            })
+        }else {
+            this.$message({
+                message:"只能删除未入库的包裹",
+                type:"error"
+            })
+        }
+      },
     clearFilter(formName) {   //清空表单
         this.$refs[formName].resetFields()
     },

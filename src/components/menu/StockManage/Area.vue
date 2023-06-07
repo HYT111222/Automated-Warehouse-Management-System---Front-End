@@ -125,8 +125,13 @@
         <el-card style="margin-top: 10px;">
             <span>  货架编号:</span>
             <el-input v-model="shelfId" placeholder="请输入货架编号" size="small" style="width:200px"></el-input>
-            <el-button type="primary"  icon="el-icon-search"  round size="mini">搜索</el-button>
-            <el-button type="danger" icon="el-icon-delete" size="small" plain style="float:right;padding: 6px; margin-bottom: 10px;">删除</el-button>
+            <el-button type="primary"  @click="searchShelfID(shelfId)" icon="el-icon-search"  round size="mini">搜索</el-button>
+            
+            <template>
+            <el-popconfirm @confirm="confirm()" title="确定添加货架吗？" >
+                <el-button slot="reference" type="primary" icon="el-icon-circle-plus-outline" size="small" plain style="float:right;padding: 6px; margin-bottom: 10px;">添加货架</el-button>
+            </el-popconfirm>
+            </template>
             <!--表头等操作-->
             <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" style="width: 100%" @selection-change="handleSelectionChange" 
             :header-row-style="{height:'30px'}" 
@@ -134,8 +139,7 @@
             :row-style="{height:'40px'}" :cell-style="{padding:'0px', textAlign: 'center' }" 
             size='small' >
             
-            <el-table-column type="selection">
-            </el-table-column>
+            
             <el-table-column  prop="regionId"  label="库区编号"  >
             </el-table-column>
             <el-table-column  prop="shelfId"  label="货架编号">
@@ -147,7 +151,7 @@
             label="操作">
         <template slot-scope="scope">
             <div style=" display: flex;">
-                <el-button @click="handleClick(scope.row)" type="text" size="small" > 删除</el-button>
+                <el-button @click="deleteshelf(scope.row)" type="text"  size="small" > 删除</el-button>
             </div>
         </template>
         </el-table-column>
@@ -173,9 +177,18 @@
   
   <script>
   import regionAndShelf from '@/api/regionAndShelf';
+   //判断待删除的货架的状态，空的才能删除
+   function judgeState(thing){
+        if (thing.shelfAllowance==thing.shelfAllowance){
+                return true
+             }
+        return false
+}
   export default{
     data(){
       return {
+        dialogTableVisible:false,
+        parcelName:'BJ',
         regionInformation:{
             regionId:'BJ',
             regionName:'北京',
@@ -245,9 +258,94 @@
     },
     
     methods:{
+    confirm(){
+        console.log(this.parcelName)
+        regionAndShelf.addShelf(this.regionInformation.regionId).then(res=>{
+            if(res.data.status_code === true){
+                    this.$message({
+                        message:"添加成功",
+                        type:"success"
+                    })
+            }
+            else {
+                    this.$message({
+                    message:"添加失败",
+                    type:"error"
+                    })
+                }
+            })
+        
+    },
+    //选择库区
       menuselected(e){
         console.log(e)
+        this.parcelName=e
+        regionAndShelf.searchRegion(e).then(res=>{
+                   this.regionInformation.regionId = res.data.regionId
+                   this.regionInformation.regionName = res.data.regionName
+                   this.regionInformation.shelfNumber = res.data.shelfNumber
+                    this.$message({
+                        message:"查找成功",
+                        type:"success"
+                    })
+            })
       },
+    //按照货架编号搜索货架
+    searchShelfID(id){
+            if (id!= null) {
+                regionAndShelf.searchShelf(id).then(res=>{
+                    if(res.data.status_code === true){
+                        this.tableData.regionId = res.data.regionId
+                        this.tableData.shelfId=res.data.shelfId
+                        this.tableData.shelfCapacity=res.data.shelfCapacity
+                        this.tableData.shelfAllowance=res.data.shelfAllowance
+                    }else {
+                        this.$message({
+                            message:"查询异常",
+                            type:"error"
+                        })
+                    }
+                })
+            }
+            else if(id==null){
+                regionAndShelf.allShelf(this.regionInformation.regionId).then(res=>{
+                    if(res.data.status_code === true){
+                        this.tableData = res.data.shelfList
+                    }else {
+                        this.$message({
+                            message:"查询异常",
+                            type:"error"
+                        })
+                    }
+                })
+            }
+
+    },
+    deleteshelf(row){
+        if (judgeState(row) == true){
+            regionAndShelf.deleteShelf(row.shelfId).then(res=>{
+                if(res.data.status_code ==true){
+                    this.$message({
+                        message:"删除成功",
+                        type:"success"
+                    })
+                }else{
+                    this.$message({
+                        message:"删除异常",
+                        type:"error"
+                    })
+                }
+            })
+        }else {
+            this.$message({
+                message:"只能删除空货架",
+                type:"error"
+            })
+        }
+
+
+    },
+
        //每页条数改变时触发 选择一页显示多少行
      handleSizeChange(val) {
          console.log(`每页 ${val} 条`);
@@ -302,4 +400,8 @@
   .menu{
     color:#5ea6c9
   }
+  .textInput2 {
+    width: 303px;
+    align-items: center;
+}
   </style>
