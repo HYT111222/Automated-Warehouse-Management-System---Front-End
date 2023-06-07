@@ -11,7 +11,7 @@ body,
 
 .el-button:hover{
     transform: scale(110%,110%);
-    box-shadow: 3px 5px 5px #8f929a;
+    /* text-shadow: 3px 5px 5px #d6dae7; */
 }
 .el-form-item:hover{
     transform: scale(110%,110%);

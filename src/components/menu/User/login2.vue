@@ -196,15 +196,30 @@ export default {
                 user.login(this.loginForm).then(res => {
                     console.log(res)
                 if (res.data.status_code === true ) {
+                    
                     //保存token、用户权限类型、用户名
                     window.localStorage.setItem('token',res.data.token)
-                    let authority=window.sessionStorage.setItem('authority',res.data.authority)
+                    let authority=res.data.authority
+                    window.sessionStorage.setItem('authority',res.data.authority)
+                    window.localStorage.setItem('authority',res.data.authority)
                     window.sessionStorage.setItem('userID',this.loginForm.userID)
                     window.sessionStorage.setItem('userName',res.data.userName)
-                    if(authority === 'manager'){//切换路由
-                        this.$router.options.routes = manager
-                        this.$router.addRoute(manager)
-                    }
+                    console.log(authority)
+                    // if(authority === 'manager'){//切换路由
+                    //     console.log("manager")
+                    //     // manager.forEach(res=>{
+                    //     //     router.addRoute(res);
+                    //     //     })
+                    //     this.$router.addRoute(manager);
+                    //     this.$router.options.routes = manager
+                    //     // 登录成功
+                    //     this.$message({
+                    //     message: '登录成功',
+                    //     type: 'success'
+                    //     })
+                    //     window.localStorage.setItem('token',res.data.token)
+                    //     this.$router.push('/home')
+                    // }
                     // 登录成功
                     this.$message({
                     message: '登录成功',

@@ -19,14 +19,14 @@
                     </el-form-item>
                 <el-form-item style="display: inline-block">
                     <span slot="label"  class="span-text">订单号:</span>
-                    <el-tag v-if="isEdit===false" class="tag">{{ newInOrder.orderID }}</el-tag>
+                    <!-- <el-tag v-if="isEdit===false" class="tag">{{ newInOrder.orderID }}</el-tag> -->
                     <el-input  placeholder="数字组成" clearable v-model="newInOrder.orderID" class="tag"
-                    v-else></el-input>
+                    :disabled="!isEdit"></el-input>
                 </el-form-item>
                 <el-form-item prop="" class="" style="display: inline-block">
                     <span slot="label"  class="span-text">入库交接人:</span>
-                    <el-tag v-if="isEdit===false" class="tag">{{ newInOrder.inPeopleName }}</el-tag>
-                    <el-select v-else v-model="newInOrder.inPeopleName"  clearable placeholder="请选择"
+                    <!-- <el-tag v-if="isEdit===false" class="tag">{{ newInOrder.inPeopleName }}</el-tag> -->
+                    <el-select :disabled="!isEdit" v-model="newInOrder.inPeopleName"  clearable placeholder="请选择"
                     class="tag">
                         <el-option
                         v-for="item in inPeopleNameList"
@@ -40,8 +40,8 @@
                 <el-form-item  class="el-form-item-span" v-if="isNew=='false'">
                     <!--可修改：处于编辑状态，管理员，状态为待审核/已拒绝-->
                     <span slot="label"  class="span-text">订单状态:</span>
-                    <el-tag v-if="isEdit===false" class="tag">{{ newInOrder.inStatus }}</el-tag>
-                    <el-radio-group v-model="newInOrder.inStatus" size="medium" v-else>
+                    <!-- <el-tag v-if="isEdit===false" class="tag">{{ newInOrder.inStatus }}</el-tag> -->
+                    <el-radio-group v-model="newInOrder.inStatus" size="medium" :disabled="!isEdit">
                     <el-radio-button label="已拒绝" ></el-radio-button>
                     <el-radio-button label="待审核"></el-radio-button>
                     <el-radio-button label="待入库"></el-radio-button>

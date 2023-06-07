@@ -12,12 +12,12 @@ import outStock from '@/components/menu/outAndIn/outStock.vue'
 import Area from '@/components/menu/StockManage/Area.vue'
 import data from '@/components/menu/data.vue'
 import Parcel from '@/components/menu/parcelManage.vue'
-// import inNeedToCheck from '@/components/menu/outAndIn/managerCheck.vue'
+import inNeedToCheck from '@/components/menu/outAndIn/managerCheck.vue'
 import addNewOUt from '@/components/menu/outAndIn/addOutOrder.vue'
 //https://registry.npm.taobao.org
 import User from '@/components/menu/personalPage.vue'
 
-const inNeedToCheck = () => import('@/components/menu/outAndIn/managerCheck.vue')
+// const inNeedToCheck = () => import('@/components/menu/outAndIn/managerCheck.vue')
 Vue.use(VueRouter)
 
 const routes = [
@@ -66,4 +66,4 @@ const router = new VueRouter({
 //     }
 //   }
 // })
-export default router
+// export default router

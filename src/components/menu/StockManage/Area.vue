@@ -113,7 +113,7 @@
         </el-menu>
       </el-aside>
       <el-container>
-        <el-main>
+        <el-main style="padding-top:0px ;">
         <el-card class="box-card">
             <el-descriptions title="库存信息">
             <el-descriptions-item label="库区id">{{ regionInformation.regionId }}</el-descriptions-item>
@@ -392,6 +392,8 @@
 <style lang="less" scoped>
 .box-card {
     position: relative;
+    // background-color: antiquewhite;
+    // margin-top: 0%;
 }
   .menu {
   
