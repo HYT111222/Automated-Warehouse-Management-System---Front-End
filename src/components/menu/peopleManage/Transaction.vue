@@ -2,8 +2,10 @@
   <div>
     <!-- 展示客户信息区 -->
     <el-card class="input-card">
-
-
+      <div :inline="true">
+        <h3>客户id: {{ customId }}</h3>
+      </div>
+      <el-divider></el-divider>
     </el-card>
     <!-- 查询结果区 -->
     <el-card style="margin-top: 10px;">
@@ -50,57 +52,14 @@
 
 <script>
 import peopleManger from "@/api/peopleManger";
-import outAndIn from "@/api/outAndIn";
 
 export default {
   data() {
-    // 输入框逻辑判定
-    // var inBoundPersonId = (rule, value, callback) => {
-    //   var req = /^[A-Za-z0-9]*$/
-    //   if (!value) {
-    //     callback()
-    //   } else if (!req.test(value)) {
-    //     return callback(new Error('仅由数字和字母构成'))
-    //   }
-    // }
-    // var phone = (rule, value, callback) => {
-    //   const reg = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/
-    //   if (!value) {
-    //     callback()
-    //   } else if (!reg.test(value)) {
-    //     return callback(new Error('请输入手机号码'))
-    //   }
-    // }
-    // var email = (rule, value, callback) => {
-    //   const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
-    //   if (!value) {
-    //     callback()
-    //   } else if (!reg.test(value)) {
-    //     return callback(new Error('请输入正确邮箱,例如10203022@bjtu.edu.cn'))
-    //   }
-    // }
-
     return {
       Loading: false, // 加载中动画
-      // inputForm: {
-      //   inBoundPersonId: '',
-      //   userName: '',
-      //   phone: '',
-      //   name: '',
-      //   address: '',
-      //   email: ''
-      // },
-      // dialogVisible: false, // 对话框是否可见
-      // // 封装dialog提交的信息
-      // inputFormNew: {
-      //   inBoundPersonId: '',
-      //   userName: '',
-      //   phone: '',
-      //   name: '',
-      //   address: '',
-      //   email: '',
-      //   remark: ''
-      // },
+      checkFrom:{
+        customId:''
+      },
       tableData: [
         {
           transactionId: '111',
@@ -163,58 +122,25 @@ export default {
           transactionId: '124'
         }
       ],
-      // inPeopleNameList: ["小李", "小猪"],
-      // rules: {
-      //   inBoundPersonId: [{validator: inBoundPersonId, trigger: 'blur'}],
-      //   phone: [{validator: phone, trigger: 'blur'}],
-      //   email: [{validator: email, trigger: 'blur'}]
-      // },
       currentPage: 1, // 当前页码
       total: 20, // 总条数
       pageSize: 5 // 每页的数据条数
     }
   },
   created() {
+    this.customId = window.sessionStorage.getItem('customId')
+    console.log('获取的customId：' + this.customId)
     this.fetchNewTable()
-    // this.getPeopleList()
   },
   methods: {
     // 该方法用于刷新表格
     fetchNewTable() {
-      peopleManger.checkCustomTransaction().then(res => {
+      peopleManger.checkCustomTransaction(this.checkFrom).then(res => {
         if (res.data.status_code === true) {
           this.tableData = res.data.transactionList
         }
       })
     },
-    // 该方法用于获取入库人列表
-    // getPeopleList(){
-    //   outAndIn.fetchInPeopleNameList().then(res =>{
-    //     if (res.data.status_code === true) {
-    //       this.inPeopleNameList = res.data.inPeopleNameList
-    //     }
-    //   })
-    // },
-    // 该方法用于搜索
-    // searchMag(formName) {
-    //   this.$refs[formName].validate((valid) => {
-    //     if (valid) {
-    //       this.Loading = true
-    //       peopleManger.checkInBoundPeorsonInformation(this.inputForm).then(res => {
-    //         if (res.data.status_code === true) {
-    //           this.tableData = res.data.inBoundPeopleList
-    //         } else {
-    //           this.$message({
-    //             message: "搜索异常",
-    //             type: "error"
-    //           })
-    //         }
-    //       }).finally(res => {
-    //         this.Loading = false
-    //       })
-    //     }
-    //   })
-    // },
     // 该方法用于清除填入的信息
     clearFilter(formName) {
       this.$refs[formName].resetFields();
@@ -225,37 +151,6 @@ export default {
       this.$refs['tableData'].clearSort()
       this.$refs['tableData'].clearSelection();
     },
-    // 提交dialog信息
-    // submitDialog(formName){
-    //   this.dialogVisible = false
-    //   this.$refs[formName].validate((valid) => {
-    //     if (valid) {
-    //       this.Loading = true
-    //       peopleManger.addInBoundPeople(this.inputFormNew).then(res => {
-    //         if(res.data.status_code === true) {
-    //           this.fetchNewTable()
-    //           this.getPeopleList()
-    //         }else{
-    //           this.$message({
-    //             message:"提交异常",
-    //             type:"error"
-    //           })
-    //         }
-    //       }).finally(res => {
-    //         this.Loading = false
-    //       })
-    //     }
-    //   })
-    // },
-    // 关闭对话框
-    // handleClose(done) {
-    //   this.$confirm('确认关闭？')
-    //       .then(_ => {
-    //         done();
-    //       })
-    //       .catch(_ => {
-    //       });
-    // },
     // 该方法在每页条数改变时触发 选择一页显示多少行
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
@@ -266,28 +161,7 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.currentPage = val;
-    },
-    // 该方法用于删除信息
-  //   deleteOne(row){
-  //     console.log("触发删除信息，id: " +row.inBoundPersonId)
-  //     var temp = []
-  //     temp.push(row.inBoundPersonId)
-  //     peopleManger.delFetchInPeopleInformation(temp).then(res=>{
-  //       if(res.data.status_code ==true){
-  //         this.fetchNewTable()
-  //         this.getPeopleList()
-  //         this.$message({
-  //           message:"删除成功",
-  //           type:"success"
-  //         })
-  //       }else{
-  //         this.$message({
-  //           message:"删除异常",
-  //           type:"error"
-  //         })
-  //       }
-  //     })
-  //   }
+    }
   }
 }
 </script>
