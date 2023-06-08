@@ -177,7 +177,9 @@ export default {
     return request({
       url: '/outAndIn/singleInOrderDetail',
       method: 'get',
-      param: param
+      params: {
+        InID:param
+      }
     })
   },
   /**
@@ -188,7 +190,9 @@ export default {
     return request({
       url: '/outAndIn/singleOutOrderDetail',
       method: 'get',
-      param:param
+      params:{
+        OutID:param
+      }
     })
   },
   /**
