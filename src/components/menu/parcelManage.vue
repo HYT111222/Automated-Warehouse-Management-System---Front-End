@@ -277,8 +277,18 @@
     }
    
     },
+    created(){
+       this.fetchNewTable()
+    },
 
     methods:{
+     fetchNewTable(){
+            parcel.allParcel().then(res=>{
+                if (res.data.status_code == true){
+                    this.tableData = res.data.parcelInformation
+                }
+            })
+      },
      //查询
      searchParcel(formName){
         this.$refs[formName].validate((valid) => {
