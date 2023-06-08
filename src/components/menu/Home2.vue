@@ -88,12 +88,12 @@
                         <span>包裹管理模块</span>
                         </template>
                     </el-menu-item>
-                    <el-menu-item index="data" class="el-menu-item">
+                    <!-- <el-menu-item index="data" class="el-menu-item">
                         <template slot="title">
                         <i class="el-icon-s-data"></i>
                         <span>数据统计</span>
                         </template>
-                    </el-menu-item>
+                    </el-menu-item> -->
                 </el-menu>
             </el-aside>
             <el-main class="main">
