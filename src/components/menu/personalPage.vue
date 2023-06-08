@@ -16,11 +16,9 @@
                         <el-descriptions-item  label="用户名">{{ this.userName }}</el-descriptions-item>
                         <el-descriptions-item label="手机号" class="test">{{ this.phone }}</el-descriptions-item>   
                         <el-descriptions-item label="所属中转站">
-                        <el-tag >{{ this.address }}</el-tag>
+                        <el-tag >{{ this.stationName }}</el-tag>
                         </el-descriptions-item>
-                        <el-descriptions-item label="产生费用">
-                            <el-tag type="danger">{{  totalCost }}</el-tag>
-                        </el-descriptions-item>
+                        <el-descriptions-item label="账号创建时间" class="test">{{ this.startTime }}</el-descriptions-item> 
                     </el-descriptions>
                 </el-card>
             </el-form-item>
@@ -29,10 +27,13 @@
         <el-dialog width="450px" title="修改个人信息" :visible.sync="dialogFormVisible" append-to-body>
             <el-form :model="changeInfo" ref="changeInfo" :rules="rules">
                 <el-form-item label="电话号码:" label-width="100px" prop="phone">
-                   <el-input v-model="changeInfo.phone" placeholder="11位数手机号"></el-input>
+                   <el-input v-model="changeInfo.userPhone" placeholder="11位数手机号"></el-input>
                 </el-form-item>
                 <el-form-item label="所属中转站:" label-width="100px" prop="address">
-                    <el-input v-model="changeInfo.address" ></el-input>
+                    <el-input v-model="changeInfo.stationName" ></el-input>
+                </el-form-item>
+                <el-form-item label="电子邮箱:" label-width="100px" prop="userEmail">
+                    <el-input v-model="changeInfo.userEmail" ></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -43,10 +44,10 @@
             <el-dialog width="450px" title="修改密码" :visible.sync="changePasswordDialog" append-to-body>
             <el-form :model="changePassword" ref="changePassword" :rules="rules">
                 <el-form-item label="旧密码:" label-width="100px" prop="pre_password">
-                   <el-input prefix-icon="el-icon-lock" placeholder="长度3-16个字符,包含数字、大小写字母" type="password" maxlength="18" v-model="changePassword.pre_password" show-password></el-input>
+                   <el-input prefix-icon="el-icon-lock" placeholder="长度3-16个字符,包含数字、大小写字母" type="password" maxlength="18" v-model="changePassword.password" show-password></el-input>
                 </el-form-item>
                 <el-form-item label="新密码:" label-width="100px" prop="new_password">
-                    <el-input prefix-icon="el-icon-lock" placeholder="长度3-16个字符,包含数字、大小写字母" type="password" maxlength="18" v-model="changePassword.new_password" show-password></el-input>
+                    <el-input prefix-icon="el-icon-lock" placeholder="长度3-16个字符,包含数字、大小写字母" type="password" maxlength="18" v-model="changePassword.passwordNew" show-password></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -58,10 +59,8 @@
 </template>
 
 <script>
-import other from '@/api/other.js'
-import user from '@/api/user'
 import jpg from '@/assets//image/R.jpg'
-
+import center from '@/api/center.js'
 export default{
     data(){
         var phone = (rule, value, callback) => {
@@ -107,20 +106,19 @@ export default{
             userJPG: jpg,
             userName: "hyt4",
             phone: "142578343",
-            address: "北京中关村二部",
-            totalCost: 0,
-            token: '',
+            stationName: "北京中关村二部",
+            startTime:"2022.5.1",
+            userEmail:"123@qq.com",
             dialogFormVisible: false,
             changePasswordDialog: false,
             changePassword: {
-                pre_password:'',
-                new_password:'',
-                token:''
+                password:'',
+                passwordNew:'',
             },
             changeInfo: {
-                phone:'',
-                address:'',
-                token:''
+                userPhone:'',
+                stationName:'',
+                userEmail:''
             },
             rules:{
                 phone: [{ validator: phone, trigger: 'blur' }],
@@ -131,9 +129,9 @@ export default{
         }
     },
     created() {
-        this.token = JSON.parse(window.localStorage.getItem('Token')).token
-        this.changeInfo.token = this.token
-        this.changePassword.token = this.token
+        // this.token = JSON.parse(window.localStorage.getItem('Token')).token
+        // this.changeInfo.token = this.token
+        // this.changePassword.token = this.token
         this.getPersonalInfo()
     },
     methods:{
@@ -147,7 +145,7 @@ export default{
                 if (valid) {
                     this.loading = true
                     console.log(this.changeInfo)
-                    user.changeInfo(this.changeInfo).then(res=> {
+                    center.modifyUserInformation(this.changeInfo).then(res=> {
                         if (res.data.status_code == true){
                             //重新获取用户信息
                             this.getPersonalInfo()
@@ -165,13 +163,14 @@ export default{
         },
         //获取用户信息
         getPersonalInfo(){
-            user.getUserInfo(this.token).then(res=> {
+            center.personInformation().then(res=> {
                 if (res.data.status_code==true) {
                     console.log(res)
-                    this.userName = res.data.user_name
-                    this.phone = res.data.phone
-                    this.address = res.data.address
-                    this.totalCost = res.data.total_cost
+                    this.userName = res.data.userName
+                    this.phone = res.data.userPhone
+                    this.stationName = res.data.stationName
+                    this.startTime = res.data.startTime
+                    this.userEmail = res.data.userEmail
                 }
             }).finally(res=>{
                 
@@ -183,7 +182,7 @@ export default{
             this.$refs[formName].validate(valid=>{
                 if (valid) {
                     this.loading = true
-                    user.changePassword(this.changePassword).then(res=> {
+                    center.modifyPassword(this.changePassword).then(res=> {
                         if (res.data.status_code==true) {
                             this.$message({
                                 message: '成功修改密码',
