@@ -61,66 +61,66 @@ export default {
         customId:''
       },
       tableData: [
-        {
-          transactionId: '111',
-          transactionAmount: '123',
-          time: '2023-09-11-12-08-09',
-          contactName:'yyz',
-          phone: '15302938395',
-          bankName: '招商银行',
-          bankCardNum:'111001001101001010'
-        },
-        {
-          transactionId: '111',
-          transactionAmount: '123',
-          time: '2023-09-11-12-08-09',
-          contactName:'yyz',
-          phone: '15302938395',
-          bankName: '招商银行',
-          bankCardNum:'111001001101001010'
-        },
-        {
-          transactionId: '111',
-          transactionAmount: '123',
-          time: '2023-09-11-12-08-09',
-          contactName:'yyz',
-          phone: '15302938395',
-          bankName: '招商银行',
-          bankCardNum:'111001001101001010'
-        },
-        {
-          transactionId: '114'
-        },
-        {
-          transactionId: '115'
-        },
-        {
-          transactionId: '116'
-        },
-        {
-          transactionId: '117'
-        },
-        {
-          transactionId: '118'
-        },
-        {
-          transactionId: '119'
-        },
-        {
-          transactionId: '120'
-        },
-        {
-          transactionId: '121'
-        },
-        {
-          transactionId: '122'
-        },
-        {
-          transactionId: '123'
-        },
-        {
-          transactionId: '124'
-        }
+        // {
+        //   transactionId: '111',
+        //   transactionAmount: '123',
+        //   time: '2023-09-11-12-08-09',
+        //   contactName:'yyz',
+        //   phone: '15302938395',
+        //   bankName: '招商银行',
+        //   bankCardNum:'111001001101001010'
+        // },
+        // {
+        //   transactionId: '111',
+        //   transactionAmount: '123',
+        //   time: '2023-09-11-12-08-09',
+        //   contactName:'yyz',
+        //   phone: '15302938395',
+        //   bankName: '招商银行',
+        //   bankCardNum:'111001001101001010'
+        // },
+        // {
+        //   transactionId: '111',
+        //   transactionAmount: '123',
+        //   time: '2023-09-11-12-08-09',
+        //   contactName:'yyz',
+        //   phone: '15302938395',
+        //   bankName: '招商银行',
+        //   bankCardNum:'111001001101001010'
+        // },
+        // {
+        //   transactionId: '114'
+        // },
+        // {
+        //   transactionId: '115'
+        // },
+        // {
+        //   transactionId: '116'
+        // },
+        // {
+        //   transactionId: '117'
+        // },
+        // {
+        //   transactionId: '118'
+        // },
+        // {
+        //   transactionId: '119'
+        // },
+        // {
+        //   transactionId: '120'
+        // },
+        // {
+        //   transactionId: '121'
+        // },
+        // {
+        //   transactionId: '122'
+        // },
+        // {
+        //   transactionId: '123'
+        // },
+        // {
+        //   transactionId: '124'
+        // }
       ],
       currentPage: 1, // 当前页码
       total: 20, // 总条数
@@ -148,8 +148,8 @@ export default {
     //清除筛选器等
     resetDateFilter() {
       this.$refs['tableData'].clearFilter()
-      this.$refs['tableData'].clearSort()
-      this.$refs['tableData'].clearSelection();
+      // this.$refs['tableData'].clearSort()
+      // this.$refs['tableData'].clearSelection();
     },
     // 该方法在每页条数改变时触发 选择一页显示多少行
     handleSizeChange(val) {

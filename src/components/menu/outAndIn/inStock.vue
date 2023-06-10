@@ -14,7 +14,7 @@
                     </el-form-item>
                     <el-form-item prop="" class="textInput el-form-item">
                     <span slot="label"  style="color: #403b3b;">   入库人姓名:</span>
-                    <el-select  v-model="queryConditions.inPeopleName" size="small" clearable placeholder="请选择" style="width: 150px;h">
+                    <el-select  v-model="queryConditions.inPeopleName" size="small" clearable placeholder="请选择" style="width: 150px;">
                         <el-option
                         v-for="item in inPeopleNameList"
                         :key="item"

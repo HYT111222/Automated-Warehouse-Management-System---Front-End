@@ -8,7 +8,7 @@
           <span slot="label"  style="color: #403b3b">员工用户名:</span>
           <el-input v-model="staffForm.userName" placeholder="请输入用户名" size="small" clearable style="width: 220px;"></el-input>
         </el-form-item>
-        <el-form-item prop="" class="textStaff el-form-item">
+        <el-form-item prop="name" class="textStaff el-form-item">
           <span slot="label"  style="color: #403b3b;">   员工姓名:</span>
           <el-select  v-model="staffForm.name" size="small" clearable placeholder="请选择" style="width: 220px;">
             <el-option
@@ -147,6 +147,8 @@ export default {
         callback()
       } else if (!reg.test(value)) {
         return callback(new Error('请输入手机号码'))
+      } else {
+        return callback()
       }
     }
     var email = (rule, value, callback) => {
@@ -155,6 +157,8 @@ export default {
         callback()
       } else if (!reg.test(value)) {
         return callback(new Error('请输入正确邮箱,例如10203022@bjtu.edu.cn'))
+      } else {
+        return callback()
       }
     }
 
@@ -182,64 +186,68 @@ export default {
         remark: '',
       },*/
       tableData: [
-        {
-          userName: '顺丰快递员1',
-          name: 'yyz',
-          warehouseId:'1',
-          // warehouseName: '北京交通大学',
-          phone: '15302938395',
-          transferStation: '北京交通大学',
-          email: '20301029@bjtu.edu.cn',
-        },
-        {
-          userName: '顺丰快递员2',
-          name: 'yyz',
-          warehouseId:'1',
-          // warehouseName: '北京交通大学',
-          phone: '15302938395',
-          transferStation: '北京交通大学',
-          email: '20301029@bjtu.edu.cn',
-        },
-        {
-          userName: '顺丰快递员3',
-          name: 'yyz',
-          warehouseId:'1',
-          // warehouseName: '北京交通大学'
-          phone: '15302938395',
-          transferStation: '北京交通大学',
-          email: '20301029@bjtu.edu.cn',
-        },
-        {
-          userName: '顺丰快递员3'
-        },
-        {
-          userName: '顺丰快递员3'
-        },
-        {
-          userName: '顺丰快递员3'
-        },
-        {
-          userName: '顺丰快递员3'
-        },
-        {
-          userName: '顺丰快递员3'
-        },
-        {
-          userName: '顺丰快递员3'
-        },
-        {
-          userName: '顺丰快递员3'
-        },
-        {
-          userName: '顺丰快递员3'
-        },
-        {
-          userName: '顺丰快递员3'
-        }
+        // {
+        //   userName: '顺丰快递员1',
+        //   name: 'yyz',
+        //   warehouseId:'1',
+        //   // warehouseName: '北京交通大学',
+        //   phone: '15302938395',
+        //   transferStation: '北京交通大学',
+        //   email: '20301029@bjtu.edu.cn',
+        // },
+        // {
+        //   userName: '顺丰快递员2',
+        //   name: 'yyz',
+        //   warehouseId:'1',
+        //   // warehouseName: '北京交通大学',
+        //   phone: '15302938395',
+        //   transferStation: '北京交通大学',
+        //   email: '20301029@bjtu.edu.cn',
+        // },
+        // {
+        //   userName: '顺丰快递员3',
+        //   name: 'yyz',
+        //   warehouseId:'1',
+        //   // warehouseName: '北京交通大学'
+        //   phone: '15302938395',
+        //   transferStation: '北京交通大学',
+        //   email: '20301029@bjtu.edu.cn',
+        // },
+        // {
+        //   userName: '顺丰快递员3'
+        // },
+        // {
+        //   userName: '顺丰快递员3'
+        // },
+        // {
+        //   userName: '顺丰快递员3'
+        // },
+        // {
+        //   userName: '顺丰快递员3'
+        // },
+        // {
+        //   userName: '顺丰快递员3'
+        // },
+        // {
+        //   userName: '顺丰快递员3'
+        // },
+        // {
+        //   userName: '顺丰快递员3'
+        // },
+        // {
+        //   userName: '顺丰快递员3'
+        // },
+        // {
+        //   userName: '顺丰快递员3'
+        // }
       ],
       staffNameList: ["小李", "小猪"],
       rules: {
+        userName: [],
+        name: [],
+        warehouseId:[],
         phone: [{validator: phone, trigger: 'blur'}],
+        transferStation: [],
         email: [{validator: email, trigger: 'blur'}]
       },
       currentPage: 1, // 当前页码
@@ -270,7 +278,9 @@ export default {
     },
     // 该方法用于搜索
     searchMag(formName) {
+      console.log("开始搜索")
       this.$refs[formName].validate((valid) => {
+        console.log("通过搜索表单验证")
         if (valid) {
           this.Loading = true
           peopleManger.checkStaffInformation(this.staffForm).then(res => {
@@ -285,8 +295,11 @@ export default {
           }).finally(res => {
             this.Loading = false
           })
+        } else {
+          console.log("没有通过搜索表单验证")
         }
       })
+      console.log("搜索完毕")
     },
     // 该方法用于清除填入的信息
     clearFilter(formName) {
@@ -364,6 +377,7 @@ export default {
           })
         }
       })
+      console.log("删除完毕")
     }
   }
 }

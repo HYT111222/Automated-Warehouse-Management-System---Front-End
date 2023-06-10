@@ -20,7 +20,7 @@
         <!--          <span slot="label"  style="color: #403b3b">入库人姓名:</span>-->
         <!--          <el-input v-model="inputForm.name" placeholder="请输入姓名" size="small" clearable style="width: 220px;"></el-input>-->
         <!--        </el-form-item>-->
-        <el-form-item prop="" class="textOutput el-form-item">
+        <el-form-item prop="name" class="textOutput el-form-item">
           <span slot="label"  style="color: #403b3b;">   出库人姓名:</span>
           <el-select  v-model="outputForm.name" size="small" clearable placeholder="请选择" style="width: 220px;">
             <el-option
@@ -52,7 +52,7 @@
       <!-- 新增入库人相关 -->
       <el-dialog title="添加入库人" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
         <!-- 信息区域 -->
-        <el-form :inline="true" :model="outputFormNew" ref="outputRef" :rules="rules" label-width="120px" class="output-form">
+        <el-form :inline="true" :model="outputFormNew" ref="outputRef" :rules="rulesNew" label-width="120px" class="output-form">
           <el-form-item prop="outBoundPersonId" label-position="left" class="output-el-form-item">
             <span slot="label"  style="color: #403b3b">出库人编号:</span>
             <el-input v-model="outputFormNew.outBoundPersonId" placeholder="请输入编号" size="small" clearable style="width: 165px;"></el-input>
@@ -139,9 +139,11 @@ export default {
     var outBoundPersonId = (rule, value, callback) => {
       var req = /^[A-Za-z0-9]*$/
       if (!value) {
-        callback()
+        return callback()
       } else if (!req.test(value)) {
         return callback(new Error('仅由数字和字母构成'))
+      } else {
+        return callback()
       }
     }
     var phone = (rule, value, callback) => {
@@ -150,6 +152,8 @@ export default {
         callback()
       } else if (!reg.test(value)) {
         return callback(new Error('请输入手机号码'))
+      } else {
+        return callback()
       }
     }
     var email = (rule, value, callback) => {
@@ -158,6 +162,8 @@ export default {
         callback()
       } else if (!reg.test(value)) {
         return callback(new Error('请输入正确邮箱,例如10203022@bjtu.edu.cn'))
+      } else {
+        return callback()
       }
     }
 
@@ -183,72 +189,84 @@ export default {
         remark: ''
       },
       tableData: [
-        {
-          outBoundPersonId: '111',
-          userName: '顺丰快递员1',
-          name: 'yyz',
-          phone: '15302938395',
-          address: '北京交通大学',
-          email: '20301029@bjtu.edu.cn',
-          remark: '开发测试'
-        },
-        {
-          outBoundPersonId: '112',
-          userName: '顺丰快递员2',
-          name: 'yyz',
-          phone: '15302938395',
-          address: '北京交通大学',
-          email: '20301029@bjtu.edu.cn',
-          remark: '开发测试'
-        },
-        {
-          outBoundPersonId: '113',
-          userName: '顺丰快递员3',
-          name: 'yyz',
-          phone: '15302938395',
-          address: '北京交通大学',
-          email: '20301029@bjtu.edu.cn',
-          remark: '开发测试'
-        },
-        {
-          outBoundPersonId: '114'
-        },
-        {
-          outBoundPersonId: '115'
-        },
-        {
-          outBoundPersonId: '116'
-        },
-        {
-          outBoundPersonId: '117'
-        },
-        {
-          outBoundPersonId: '118'
-        },
-        {
-          outBoundPersonId: '119'
-        },
-        {
-          outBoundPersonId: '120'
-        },
-        {
-          outBoundPersonId: '121'
-        },
-        {
-          outBoundPersonId: '122'
-        },
-        {
-          outBoundPersonId: '123'
-        },
-        {
-          outBoundPersonId: '124'
-        }
+        // {
+        //   outBoundPersonId: '111',
+        //   userName: '顺丰快递员1',
+        //   name: 'yyz',
+        //   phone: '15302938395',
+        //   address: '北京交通大学',
+        //   email: '20301029@bjtu.edu.cn',
+        //   remark: '开发测试'
+        // },
+        // {
+        //   outBoundPersonId: '112',
+        //   userName: '顺丰快递员2',
+        //   name: 'yyz',
+        //   phone: '15302938395',
+        //   address: '北京交通大学',
+        //   email: '20301029@bjtu.edu.cn',
+        //   remark: '开发测试'
+        // },
+        // {
+        //   outBoundPersonId: '113',
+        //   userName: '顺丰快递员3',
+        //   name: 'yyz',
+        //   phone: '15302938395',
+        //   address: '北京交通大学',
+        //   email: '20301029@bjtu.edu.cn',
+        //   remark: '开发测试'
+        // },
+        // {
+        //   outBoundPersonId: '114'
+        // },
+        // {
+        //   outBoundPersonId: '115'
+        // },
+        // {
+        //   outBoundPersonId: '116'
+        // },
+        // {
+        //   outBoundPersonId: '117'
+        // },
+        // {
+        //   outBoundPersonId: '118'
+        // },
+        // {
+        //   outBoundPersonId: '119'
+        // },
+        // {
+        //   outBoundPersonId: '120'
+        // },
+        // {
+        //   outBoundPersonId: '121'
+        // },
+        // {
+        //   outBoundPersonId: '122'
+        // },
+        // {
+        //   outBoundPersonId: '123'
+        // },
+        // {
+        //   outBoundPersonId: '124'
+        // }
       ],
       outPeopleNameList: ["小李", "小猪"],
       rules: {
         outBoundPersonId: [{validator: outBoundPersonId, trigger: 'blur'}],
+        userName: [],
         phone: [{validator: phone, trigger: 'blur'}],
+        name: [],
+        address: [],
         email: [{validator: email, trigger: 'blur'}]
+      },
+      rulesNew:{
+        outBoundPersonId: [{validator: outBoundPersonId, trigger: 'blur'}],
+        userName: [],
+        phone: [{validator: phone, trigger: 'blur'}],
+        name: [],
+        address: [],
+        email: [{validator: email, trigger: 'blur'}],
+        remark: [],
       },
       currentPage: 1, // 当前页码
       total: 20, // 总条数
@@ -278,7 +296,9 @@ export default {
     },
     // 该方法用于搜索
     searchMag(formName) {
+      console.log("开始搜索")
       this.$refs[formName].validate((valid) => {
+        console.log("搜索表单通过验证")
         if (valid) {
           this.Loading = true
           peopleManger.checkFetchOutPeopleInformation(this.outputForm).then(res => {
@@ -293,8 +313,11 @@ export default {
           }).finally(res => {
             this.Loading = false
           })
+        }else {
+          console.log("搜索表单没有通过验证")
         }
       })
+      console.log("搜索完毕")
     },
     // 该方法用于清除填入的信息
     clearFilter(formName) {
@@ -303,13 +326,15 @@ export default {
     //清除筛选器等
     resetDateFilter() {
       this.$refs['tableData'].clearFilter()
-      this.$refs['tableData'].clearSort()
-      this.$refs['tableData'].clearSelection();
+      // this.$refs['tableData'].clearSort()
+      // this.$refs['tableData'].clearSelection();
     },
     // 提交dialog信息
     submitDialog(formName){
       this.dialogVisible = false
+      console("开始增加出库人")
       this.$refs[formName].validate((valid) => {
+        console.log("通过增加出库人表单验证")
         if (valid) {
           this.Loading = true
           peopleManger.addFetchOutPeople(this.outputFormNew).then(res => {
@@ -325,8 +350,11 @@ export default {
           }).finally(res => {
             this.Loading = false
           })
+        }else {
+          console.log("没有通过增加出库人表单验证")
         }
       })
+      console.log("增加出库人执行完毕")
     },
     // 关闭对话框
     handleClose(done) {
@@ -368,6 +396,7 @@ export default {
           })
          }
       })
+      console.log("删除完成")
     }
   }
 }
