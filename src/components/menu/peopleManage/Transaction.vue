@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import peopleManger from "@/api/peopleManger";
+import peopleManger from "@/api/peopleManage";
 
 export default {
   data() {

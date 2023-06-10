@@ -130,7 +130,7 @@
 </template>
 
 <script>
-import peopleManger from "@/api/peopleManger";
+import peopleManger from "@/api/peopleManage";
 import outAndIn from "@/api/outAndIn";
 
 export default {

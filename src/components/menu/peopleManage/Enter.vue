@@ -130,7 +130,7 @@
 </template>
 
 <script>
-import peopleManger from "@/api/peopleManger";
+import peopleManger from "@/api/peopleManage";
 import outAndIn from "@/api/outAndIn";
 
 export default {
@@ -284,6 +284,7 @@ export default {
           peopleManger.checkInBoundPeorsonInformation(this.inputForm).then(res => {
             if (res.data.status_code === true) {
               this.tableData = res.data.inBoundPeopleList
+              console.log("搜索成功")
             } else {
               this.$message({
                 message: "搜索异常",
@@ -303,8 +304,8 @@ export default {
     //清除筛选器等
     resetDateFilter() {
       this.$refs['tableData'].clearFilter()
-      this.$refs['tableData'].clearSort()
-      this.$refs['tableData'].clearSelection();
+      // this.$refs['tableData'].clearSort()
+      // this.$refs['tableData'].clearSelection();
     },
     // 提交dialog信息
     submitDialog(formName){
@@ -316,6 +317,11 @@ export default {
             if(res.data.status_code === true) {
               this.fetchNewTable()
               this.getPeopleList()
+              this.$message({
+                message:"提交成功",
+                type:"success"
+              })
+              console.log("提交成功")
             }else{
               this.$message({
                 message:"提交异常",

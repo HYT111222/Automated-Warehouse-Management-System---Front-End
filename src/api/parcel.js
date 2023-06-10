@@ -36,5 +36,15 @@ export default {
       method: 'delete',
       data:data
     })
+  },
+  /**
+   * 3.获取全部包裹信息
+   * @returns 
+   */
+  allParcel() {
+    return request({
+      url: '/parcel/allParcel',
+      method: 'get',
+    })
   }
 }
