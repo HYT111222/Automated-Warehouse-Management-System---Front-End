@@ -16,7 +16,7 @@
                 <el-form-item  style="display: inline-block">
                     <span slot="label"  class="span-text">出库单号:</span>
                     <el-tag type="success" class="tag">{{ newOutOrder.outID }}</el-tag>
-                    </el-form-item>
+                </el-form-item>
                 <el-form-item style="display: inline-block">
                     <span slot="label"  class="span-text">订单号:</span>
                     <el-tag v-if="isEdit===false" class="tag">{{ newOutOrder.orderID }}</el-tag>
@@ -129,11 +129,11 @@
         </el-card>
         <el-dialog title="请选择包裹（以下包裹正在库中）"  :visible.sync="dialogFormVisible" style="padding: 0px;" :width="'1000px'" class="dialogue-add">
             <div style="text-align:center;">
-                <el-form :model="searchMag" ref="searchMag" style="width: 450px; text-align:center;display: inline-block;">
-                    <el-form-item style="display:flex">
+                <el-form :model="searchMag" :rules="rules" ref="searchMag" style="width: 450px; text-align:center;display: inline-block;">
+                    <el-form-item style="display:flex" prop="parcelId">
                     <span slot="label"  class="span-text" >包裹ID:</span>
-                    <el-input size="small" clearable v-model="searchMag.parcelId" class="tag"></el-input>
-                    <el-button type="primary" :loading="Loading" @click="searchMag('searchMag')" icon="el-icon-search"  round size="small">搜索</el-button>
+                    <el-input size="small"  clearable v-model="searchMag.parcelId" class="tag"></el-input>
+                    <el-button type="primary" :loading="Loading" @click="search('searchMag')" icon="el-icon-search"  round size="small">搜索</el-button>
                     <el-tooltip class="item" effect="light" content="重置表格内容" placement="top-start">
                     <el-button type="primary" icon="el-icon-refresh-right" @click="initialParcel" plain  circle style="padding:5px;"></el-button>
                     </el-tooltip>
@@ -273,20 +273,20 @@ export default {
             outPeopleNameList:['王小龙','李小虎'],
             searchMag:{
                 parcelId: "",
-                parcelState: "",
-                shelfID: "",
-                regionName: ""
+                // parcelState: "",
+                // shelfID: "",
+                // regionName: ""
             },
             newOutOrder:{
-                outID: "20974567382",
-                orderID: "287392052",
-                outPeopleName: "小王",
+                outID: "",
+                orderID: "",
+                outPeopleName: "",
                 visible: false,
                 //以下为编辑查看特有
                 outStatus:"待审核",
                 outTime:"249752",
-                userName:"小王",
-                managerName:"王总",
+                userName:"",
+                managerName:"",
                 parcelList: [
                     {
                     parcelID: "234567890343",
@@ -444,18 +444,23 @@ export default {
             ],
             rules:{
                 outID:[{}],
-                orderID:[{validator: parcelID, trigger: 'blur'}],
-                outPeopleName:[{validator: outPeople, trigger: 'blur'}],
+                orderID:[
+                { required: true,  message: "不能为空", trigger: "blur"},    
+                {validator: parcelID, trigger: 'blur'}],
+                outPeopleName:[
+                { required: true,  message: "不能为空", trigger: "blur"},],
                 //对话框
-                parcelID:[{validator: parcelID, trigger: 'blur'}],
-                fromPeople:[{validator: name, trigger: 'blur'}],
-                fromPhone:[{validator: phone, trigger: 'blur'}],
-                fromAddrSelect: [{required: true, message: '请选择', trigger: 'blur'}],
-                fromAddrDetail:[{validator: addrDetail, trigger: 'blur'}],
-                toPeople:[{validator: name, trigger: 'blur'}],
-                toPhone:[{validator: phone, trigger: 'blur'}],
-                toAddrSelect: [{required: true, message: '请选择', trigger: 'blur'}],
-                toAddrDetail:[{validator: addrDetail, trigger: 'blur'}]
+                parcelID:[ { required: true,  message: "不能为空", trigger: "blur"},
+                {validator: parcelID, trigger: 'blur'}],
+                parcelId:[ { required: true,  message: "不能为空", trigger: "blur"}],
+                // fromPeople:[{validator: name, trigger: 'blur'}],
+                // fromPhone:[{validator: phone, trigger: 'blur'}],
+                // fromAddrSelect: [{required: true, message: '请选择', trigger: 'blur'}],
+                // fromAddrDetail:[{validator: addrDetail, trigger: 'blur'}],
+                // toPeople:[{validator: name, trigger: 'blur'}],
+                // toPhone:[{validator: phone, trigger: 'blur'}],
+                // toAddrSelect: [{required: true, message: '请选择', trigger: 'blur'}],
+                // toAddrDetail:[{validator: addrDetail, trigger: 'blur'}]
             },
             //表格分页
             multipleSelection: [],//选中的信息
@@ -482,7 +487,14 @@ export default {
                 outAndIn.singleOutOrderDetail(window.sessionStorage.getItem('row_out')).then(res=>{
                     if (res.data.status_code == true){
                         //保存数据
-                        this.newOutOrder.outID = res.data.outID
+                        this.newInOrder.outID = res.data.inID
+                        this.newInOrder.inPeopleName = res.data.inPeopleName
+                        this.newInOrder.inStatus = res.data.inStatus
+                        this.newInOrder.managerName = res.data.managerName
+                        this.newInOrder.orderID = res.data.orderID
+                        this.newInOrder.userName =res.data.userName
+                        this.newInOrder.inTime =res.data.inTime
+                        this.newInOrder.parcelList =res.data.parcelList
                     }else {
                         this.$message({
                             message:"获取包裹详情异常",
@@ -519,10 +531,16 @@ export default {
     methods:{
     /**----------------------------------------普通操作方法------------------------------------------------- */
     //搜索包裹
-    searchMag(formName){
+    search(formName){
         this.$refs[formName].validate(valid=>{
             if (valid){
-                outAndIn.searchParcel(this.searchMag).then(res=>{
+                let temp={
+                    parcelId:this.searchMag.parcelId,
+                    parcelState: "",
+                    shelfID: "",
+                    regionName: ""
+                }
+                outAndIn.searchParcel(temp).then(res=>{
                     console.log(res)
                     if (res.data.status_code){
                         this.parcelList = res.data.parcelList
@@ -592,7 +610,7 @@ export default {
                         this.$router.push('/outStock')
                     }else {
                         this.$message({
-                            message:"申请异常",
+                            message:res.message,
                             type:'error'
                         })
                     }

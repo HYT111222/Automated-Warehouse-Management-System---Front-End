@@ -154,102 +154,102 @@ export default{
                 inPeopleName: ''
             },
             tableData:[
-                {
-                    inID: "20230510192800",
-                    orderID: "20230510192801",
-                    inPeopleName: "王小利",
-                    inStatus:'已入库',
-                    inTime: "2023-05-10-19:58:01",
-                    userName: "小李"
-                },
-                {
-                    inID: "20230510192801",
-                    orderID: "20230510192802",
-                    inPeopleName: "王小利",
-                    inStatus: '待入库',
-                    inTime: "string",
-                    userName: "小李"
-                },
-                {
-                    inID: "20230510192803",
-                    orderID: "20230510192803",
-                    inPeopleName: "王小利",
-                    inStatus:'已入库',
-                    inTime: "2023-05-10-19:58:01",
-                    userName: "王五"
-                },
-                {
-                    inID: "20230510192804",
-                    orderID: "20230510192811",
-                    inPeopleName: "王小利",
-                    inStatus: '待入库',
-                    inTime: "string",
-                    userName: "小李"
-                },
-                {
-                    inID: "20230510192809",
-                    orderID: "20230510192801",
-                    inPeopleName: "王小利",
-                    inStatus:'已入库',
-                    inTime: "2023-05-10-19:58:01",
-                    userName: "小李"
-                },
-                {
-                    inID: "20230510192801",
-                    orderID: "20230510192801",
-                    inPeopleName: "王小利",
-                    inStatus: '待入库',
-                    inTime: "string",
-                    userName: "小李"
-                },
-                {
-                    inID: "20230510192801",
-                    orderID: "20230510192801",
-                    inPeopleName: "王小利",
-                    inStatus:'已入库',
-                    inTime: "2023-05-10-19:58:01",
-                    userName: "小李"
-                },
-                {
-                    inID: "20230510192801",
-                    orderID: "20230510192801",
-                    inPeopleName: "王小利",
-                    inStatus: '待入库',
-                    inTime: "string",
-                    userName: "小李"
-                },
-                {
-                    inID: "20230510192801",
-                    orderID: "20230510192801",
-                    inPeopleName: "王小利",
-                    inStatus:'已入库',
-                    inTime: "2023-05-10-19:58:01",
-                    userName: "小李"
-                },
-                {
-                    inID: "20230510192801",
-                    orderID: "20230510192801",
-                    inPeopleName: "王小利",
-                    inStatus: '待入库',
-                    inTime: "string",
-                    userName: "小李"
-                },
-                {
-                    inID: "20230510192801",
-                    orderID: "20230510192801",
-                    inPeopleName: "王小利",
-                    inStatus:'已入库',
-                    inTime: "2023-05-10-19:58:01",
-                    userName: "小李"
-                },
-                {
-                    inID: "20230510192801",
-                    orderID: "20230510192801",
-                    inPeopleName: "王小利",
-                    inStatus: '待入库',
-                    inTime: "string",
-                    userName: "小李"
-                }
+                // {
+                //     inID: "20230510192800",
+                //     orderID: "20230510192801",
+                //     inPeopleName: "王小利",
+                //     inStatus:'已入库',
+                //     inTime: "2023-05-10-19:58:01",
+                //     userName: "小李"
+                // },
+                // {
+                //     inID: "20230510192801",
+                //     orderID: "20230510192802",
+                //     inPeopleName: "王小利",
+                //     inStatus: '待入库',
+                //     inTime: "string",
+                //     userName: "小李"
+                // },
+                // {
+                //     inID: "20230510192803",
+                //     orderID: "20230510192803",
+                //     inPeopleName: "王小利",
+                //     inStatus:'已入库',
+                //     inTime: "2023-05-10-19:58:01",
+                //     userName: "王五"
+                // },
+                // {
+                //     inID: "20230510192804",
+                //     orderID: "20230510192811",
+                //     inPeopleName: "王小利",
+                //     inStatus: '待入库',
+                //     inTime: "string",
+                //     userName: "小李"
+                // },
+                // {
+                //     inID: "20230510192809",
+                //     orderID: "20230510192801",
+                //     inPeopleName: "王小利",
+                //     inStatus:'已入库',
+                //     inTime: "2023-05-10-19:58:01",
+                //     userName: "小李"
+                // },
+                // {
+                //     inID: "20230510192801",
+                //     orderID: "20230510192801",
+                //     inPeopleName: "王小利",
+                //     inStatus: '待入库',
+                //     inTime: "string",
+                //     userName: "小李"
+                // },
+                // {
+                //     inID: "20230510192801",
+                //     orderID: "20230510192801",
+                //     inPeopleName: "王小利",
+                //     inStatus:'已入库',
+                //     inTime: "2023-05-10-19:58:01",
+                //     userName: "小李"
+                // },
+                // {
+                //     inID: "20230510192801",
+                //     orderID: "20230510192801",
+                //     inPeopleName: "王小利",
+                //     inStatus: '待入库',
+                //     inTime: "string",
+                //     userName: "小李"
+                // },
+                // {
+                //     inID: "20230510192801",
+                //     orderID: "20230510192801",
+                //     inPeopleName: "王小利",
+                //     inStatus:'已入库',
+                //     inTime: "2023-05-10-19:58:01",
+                //     userName: "小李"
+                // },
+                // {
+                //     inID: "20230510192801",
+                //     orderID: "20230510192801",
+                //     inPeopleName: "王小利",
+                //     inStatus: '待入库',
+                //     inTime: "string",
+                //     userName: "小李"
+                // },
+                // {
+                //     inID: "20230510192801",
+                //     orderID: "20230510192801",
+                //     inPeopleName: "王小利",
+                //     inStatus:'已入库',
+                //     inTime: "2023-05-10-19:58:01",
+                //     userName: "小李"
+                // },
+                // {
+                //     inID: "20230510192801",
+                //     orderID: "20230510192801",
+                //     inPeopleName: "王小利",
+                //     inStatus: '待入库',
+                //     inTime: "string",
+                //     userName: "小李"
+                // }
             ],
             inPeopleNameList:["小李",'小猪'],
             rules:{
@@ -271,11 +271,13 @@ export default{
       //刷新表格
       fetchNewTable(){
             outAndIn.showIn().then(res=>{
+                console.log(res.data.inList)
                 if (res.data.status_code == true){
                     this.tableData = res.data.inList
                 }
             })
             outAndIn.fetchInPeopleNameList().then(res=>{
+                console.log(res.data.inPeopleNameList)
                 if(res.data.status_code == true){
                     this.inPeopleNameList = res.data.inPeopleNameList
                 }

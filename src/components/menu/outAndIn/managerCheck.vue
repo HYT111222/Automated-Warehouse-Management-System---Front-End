@@ -420,11 +420,13 @@ export default{
         handleClick_dia(row){
             //赋予对话框数据
             outAndIn.singleInOrderDetail(row.inID).then(res=>{
+                console.log(res)
                 if(res.data.status_code){
                     this.dialogue.inID = res.data.inID
                     this.dialogue.inPeopleName = res.data.inPeopleName
                     this.dialogue.inStatus =res.data.inStatus
                     this.dialogue.inTime =res.data.inTime
+                    this.dialogue.userName = res.data.userName
                     this.dialogue.managerName = res.data.managerName
                     this.dialogue.orderID = res.data.orderID
                     this.dialogue.parcelList = res.data.parcelList
@@ -476,6 +478,7 @@ export default{
            if(this.isIn){
             this.dialogue.inStatus = '待入库'
             outAndIn.ExamineIn(this.dialogue).then(res=>{
+                console.log(res)
                 if(res.data.status_code){
                     this.$message({
                         message:"处理结果成功保存",
@@ -484,7 +487,7 @@ export default{
                 }else{
                     this.$message({
                         message:"处理异常",
-                        type:'success'
+                        type:'error'
                     })
                 }
             })

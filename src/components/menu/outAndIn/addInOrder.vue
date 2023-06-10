@@ -12,19 +12,19 @@
                 <el-button icon="el-icon-d-arrow-right" size="large" circle style="border: transparent !important;" @click="backToInSock"></el-button>
             </div>
             <el-form :model="newInOrder" label-width="100px" ref="newInOrder" :rules="rules"
-            style="width: 500px; text-align:center;display: inline-block;height: 170px;">
+            style="width: 500px; text-align:center;display: inline-block;height: 200px;">
                 <el-form-item  style="display: inline-block">
-                    <span slot="label"  class="span-text">入库单号:</span>
+                    <span prop="inID" slot="label"  class="span-text">入库单号:</span>
                     <el-tag type="success" class="tag">{{ newInOrder.inID }}</el-tag>
                     </el-form-item>
-                <el-form-item style="display: inline-block">
+                <el-form-item prop="orderID" style="display: inline-block">
                     <span slot="label"  class="span-text">订单号:</span>
                     <!-- <el-tag v-if="isEdit===false" class="tag">{{ newInOrder.orderID }}</el-tag> -->
                     <el-input  placeholder="数字组成" clearable v-model="newInOrder.orderID" class="tag"
                     :disabled="!isEdit"></el-input>
                 </el-form-item>
-                <el-form-item prop="" class="" style="display: inline-block">
-                    <span slot="label"  class="span-text">入库交接人:</span>
+                <el-form-item prop="inPeopleName" class="" style="display: inline-block">
+                    <span slot="label"  class="span-text">交接人:</span>
                     <!-- <el-tag v-if="isEdit===false" class="tag">{{ newInOrder.inPeopleName }}</el-tag> -->
                     <el-select :disabled="!isEdit" v-model="newInOrder.inPeopleName"  clearable placeholder="请选择"
                     class="tag">
@@ -48,14 +48,18 @@
                     </el-radio-group>
                 </el-form-item>
                 <div v-if="isNew=='false'">
-                <el-form-item  class="el-form-item-span" >
-                    <span slot="label"  class="span-text">申请人:</span>
-                    <span style="font-size: 16px;">{{ newInOrder.userName }}</span>
-                </el-form-item>
-                <el-form-item  class="el-form-item-span" >
-                    <span slot="label"  class="span-text">审批人:</span>
-                    <span style="font-size: 16px;">{{ newInOrder.managerName }}</span>
-                </el-form-item>
+                    <span slot="label"  class="span-text">申请人:{{ newInOrder.userName }}</span>
+                    <!-- <span style="font-size: 16px;">{{ newInOrder.userName }}</span> -->
+                    <span slot="label"  class="span-text">审批人:{{ newInOrder.managerName }}</span>
+                    <!-- <span style="font-size: 16px;">{{ newInOrder.managerName }}</span> -->
+                <!-- <el-form-item  class="el-form-item-span" style="display: flex;">
+                    <span slot="label"  class="span-text">申请人:{{ newInOrder.userName }}</span>
+                    <span slot="label"  class="span-text">审批人:{{ newInOrder.managerName }}</span>
+                  
+                </el-form-item> -->
+                <!-- <el-form-item  class="el-form-item-span" > -->
+                    
+                <!-- </el-form-item> -->
                 <el-form-item class="el-form-item-span" v-if="newInOrder.inStatus === '已入库'">
                     <span slot="label"  class="span-text">入库时间:</span>
                     <span style="font-size: 16px;">{{ newInOrder.inTime }}</span>
@@ -246,9 +250,9 @@
         </div>
         </el-card>
         <el-dialog title="添加包裹"  :visible.sync="dialogFormVisible" style="padding: 0px;" :width="'800px'" class="dialogue-add">
-        <el-form :model="parcel" ref="parcel" :rules="rules" style="padding: 0px; height: 300px; " label-width="90px" >
+        <el-form :model="parcel" ref="parcel" :rules="rules" style="padding: 0px; height: 300px; " label-width="100px" >
             <div style="text-align: center;">
-                <el-form-item label-width="70px" prop="parcelID" style="margin-top: 0%; display: inline-block;">
+                <el-form-item label-width="90px" prop="parcelID" style="margin-top: 0%; display: inline-block;">
                 <span slot="label"  style="color: #403b3b;font-size: 16px;">包裹ID</span>
                 <el-input class="id-input" v-model="parcel.parcelID" size="small" placeholder="由5-20位数字组成" autocomplete="off" style="width: 200px;" ></el-input>
                 </el-form-item>
@@ -363,7 +367,7 @@ export default {
                 callback()
             }
         }
-        var inPeople = ( rule, value, callback) => {
+        var inPeopleName = ( rule, value, callback) => {
             if (!value) {
                 return callback(new Error('请选择入库交接人'))
             }else {
@@ -399,18 +403,18 @@ export default {
             options: regionData,
             inPeopleNameList:['王小龙','李小虎'],
             newInOrder:{
-                inID: "20974567382",
-                orderID: "287392052",
-                inPeopleName: "小王",
+                inID: "",
+                orderID: "",
+                inPeopleName: "",
                 visible: false,
                 //以下为编辑查看特有
                 inStatus:"待审核",
-                inTime:"249752",
-                userName:"小王",
-                managerName:"王总",
+                inTime:"",
+                userName:"",
+                managerName:"",
                 parcelList: [
                     {
-                    parcelID: "234567890343",
+                    parcelID: "",
                     fromPeople: "小王李",
                     fromPhone: "12345678911",
                     fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
@@ -457,18 +461,34 @@ export default {
            },
             rules:{
                 inID:[{}],
-                orderID:[{validator: parcelID, trigger: 'blur'}],
-                inPeopleName:[{validator: inPeople, trigger: 'blur'}],
+                orderID:[
+                    { required: true,  message: "不能为空", trigger: "blur"},
+                    {validator: parcelID, trigger: 'blur'}],
+                inPeopleName:[{required: true, message: '请选择', trigger: 'blur'}],
                 //对话框
-                parcelID:[{validator: parcelID, trigger: 'blur'}],
-                fromPeople:[{validator: name, trigger: 'blur'}],
-                fromPhone:[{validator: phone, trigger: 'blur'}],
+                parcelID:[
+                    {required: true,message: "不能为空", trigger: "blur"},
+                    {validator: parcelID, trigger: 'blur'}],
+                fromPeople:[
+                    {required: true,message: "不能为空", trigger: "blur"},
+                    {validator: name, trigger: 'blur'}],
+                fromPhone:[
+                {required: true,message: "不能为空", trigger: "blur"},    
+                {validator: phone, trigger: 'blur'}],
                 fromAddrSelect: [{required: true, message: '请选择', trigger: 'blur'}],
-                fromAddrDetail:[{validator: addrDetail, trigger: 'blur'}],
-                toPeople:[{validator: name, trigger: 'blur'}],
-                toPhone:[{validator: phone, trigger: 'blur'}],
+                fromAddrDetail:[
+                {required: true,message: "不能为空", trigger: "blur"},    
+                {validator: addrDetail, trigger: 'blur'}],
+                toPeople:[
+                {required: true,message: "不能为空", trigger: "blur"},
+                {validator: name, trigger: 'blur'}],
+                toPhone:[
+                {required: true,message: "不能为空", trigger: "blur"},    
+                {validator: phone, trigger: 'blur'}],
                 toAddrSelect: [{required: true, message: '请选择', trigger: 'blur'}],
-                toAddrDetail:[{validator: addrDetail, trigger: 'blur'}]
+                toAddrDetail:[
+                {required: true,message: "不能为空", trigger: "blur"},    
+                {validator: addrDetail, trigger: 'blur'}]
             },
             //表格分页
             multipleSelection: [],//选中的信息
@@ -493,9 +513,18 @@ export default {
             this.isEdit = false
             //获取数据
             outAndIn.singleInOrderDetail(window.sessionStorage.getItem('row')).then(res=>{
+                console.log(res.data)
                 if (res.data.status_code == true){
                     //保存数据
                     this.newInOrder.inID = res.data.inID
+                    this.newInOrder.inPeopleName = res.data.inPeopleName
+                    this.newInOrder.inStatus = res.data.inStatus
+                    this.newInOrder.managerName = res.data.managerName
+                    this.newInOrder.orderID = res.data.orderID
+                    this.newInOrder.userName =res.data.userName
+                    this.newInOrder.inTime =res.data.inTime
+                    this.newInOrder.parcelList =res.data.parcelList
+
                 }else {
                     this.$message({
                         message:"获取包裹详情异常",
@@ -596,7 +625,7 @@ export default {
                         this.$router.push('/inStock')
                     }else {
                         this.$message({
-                            message:"申请异常",
+                            message:res.message,
                             type:'error'
                         })
                     }
