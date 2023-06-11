@@ -360,9 +360,9 @@ export default {
     // 该方法用于删除信息
     deleteOne(row){
       console.log("触发删除信息")
-      var temp = []
-      temp.push(row.userName)
-      peopleManger.delStaffInformation(temp).then(res =>{
+      // var temp = []
+      // temp.push(row.userName)
+      peopleManger.delStaffInformation(row.userName).then(res =>{
         if(res.data.status_code === true){
           this.fetchNewTable()
           this.getPeopleList()

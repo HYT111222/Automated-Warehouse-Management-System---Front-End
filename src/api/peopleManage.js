@@ -65,7 +65,7 @@ export default {
     },
     /**
      * 6.删除入库核实人信息
-     * @param{*} data
+     * @param {*} data
      * @returns
      */
     delFetchInPeopleInformation(data){

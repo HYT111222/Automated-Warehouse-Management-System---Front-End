@@ -356,6 +356,7 @@ export default {
               })
               console.log("提交成功")
             }else{
+              console.log("提交异常")
               this.$message({
                 message:"提交异常",
                 type:"error"
@@ -391,12 +392,18 @@ export default {
     // 该方法用于删除信息
     deleteOne(row){
       console.log("触发删除信息，id: " +row.inBoundPersonId)
-      var temp = []
-      temp.push(row.inBoundPersonId)
-      peopleManger.delFetchInPeopleInformation(temp).then(res=>{
+      // var temp = []
+      // console.log("temp: " + temp)
+      // console.log("断点1")
+      // temp.push(row.inBoundPersonId)
+      console.log("断点2")
+      // console.log("2temp:" + temp)
+      peopleManger.delFetchInPeopleInformation(row.inBoundPersonId).then(res=>{
+        console.log("断点3")
         if(res.data.status_code == true){
           this.fetchNewTable()
           this.getPeopleList()
+          console.log("断点4")
           this.$message({
             message:"删除成功",
             type:"success"
