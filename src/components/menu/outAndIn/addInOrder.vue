@@ -235,7 +235,7 @@
         </el-pagination>
         <div style="text-align: center;margin-top: 10px;">
             <el-button round type="primary" :loading="Loading" @click="saveOrder('newInOrder')" style="padding: 10px;" :disabled="isEdit===false?true:false">保 存</el-button>
-            <el-button round type="success" :loading="Loading" @click="enter" style="padding: 10px;" v-if="enterOp===true">入 库</el-button>
+            <el-button round type="success" :loading="Loading" @click="enter" style="padding: 10px;" v-if="enterOp==true">入 库</el-button>
             <el-popover
             placement="top"
             width="160"
@@ -254,7 +254,7 @@
             <div style="text-align: center;">
                 <el-form-item label-width="90px" prop="parcelID" style="margin-top: 0%; display: inline-block;">
                 <span slot="label"  style="color: #403b3b;font-size: 16px;">包裹ID</span>
-                <el-input class="id-input" v-model="parcel.parcelID" size="small" placeholder="由5-20位数字组成" autocomplete="off" style="width: 200px;" ></el-input>
+                <el-input class="id-input" v-model="parcel.parcelID" size="small" placeholder="由1-20位数字组成" autocomplete="off" style="width: 200px;" ></el-input>
                 </el-form-item>
             </div>
 
@@ -352,7 +352,7 @@ export default {
         var parcelID = (rule, value, callback) => {
             if (!value) {
                 return callback(new Error('不可为空'))
-            }else if (!/^[0-9]{5,20}$/.test(value)){
+            }else if (!/^[0-9]{1,20}$/.test(value)){
                 return callback(new Error('只能由数字组成,5-20位'))
             }else {
                 callback()
@@ -408,21 +408,21 @@ export default {
                 inPeopleName: "",
                 visible: false,
                 //以下为编辑查看特有
-                inStatus:"待审核",
+                inStatus:"",
                 inTime:"",
                 userName:"",
                 managerName:"",
                 parcelList: [
-                    {
-                    parcelID: "",
-                    fromPeople: "小王李",
-                    fromPhone: "12345678911",
-                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    toPeople: "胡晓",
-                    toPhone: "12345678911",
-                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    },
+                    // {
+                    // parcelID: "",
+                    // fromPeople: "小王李",
+                    // fromPhone: "12345678911",
+                    // fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
+                    // //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
+                    // toPeople: "胡晓",
+                    // toPhone: "12345678911",
+                    // toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
+                    // },
                     // {
                     // parcelID: "234567890344",
                     // fromPeople: "小王李",
@@ -497,6 +497,7 @@ export default {
         }
     },
     created(){
+        const _this =this
         this.isNew = window.sessionStorage.getItem('isNew')
         //判断是新增还是编辑查看
         if (this.isNew =='true') {//新增
@@ -516,14 +517,37 @@ export default {
                 console.log(res.data)
                 if (res.data.status_code == true){
                     //保存数据
-                    this.newInOrder.inID = res.data.inID
-                    this.newInOrder.inPeopleName = res.data.inPeopleName
-                    this.newInOrder.inStatus = res.data.inStatus
-                    this.newInOrder.managerName = res.data.managerName
-                    this.newInOrder.orderID = res.data.orderID
-                    this.newInOrder.userName =res.data.userName
-                    this.newInOrder.inTime =res.data.inTime
-                    this.newInOrder.parcelList =res.data.parcelList
+                    _this.newInOrder.inID = res.data.inID
+                    _this.newInOrder.inPeopleName = res.data.inPeopleName
+                    _this.newInOrder.inStatus = res.data.inStatus
+                    _this.newInOrder.managerName = res.data.managerName
+                    _this.newInOrder.orderID = res.data.orderID
+                    _this.newInOrder.userName =res.data.userName
+                    _this.newInOrder.inTime =res.data.inTime
+                    _this.newInOrder.parcelList =res.data.parcelList
+                    console.log(_this.newInOrder)
+                    //判断该订单状态，若为已入库则状态和内容皆不可修改
+                    if (this.newInOrder.inStatus === "已入库"){
+                        this.switch_disable = true
+                    }else if (this.newInOrder.inStatus === "待入库"){//只能进行入库操作
+                        this.enterOp = true
+                        console.log("ok")
+                    }else {//待审核和已拒绝
+                        console.log("okkkk")
+                        //获取身份
+                        //this.authority=window.sessionStorage.getItem('authority')
+                        //若为普通用户，判断该订单本用户是否可编辑
+                        if(this.authority != 'manager'){
+                            //若为本用户所申请的订单
+                            if(this.newInOrder.userName === window.sessionStorage.getItem('userName')){
+                                this.switch_disable = false
+                            }else {
+                                this.switch_disable = true
+                            }
+                        }else {
+                            this.switch_disable = false
+                        }
+                    }
 
                 }else {
                     this.$message({
@@ -532,26 +556,7 @@ export default {
                     })
                 }
             })
-            //判断该订单状态，若为已入库则状态和内容皆不可修改
-            if (this.newInOrder.inStatus === "已入库"){
-                this.switch_disable = true
-            }else if (this.newInOrder.inStatus === "待入库"){//只能进行入库操作
-                this.enterOp = true
-            }else {//待审核和已拒绝
-                //获取身份
-                //this.authority=window.sessionStorage.getItem('authority')
-                //若为普通用户，判断该订单本用户是否可编辑
-                if(this.authority != 'manager'){
-                    //若为本用户所申请的订单
-                    if(this.newInOrder.userName === window.sessionStorage.getItem('userName')){
-                        this.switch_disable = false
-                    }else {
-                        this.switch_disable = true
-                    }
-                }else {
-                    this.switch_disable = false
-                }
-            }
+            
 
         }
     },
@@ -667,27 +672,25 @@ export default {
 
     },
     //入库操作
-    enter(formName){
+    enter(){
         this.newInOrder.inStatus = '已入库'
-        this.$refs[formName].validate(valid=>{
-            if(valid){
-                this.Loading =true
-                outAndIn.ExamineIn(this.newInOrder).then(res=>{
-                    console.log(res)
-                    if(res.data.status_code == true){
-                        this.$message({
-                            message:"入库成功",
-                            type:'success'
-                        })
-                    }else {
-                        this.$message({
-                            message:"入库失败",
-                            type:'error'
-                        })
-                    }
+        this.Loading =true
+        outAndIn.ExamineIn(this.newInOrder).then(res=>{
+            console.log(res)
+            if(res.data.status_code == true){
+                this.$message({
+                    message:"入库成功",
+                    type:'success'
+                })
+                this.$router.push('/inStock')
+            }else {
+                this.$message({
+                    message:"入库失败原因是"+res.message,
+                    type:'error'
                 })
             }
         })
+      
     },
 
     /**-----------------------------------------表格操作------------------------------------------------ */

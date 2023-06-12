@@ -190,7 +190,7 @@ export default{
             this.authority= '仓库管理员'
             user.managerHomePage().then(res=>{
                 if (res.data.status_code == true){
-                    this.staffNum = res.data.staffNum-1
+                    this.staffNum = res.data.staffNum
                     this.shelfNum = res.data.shelfNum
                     this.companyNum = res.data.companyNum
                     this.inPeopleNum = res.data.inPeopleNum

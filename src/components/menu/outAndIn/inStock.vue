@@ -2,7 +2,7 @@
     <div >
         <el-card class="box-card">
         <el-form :model="queryConditions" :rules="rules" ref="queryConditions" label-width="90px" class="form" :inline="true">
-                    <el-form-item class="el-form-item">
+                    <el-form-item class="el-form-item" prop="inStatus">
                     <span slot="label" style="color: #403b3b">入库单状态:</span>
                     <el-radio-group v-model="queryConditions.inStatus" class="status-group" size="small">
                     <el-radio-button label="待审核" ></el-radio-button>
@@ -12,7 +12,7 @@
                     <el-radio-button label="全部状态"></el-radio-button>
                     </el-radio-group>
                     </el-form-item>
-                    <el-form-item prop="" class="textInput el-form-item">
+                    <el-form-item prop="inPeopleName" class="textInput el-form-item">
                     <span slot="label"  style="color: #403b3b;">   入库人姓名:</span>
                     <el-select  v-model="queryConditions.inPeopleName" size="small" clearable placeholder="请选择" style="width: 150px;h">
                         <el-option
@@ -33,7 +33,7 @@
                     </el-form-item>
         </el-form>
         <div style="display: flex;float: right;margin-bottom:10px;">
-                    <el-button type="primary" :loading="Loading" @click="searchMag('queryConditions')" icon="el-icon-search"  round size="small">搜索</el-button>
+                    <el-button type="primary" :loading="Loading" @click="search('queryConditions')" icon="el-icon-search"  round size="small">搜索</el-button>
                     <el-button type="info" plain icon="el-icon-refresh-right" round size="small" @click="clearFilter('queryConditions')">重置</el-button>
         </div>
     </el-card>
@@ -122,30 +122,37 @@ import outAndIn from '@/api/outAndIn.js'
 //判断待删除的订单的状态
 function judgeState(arry){
         for (let i=0;i<arry.length;i++){
-            if (arry[i].inStatus != '待入库'|| '已拒绝'){
-                return false
+            if (arry[i].inStatus === '待入库'|| '已拒绝' || '待审核'){
+                return true
             }
         }
-        return true
+        return false
 }
 export default{
     data(){
+        
         var inID = (rule, value, callback) => {
             if (!value) {
-                callback()
+               return callback()
             } else if(!/^\d{14}$/.test(value)){
                 return callback(new Error('14个数字组成,如20230510195801'))
             }
         }
         var orderID = (rule, value, callback) => {
             if (!value) {
-                callback()
+               return callback()
             }else if (!/^[0-9]{5,16}$/.test(value)){
                 return callback(new Error('只能由数字组成'))
             }
         }
+        var inPeopleName = ( rule, value, callback) => {
+            if (!value) {
+                return callback(new Error('请选择入库交接人'))
+            }else {
+                callback()
+            }
+        }
         return{
-
             Loading:false,
             queryConditions:{
                 inStatus: '全部状态',
@@ -153,7 +160,7 @@ export default{
                 orderID: '',
                 inPeopleName: ''
             },
-            tableData:[
+            tableData:[{}
                 // {
                 //     inID: "20230510192800",
                 //     orderID: "20230510192801",
@@ -253,8 +260,11 @@ export default{
             ],
             inPeopleNameList:["小李",'小猪'],
             rules:{
-                inID:[{validator: inID, trigger: 'blur'}],
-                orderID:[{validator: orderID, trigger: 'blur'}],
+                inID:[
+                {required: false, message: "请输入手机号", trigger: "blur"}],
+                inStatus:[{}],
+                inPeopleName:[{}],
+                orderID:[{}],
             },
             multipleSelection: [],//选中的信息
             currentPage: 1, // 当前页码
@@ -290,9 +300,12 @@ export default{
         this.$router.push({ path: '/addNewIn' })
       },
       //查询
-      searchMag(formName){
-
+      search(formName){
         this.$refs[formName].validate((valid) => {
+            console.log(valid)
+            if(this.queryConditions.inStatus ==='全部状态'){
+                this.queryConditions.inStatus = ''
+            }
             if (valid) {
                 this.Loading = true
                 outAndIn.searchIn(this.queryConditions).then(res=>{
@@ -344,9 +357,10 @@ export default{
         var temp_ = []
         temp_.push(row)
         if (judgeState(temp_) == true){
-            var temp = []
-            temp.push(row.inID)
-            outAndIn.InDelMultitude(temp).then(res=>{
+            var InOrderList = []
+            InOrderList.push(row.inID)
+            console.log("temp"+InOrderList)
+            outAndIn.InDelMultitude(InOrderList).then(res=>{
                 if(res.data.status_code ==true){
                     this.fetchNewTable()
                     this.$message({
@@ -372,6 +386,7 @@ export default{
         window.sessionStorage.setItem('isNew','false')
         window.sessionStorage.setItem('row',row.inID)
         this.$router.push({ path: '/addNewIn' })
+        
       },
      /**----------------------表格相关方法-------------------------------- */
      //全表筛选器
@@ -397,7 +412,8 @@ export default{
         resetDateFilter() {
         this.$refs['tableData'].clearFilter()
         this.$refs['tableData'].clearSort()
-        this.$refs['tableData'].clearSelection();
+        this.$refs['tableData'].clearSelection()
+        this.fetchNewTable()
       },
       //表单清空
       clearFilter(formName) {

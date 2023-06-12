@@ -127,7 +127,7 @@
         </el-tab-pane>
         </el-tabs>
             </el-card>
-            <el-dialog :title="isInOrder === 'true' ? '入库申请单':'出库申请单'" :visible.sync="dialogFormVisible" :width="'800px'">
+            <el-dialog :title="isInOrder == true ? '入库申请单':'出库申请单'" :visible.sync="dialogFormVisible" :width="'800px'">
                 <div >
                   <el-card style="text-align:center;margin-top: 0px;">
                     <!-- <div style="float: right;">
@@ -140,7 +140,7 @@
                     </div> -->
             <el-form :model="dialogue" label-width="100px" ref="dialogue" :rules="rules" style="width: 500px; text-align:center;display: inline-block;height: 150px;">
                 <el-form-item  style="display: inline-block;margin-bottom: 0%;" >
-                    <span slot="label"  style="color: #403b3b;" v-if="isInOrder === 'true'">入库单号:</span>
+                    <span slot="label"  style="color: #403b3b;" v-if="isInOrder == true">入库单号:</span>
                     <span slot="label"  style="color: #403b3b;" v-else>出库单号:</span>
                     <el-tag class="tag">{{ dialogue.inID }}</el-tag>
                     </el-form-item>
@@ -149,7 +149,7 @@
                     <el-tag type="success" class="tag">{{ dialogue.orderID }}</el-tag>
                 </el-form-item>
                 <el-form-item prop="" class="" style="display: inline-block;margin-bottom: 0%;">
-                    <span slot="label"  style="color: #403b3b;" v-if="isInOrder === 'true'">入库交接人:</span>
+                    <span slot="label"  style="color: #403b3b;" v-if="isInOrder == true">入库交接人:</span>
                     <span slot="label"  style="color: #403b3b;" v-else>出库交接人:</span>
                     <el-tag type="success" class="tag">{{ dialogue.inPeopleName }}</el-tag>
                 </el-form-item>
@@ -217,11 +217,7 @@
 </template>
 <script>
 import outAndIn from '@/api/outAndIn.js'
-//计算百分比(每审批一个就调用一次)
-function calPercentage(percentage,list){
-        var temp = percentage + 100/length(list)
-        return temp
-}
+
 
 export default{
     data(){
@@ -232,11 +228,13 @@ export default{
             /**入库 */
             currentPage: 1, // 当前页码
             pageSize: 10, // 每页的数据条数
+            listLen:0,
             percentage:0,//每处理一次订单就计算一次（percentage+100/inList的长度）
             
             /**出库 */
             currentPage_out: 1, // 当前页码
             pageSize_out: 10, // 每页的数据条数
+            listLen_out:0,
             percentage_out:0,
 
             outPeopleNameList:[{text: '小王', value: '小王'},{text: '小李', value: '小李'}],//从数据存储获得
@@ -311,63 +309,63 @@ export default{
                
             ],
             //对话框展现的数据
-            isInOrder:'true',
+            isInOrder:true,
             
             dialogue:{
                 //以下需要请求获得
-                inID: "string",
-                orderID: "string",
-                inPeopleName: "string",
-                inStatus: "string",
-                inTime: "string",
-                userName: "string",
-                managerName: "string",
+                inID: "",
+                orderID: "",
+                inPeopleName: "",
+                inStatus: "",
+                inTime: "",
+                userName: "",
+                managerName: "",
                 parcelList: [
-                    {
-                        parcelID: "string",
-                        fromPeople: "string",
-                        fromPhone: "string",
-                        fromAddr: "string",
-                        toPeople: "string",
-                        toPhone: "string",
-                        toAddr: "string"
-                    },
-                    {
-                        parcelID: "string",
-                        fromPeople: "string",
-                        fromPhone: "string",
-                        fromAddr: "string",
-                        toPeople: "string",
-                        toPhone: "string",
-                        toAddr: "string"
-                    },
-                    {
-                        parcelID: "string",
-                        fromPeople: "string",
-                        fromPhone: "string",
-                        fromAddr: "string",
-                        toPeople: "string",
-                        toPhone: "string",
-                        toAddr: "string"
-                    },
-                    {
-                        parcelID: "string",
-                        fromPeople: "string",
-                        fromPhone: "string",
-                        fromAddr: "string",
-                        toPeople: "string",
-                        toPhone: "string",
-                        toAddr: "string"
-                    },
-                    {
-                        parcelID: "string",
-                        fromPeople: "string",
-                        fromPhone: "string",
-                        fromAddr: "string",
-                        toPeople: "string",
-                        toPhone: "string",
-                        toAddr: "string"
-                    }
+                    // {
+                    //     parcelID: "string",
+                    //     fromPeople: "string",
+                    //     fromPhone: "string",
+                    //     fromAddr: "string",
+                    //     toPeople: "string",
+                    //     toPhone: "string",
+                    //     toAddr: "string"
+                    // },
+                    // {
+                    //     parcelID: "string",
+                    //     fromPeople: "string",
+                    //     fromPhone: "string",
+                    //     fromAddr: "string",
+                    //     toPeople: "string",
+                    //     toPhone: "string",
+                    //     toAddr: "string"
+                    // },
+                    // {
+                    //     parcelID: "string",
+                    //     fromPeople: "string",
+                    //     fromPhone: "string",
+                    //     fromAddr: "string",
+                    //     toPeople: "string",
+                    //     toPhone: "string",
+                    //     toAddr: "string"
+                    // },
+                    // {
+                    //     parcelID: "string",
+                    //     fromPeople: "string",
+                    //     fromPhone: "string",
+                    //     fromAddr: "string",
+                    //     toPeople: "string",
+                    //     toPhone: "string",
+                    //     toAddr: "string"
+                    // },
+                    // {
+                    //     parcelID: "string",
+                    //     fromPeople: "string",
+                    //     fromPhone: "string",
+                    //     fromAddr: "string",
+                    //     toPeople: "string",
+                    //     toPhone: "string",
+                    //     toAddr: "string"
+                    // }
                 ]
             },
             
@@ -380,11 +378,13 @@ export default{
         outAndIn.InNeedTocheck().then(res=>{
             if(res.data.status_code){
                 this.inList = res.data.inList
+                this.listLen = this.inList.length
             }
         })
         outAndIn.OutNeedTocheck().then(res=>{
             if(res.data.status_code){
                 this.outList = res.data.outList
+                this.listLen_out = this.outList.length
             }
         })
         if(this.inList.length == 0){
@@ -396,6 +396,27 @@ export default{
     },
     methods:{
         /**---------------------------------整体适用---------------------------------------- */
+        handleClick(){
+            this.isInOrder = !this.isInOrder
+        },
+        //计算百分比(每审批一个就调用一次)
+        calPercentage(percentage,len){
+                var temp = percentage + 100/len
+                return temp
+        },
+        //刷新
+        refetchTable(){
+            outAndIn.InNeedTocheck().then(res=>{
+            if(res.data.status_code){
+                this.inList = res.data.inList
+                }
+            })
+            outAndIn.OutNeedTocheck().then(res=>{
+                if(res.data.status_code){
+                    this.outList = res.data.outList
+                }
+            })
+        },
         //进度条颜色
         customColorMethod(percentage) {
             if (percentage < 30) {
@@ -449,12 +470,14 @@ export default{
         handleClick_dia_out(row){
             //赋予对话框数据
             outAndIn.singleOutOrderDetail(row.outID).then(res=>{
+                console.log(res)
                 if(res.data.status_code){
                     this.dialogue.inID = res.data.outID
                     this.dialogue.inPeopleName = res.data.outPeopleName
                     this.dialogue.inStatus =res.data.outStatus
                     this.dialogue.inTime =res.data.outTime
                     this.dialogue.managerName = res.data.managerName
+                    this.dialogue.userName = res.data.userName
                     this.dialogue.orderID = res.data.orderID
                     this.dialogue.parcelList = res.data.parcelList
                 }
@@ -484,6 +507,9 @@ export default{
                         message:"处理结果成功保存",
                         type:'success'
                     })
+                    calPercentage(this.percentage,this.listLen)
+                    this.dialogFormVisible =false
+                    refetchTable()
                 }else{
                     this.$message({
                         message:"处理异常",
@@ -508,12 +534,17 @@ export default{
                         message:"处理结果成功保存",
                         type:'success'
                     })
+                    calPercentage(this.percentage,this.listLen_out)
+                    this.dialogFormVisible =false
+                    refetchTable()
                 }else{
                     this.$message({
                         message:"处理异常",
                         type:'success'
                     })
                 }
+            }).finally(res=>{
+                this.dialogFormVisible =false
             })
            }
         },
@@ -528,6 +559,9 @@ export default{
                         message:"处理结果成功保存",
                         type:'success'
                     })
+                    calPercentage(this.percentage,this.listLen_out)
+                    this.dialogFormVisible =false
+                    refetchTable()
                 }else{
                     this.$message({
                         message:"处理异常",
@@ -552,6 +586,9 @@ export default{
                         message:"处理结果成功保存",
                         type:'success'
                     })
+                    calPercentage(this.percentage,this.listLen_out)
+                    this.dialogFormVisible =false
+                    refetchTable()
                 }else{
                     this.$message({
                         message:"处理异常",

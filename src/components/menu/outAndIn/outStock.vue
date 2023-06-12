@@ -76,7 +76,7 @@
             <template slot-scope="scope">
              <!--处理待修改-->
                 <el-tooltip class="item" :disabled="scope.row.outStatus === '待出库' ? true : false" effect="light"
-                :content="scope.row.outStatus === '待出库' ? '已成功入库' : '点击修改状态'" placement="top-start">
+                :content="scope.row.outStatus === '待出库' ? '已成功出库' : '点击修改状态'" placement="top-start">
                 <el-button
                 plain
                 round
@@ -121,11 +121,12 @@ import outAndIn from '@/api/outAndIn.js'
 //判断待删除的订单的状态
 function judgeState(arry){
         for (let i=0;i<arry.length;i++){
-            if (arry[i].outStatus != '待入库'|| '已拒绝'){
-                return false
+            if (arry[i].inStatus === '待入库'|| '已拒绝' || '待审核'){
+                console.log("okkkkk")
+                return true
             }
         }
-        return true
+        return false
 }
 export default{
     data(){
@@ -310,7 +311,7 @@ export default{
         if (judgeState(this.multipleSelection) == true ){
             var temp = []
             for (let i=0;i<this.multipleSelection.length;i++){
-                temp.push(this.multipleSelection[i].inID)
+                temp.push(this.multipleSelection[i].outID)
             }
             outAndIn.OutDelMultitude(temp).then(res=>{
                 if(res.data.status_code ==true){
@@ -336,13 +337,16 @@ export default{
       },
        //删除一条
        deleteOne(row){
+        console.log(row)
         var temp_ = []
         temp_.push(row)
+        console.log(judgeState(temp_))
         if (judgeState(temp_) == true ){
-            var temp = []
-            temp.push(row.inID)
-            console.log(temp)
-            outAndIn.OutDelMultitude(temp).then(res=>{
+            let OutOrderList = []
+            OutOrderList.push(row.outID)
+            console.log(row.outID)
+            outAndIn.OutDelMultitude(OutOrderList).then(res=>{
+                console.log(res)
                 if(res.data.status_code ==true){
                     this.fetchNewTable()
                     this.$message({

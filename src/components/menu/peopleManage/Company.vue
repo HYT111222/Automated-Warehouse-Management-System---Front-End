@@ -217,7 +217,7 @@ export default {
       Loading: false, // 加载中动画
       // 上方查找返回
       customForm: {
-        customId: 'sss',
+        customId: '',
         userName: '',
         // 应付款
         phone:'',
