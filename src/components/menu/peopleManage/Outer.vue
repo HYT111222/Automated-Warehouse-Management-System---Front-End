@@ -281,15 +281,18 @@ export default {
     // 该方法用于刷新表格
     fetchNewTable() {
       peopleManger.getFetchOutPeopleInformationAll().then(res => {
+        console.log("刷新表格")
         if (res.data.status_code === true) {
           this.tableData = res.data.outBoundPeopleList
         }
       })
     },
-    // 该方法用于获取入库人列表
+    // 该方法用于获取出库人列表
     getPeopleList(){
       outAndIn.fetchOutPeopleNameList().then(res =>{
+        console.log("刷新出库人列表")
         if (res.data.status_code === true) {
+          console.log("断点1")
           this.outPeopleNameList = res.data.outPeopleNameList
         }
       })

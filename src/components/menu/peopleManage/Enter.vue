@@ -292,8 +292,10 @@ export default {
       outAndIn.fetchInPeopleNameList().then(res =>{
         console.log("刷新入库人列表")
         if (res.data.status_code == true) {
+          console.log("断点1")
           this.inPeopleNameList = res.data.inPeopleNameList
         }
+        console.log("inPeopleNameList: " + res.data.inPeopleNameList)
       })
     },
     // 该方法用于搜索

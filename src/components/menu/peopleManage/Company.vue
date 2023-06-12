@@ -223,7 +223,7 @@ export default {
       Loading: false, // 加载中动画
       // 上方查找返回
       customForm: {
-        customId: 'sss',
+        customId: '',
         userName: '',
         // 应付款
         phone:'',
@@ -363,6 +363,7 @@ export default {
     // 该方法用于刷新表格
     fetchNewTable() {
       peopleManger.getCustomInformationAll().then(res => {
+        console.log("刷新表格")
         if (res.data.status_code === true) {
           this.tableData = res.data.customList
         }
@@ -371,7 +372,9 @@ export default {
     // 该方法用于获取客户列表
     getPeopleList(){
       peopleManger.getCustomNameList().then(res =>{
+        console.log("刷新客户列表")
         if (res.data.status_code === true) {
+          console.log("断点1")
           this.customNameList = res.data.customNameList
         }
       })

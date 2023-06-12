@@ -263,6 +263,7 @@ export default {
     // 该方法用于刷新表格
     fetchNewTable() {
       peopleManger.getStaffInformationAll().then(res => {
+        console.log("刷新表格")
         if (res.data.status_code === true) {
           this.tableData = res.data.staffList
         }
@@ -271,7 +272,9 @@ export default {
     // 该方法用于获取员工列表
     getPeopleList(){
       peopleManger.getStaffNameList().then(res =>{
+        console.log("刷新员工列表")
         if (res.data.status_code === true) {
+          console.log("断点1")
           this.staffNameList = res.data.staffNameList
         }
       })
