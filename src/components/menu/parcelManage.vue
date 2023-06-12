@@ -5,11 +5,11 @@
                     <el-form-item class="el-form-item">
                     <span slot="label" style="color: #403b3b">包裹状态:</span>
                     <el-radio-group v-model="parcelConditions.parcelState" class="status-group" size="small">
-                    <el-radio-button label="未入库" ></el-radio-button>
+                    <el-radio-button label="待入库" ></el-radio-button>
                     <el-radio-button label="已入库"></el-radio-button>
-                    <el-radio-button label="已出库"></el-radio-button>
-                    <el-radio-button label="即将出库"></el-radio-button>
-                    <el-radio-button label="全部状态"></el-radio-button>
+                    <el-radio-button label="待审核"></el-radio-button>
+                    <el-radio-button label="已拒绝"></el-radio-button>
+                    <el-radio-button label="待出库"></el-radio-button>
                     </el-radio-group>
                     </el-form-item>
                     <el-form-item prop="" class="textInput el-form-item">
@@ -58,7 +58,7 @@
                     </el-form-item>         
         </el-form>
         <div style="display: flex;float: right;margin-bottom:10px;">
-            <el-button type="primary" :loading="Loading" @click="searchParcel('parcelConditions')" icon="el-icon-search"  round size="small">搜索</el-button>
+            <el-button type="primary" :loading="Loading" @click="searchPackage()" icon="el-icon-search"  round size="small">搜索</el-button>
             <el-button type="info" plain icon="el-icon-refresh-right" round size="small" @click="clearFilter('parcelConditions')">重置</el-button> 
         </div>
       </el-card>
@@ -72,7 +72,8 @@
             :row-style="{height:'40px'}" :cell-style="{padding:'0px', textAlign: 'center' }" 
             size='small' >
             
-        
+            <el-table-column  prop="parcelId"  label="包裹号"  >
+            </el-table-column>
             <el-table-column  prop="shipperName"  label="发货人姓名"  >
             </el-table-column>
             <el-table-column  prop="shipperPhone"  label="发货人电话">
@@ -126,7 +127,7 @@
   import parcel from '@/api/parcel.js'
   //判断待删除的包裹的状态
   function judgeState(thing){
-        if (thing.parcelState != 未入库){
+        if (thing.parcelState != "待入库"){
                 return false
              }
         return true
@@ -162,7 +163,7 @@
         
         parcelConditions:{
             parcelId:'',
-            parcelState:'全部状态',
+            parcelState:'',
             shelfID:'',
             regionName:''
         },
@@ -173,95 +174,6 @@
                     shipperPhone: "13100009999",
                     shipperAddress: "北京海淀区北京交通大学",
                     consigneeName:'卖西瓜的凶老板',
-                    consigneePhone: "13399999999",
-                    consigneeAddress: "辽宁本溪明山区xx街"
-                },
-                {
-                    parcelId:"001",
-                    shipperName: "美女",
-                    shipperPhone: "13100009999",
-                    shipperAddress: "北京海淀区北京交通大学",
-                    consigneeName:'卖西瓜的凶老板',
-                    consigneePhone: "13399999999",
-                    consigneeAddress: "辽宁本溪明山区xx街"
-                },
-                {
-                    shipperName: "美女",
-                    shipperPhone: "13100009999",
-                    shipperAddress: "北京海淀区北京交通大学",
-                    consigneeName:'卖西瓜的凶老板',
-                    consigneePhone: "13399999999",
-                    consigneeAddress: "辽宁本溪明山区xx街"
-                },
-                {
-                    shipperName: "美女",
-                    shipperPhone: "13100009999",
-                    shipperAddress: "北京海淀区北京交通大学",
-                    consigneeName:'卖西瓜的老板',
-                    consigneePhone: "13399999999",
-                    consigneeAddress: "辽宁本溪明山区xx街"
-                },
-                {
-                    shipperName: "美女",
-                    shipperPhone: "13100009999",
-                    shipperAddress: "北京海淀区北京交通大学",
-                    consigneeName:'卖西瓜的老板',
-                    consigneePhone: "13399999999",
-                    consigneeAddress: "辽宁本溪明山区xx街"
-                },
-                {
-                    shipperName: "美女",
-                    shipperPhone: "13100009999",
-                    shipperAddress: "北京海淀区北京交通大学",
-                    consigneeName:'卖西瓜的老板',
-                    consigneePhone: "13399999999",
-                    consigneeAddress: "辽宁本溪明山区xx街"
-                },
-                {
-                    shipperName: "yyz",
-                    shipperPhone: "13100009999",
-                    shipperAddress: "北京海淀区北京交通大学",
-                    consigneeName:'卖西瓜的老板',
-                    consigneePhone: "13399999999",
-                    consigneeAddress: "辽宁本溪明山区xx街"
-                },
-                {
-                    shipperName: "美女",
-                    shipperPhone: "13100009999",
-                    shipperAddress: "北京海淀区北京交通大学",
-                    consigneeName:'卖西瓜的老板',
-                    consigneePhone: "13399999999",
-                    consigneeAddress: "辽宁本溪明山区xx街"
-                },
-                {
-                    shipperName: "美女",
-                    shipperPhone: "13100009999",
-                    shipperAddress: "北京海淀区北京交通大学",
-                    consigneeName:'卖西瓜的老板',
-                    consigneePhone: "13399999999",
-                    consigneeAddress: "辽宁本溪明山区xx街"
-                },
-                {
-                    shipperName: "美女",
-                    shipperPhone: "13100009999",
-                    shipperAddress: "北京海淀区北京交通大学",
-                    consigneeName:'卖西瓜的老板',
-                    consigneePhone: "13399999999",
-                    consigneeAddress: "辽宁本溪明山区xx街"
-                },
-                {
-                    shipperName: "美女",
-                    shipperPhone: "13100009999",
-                    shipperAddress: "北京海淀区北京交通大学",
-                    consigneeName:'卖西瓜的老板',
-                    consigneePhone: "13399999999",
-                    consigneeAddress: "辽宁本溪明山区xx街"
-                },
-                {
-                    shipperName: "美女",
-                    shipperPhone: "13100009999",
-                    shipperAddress: "北京海淀区北京交通大学",
-                    consigneeName:'卖西瓜的老板',
                     consigneePhone: "13399999999",
                     consigneeAddress: "辽宁本溪明山区xx街"
                 }
@@ -284,19 +196,22 @@
     methods:{
      fetchNewTable(){
             parcel.allParcel().then(res=>{
+                console.log(res)
                 if (res.data.status_code == true){
                     this.tableData = res.data.parcelInformation
                 }
             })
       },
      //查询
-     searchParcel(formName){
-        this.$refs[formName].validate((valid) => {
-            if (valid) {
+     searchPackage(){
+                console.log(this.parcelConditions)
                 this.Loading = true
                 parcel.searchParcel(this.parcelConditions).then(res=>{
-                    if(res.data.status_code === true){
+                    console.log(res)
+                    if(res.data.status_code == true){
+                        console.log('成功')
                         this.tableData = res.data.parcelInformation
+                        console.log('断点一')
                     }else {
                         this.$message({
                             message:"查询异常",
@@ -304,15 +219,14 @@
                         })
                     }
                 }).finally(res=>{
+                    console.log('断点二')
                     this.Loading =false
                 })
-            }
-        })
       },
     //显示包裹详细信息
     view(row){ 
         this.dialogTableVisible = true
-        console.log(row.shipperName)
+        console.log(row.parcelId)
         parcel.searchParcelDetail(row.parcelId).then(res=>{
                    this.parcelinformation.parcelId = res.data.parcelId
                    this.parcelinformation.inTime = res.data.inTime

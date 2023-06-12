@@ -4,7 +4,7 @@
         <el-header class="header" style="height: 50px;">
             <div class="header-left">
                 <div class="logo-box">
-                    <div class="logo"><img src="@/assets/image/logo.png" width="40px" height="40px"  class="img"/></div>
+                    <div class="logo"><img src="@/assets/image/mao.png" width="40px" height="40px"  class="img"/></div>
                         <span class="system-name text">自动化仓库管理系统</span>
                         <!-- <div style="margin-left: 40px;">
                             <el-breadcrumb separator="/">
@@ -228,7 +228,7 @@ export default{
 /* --------------- 顶层导航栏 --------------------- */
 .header {
     height: 50px;//在此设置不管用，要在style里
-    background-color: #4481eb;
+    background-color: #80a6e7;
    // position: relative;//内部元素可以使用 top、bottom、left、right 属性来调整它的位置。
 }
 /* -------------左-------------*/

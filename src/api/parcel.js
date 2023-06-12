@@ -15,16 +15,19 @@ export default {
     },
     /**
    * 2.获取包裹详情
-   * @param {*} data 
+  
    * @returns 
    */
     searchParcelDetail(param) {
     return request({
-      url: '/parcel/searchPacelDetail',
+      url: '/parcel/searchParcelDetail',
       method: 'get',
-      param: param
+      params:{
+        parcelId:param
+      }
     })
   },
+ 
     /**
    * 3.删除包裹信息
    * @param {*} data 

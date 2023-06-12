@@ -2,9 +2,9 @@
     <div>
      <el-container style="height: 500px; ">
         <el-header>
-            <span>  货架编号:</span>
-            <el-input v-model="regionId" placeholder="请输入库区编号" size="medium" style="width:200px"></el-input>
-            <el-button type="primary"  icon="el-icon-search"  round size="small">搜索</el-button>
+            <span>  库区名称:</span>
+            <el-input v-model="regionName" placeholder="请输入库区名称" size="medium" style="width:200px"></el-input>
+            <el-button type="primary"  @click="regionselected(this.regionName)" icon="el-icon-search"  round size="small">搜索</el-button>
         </el-header>
      <el-container>
       <el-aside width="100px" style="background-color: rgb(255, 255, 255);height:500px">
@@ -188,7 +188,7 @@
     data(){
       return {
         dialogTableVisible:false,
-        parcelName:'BJ',
+        regionName:'BJ',
         regionInformation:{
             regionId:'BJ',
             regionName:'北京',
@@ -276,19 +276,58 @@
             })
         
     },
+    // regionselected(e){
+    //     console.log(e)
+    //     this.parcelName=e
+    //     regionAndShelf.searchRegion(e).then(res=>{
+    //                console.log(res)
+    //                this.regionInformation.regionId = res.data.inBoundPeopleList[0].regionId
+    //                this.regionInformation.regionName = res.data.inBoundPeopleList[0].regionName
+    //                this.regionInformation.shelfNumber = res.data.inBoundPeopleList[0].shelfNumber
+    //                 this.$message({
+    //                     message:"查找成功",
+    //                     type:"success"
+    //                 })
+    //                 regionAndShelf.allShelf(this.regionInformation.regionId).then(are=>{
+    //                 console.log(are)
+    //                 if(are.data.status_code === true){
+    //                     this.tableData = are.data.shelfList
+    //                 }else {
+    //                     this.$message({
+    //                         message:"查询异常",
+    //                         type:"error"
+    //                     })
+    //                 }
+    //             })
+    //         })
+            
+    // },
     //选择库区
       menuselected(e){
         console.log(e)
         this.parcelName=e
         regionAndShelf.searchRegion(e).then(res=>{
-                   this.regionInformation.regionId = res.data.regionId
-                   this.regionInformation.regionName = res.data.regionName
-                   this.regionInformation.shelfNumber = res.data.shelfNumber
+                   console.log(res)
+                   this.regionInformation.regionId = res.data.inBoundPeopleList[0].regionId
+                   this.regionInformation.regionName = res.data.inBoundPeopleList[0].regionName
+                   this.regionInformation.shelfNumber = res.data.inBoundPeopleList[0].shelfNumber
                     this.$message({
                         message:"查找成功",
                         type:"success"
                     })
+                    regionAndShelf.allShelf(this.regionInformation.regionId).then(are=>{
+                    console.log(are)
+                    if(are.data.status_code === true){
+                        this.tableData = are.data.shelfList
+                    }else {
+                        this.$message({
+                            message:"查询异常",
+                            type:"error"
+                        })
+                    }
+                })
             })
+            
       },
     //按照货架编号搜索货架
     searchShelfID(id){
