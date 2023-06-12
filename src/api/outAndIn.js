@@ -218,10 +218,11 @@ export default {
   /**
    * 20.根据ID获取包裹信息
    */
-  searchParcel() {
+  searchParcel(data) {
     return request({
       url: '/parcel/searchParcel',
-      method: 'post'
+      method: 'post',
+      data:data
     })
   },
 }

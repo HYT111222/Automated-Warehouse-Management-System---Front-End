@@ -65,7 +65,7 @@ export default {
     },
     /**
      * 6.删除入库核实人信息
-     * @param{*} data
+     * @param {*} data
      * @returns
      */
     delFetchInPeopleInformation(data){
@@ -130,7 +130,7 @@ export default {
      */
     addInBoundPeople(param){
         return request({
-            url:'/peopleManger/addInBoundPeople',
+            url:'/peopleManage/addInBoundPeople',
             method:'post',
             data:param
         })
@@ -142,7 +142,7 @@ export default {
      */
     addFetchOutPeople(param){
         return request({
-            url:'peopleManger/addFetchOutPeople',
+            url:'peopleManage/addFetchOutPeople',
             method:'post',
             data:param
         })
@@ -216,7 +216,7 @@ export default {
      */
     addCustom(param){
         return request({
-            url: '/peopleManger/addCustom',
+            url: '/peopleManage/addCustom',
             method: 'post',
             data:param
         })

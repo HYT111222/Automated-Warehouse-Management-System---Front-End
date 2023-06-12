@@ -13,20 +13,20 @@
             </div>
             <el-form :model="newOutOrder" label-width="100px" ref="newOutOrder" :rules="rules"
             style="width: 500px; text-align:center;display: inline-block;height: 170px;">
-                <el-form-item  style="display: inline-block">
+                <el-form-item  style="display: inline-block" prop="outID">
                     <span slot="label"  class="span-text">出库单号:</span>
                     <el-tag type="success" class="tag">{{ newOutOrder.outID }}</el-tag>
-                    </el-form-item>
-                <el-form-item style="display: inline-block">
-                    <span slot="label"  class="span-text">订单号:</span>
-                    <el-tag v-if="isEdit===false" class="tag">{{ newOutOrder.orderID }}</el-tag>
-                    <el-input  placeholder="数字组成" clearable v-model="newOutOrder.orderID" class="tag"
-                    v-else></el-input>
                 </el-form-item>
-                <el-form-item prop="" class="" style="display: inline-block">
+                <el-form-item style="display: inline-block" prop="orderID">
+                    <span slot="label"  class="span-text">订单号:</span>
+                    <!-- <el-tag v-if="isEdit===false" class="tag">{{ newOutOrder.orderID }}</el-tag> -->
+                    <el-input  placeholder="数字组成" clearable v-model="newOutOrder.orderID" class="tag"
+                    :disabled="!isEdit"></el-input>
+                </el-form-item>
+                <el-form-item prop="outPeopleName" class="" style="display: inline-block">
                     <span slot="label"  class="span-text">出库交接人:</span>
-                    <el-tag v-if="isEdit===false" class="tag">{{ newOutOrder.outPeopleName }}</el-tag>
-                    <el-select v-else v-model="newOutOrder.outPeopleName"  clearable placeholder="请选择"
+                    <!-- <el-tag v-if="isEdit===false" class="tag">{{ newOutOrder.outPeopleName }}</el-tag> -->
+                    <el-select :disabled="!isEdit" v-model="newOutOrder.outPeopleName"  clearable placeholder="请选择"
                     class="tag">
                         <el-option
                         v-for="item in outPeopleNameList"
@@ -40,8 +40,8 @@
                 <el-form-item  class="el-form-item-span" v-if="isNew_out=='false'">
                     <!--可修改：处于编辑状态，管理员，状态为待审核/已拒绝-->
                     <span slot="label"  class="span-text">订单状态:</span>
-                    <el-tag v-if="isEdit===false" class="tag">{{ newOutOrder.outStatus }}</el-tag>
-                    <el-radio-group v-model="newOutOrder.outStatus" size="medium" v-else>
+                    <!-- <el-tag v-if="isEdit===false" class="tag">{{ newOutOrder.outStatus }}</el-tag> -->
+                    <el-radio-group v-model="newOutOrder.outStatus" size="medium" :disabled="!isEdit">
                     <el-radio-button label="已拒绝" ></el-radio-button>
                     <el-radio-button label="待审核"></el-radio-button>
                     <el-radio-button label="待出库"></el-radio-button>
@@ -129,11 +129,11 @@
         </el-card>
         <el-dialog title="请选择包裹（以下包裹正在库中）"  :visible.sync="dialogFormVisible" style="padding: 0px;" :width="'1000px'" class="dialogue-add">
             <div style="text-align:center;">
-                <el-form :model="searchMag" ref="searchMag" style="width: 450px; text-align:center;display: inline-block;">
-                    <el-form-item style="display:flex">
+                <el-form :model="searchMag" :rules="rules" ref="searchMag" style="width: 450px; text-align:center;display: inline-block;">
+                    <el-form-item style="display:flex" prop="parcelId">
                     <span slot="label"  class="span-text" >包裹ID:</span>
-                    <el-input size="small" clearable v-model="searchMag.parcelId" class="tag"></el-input>
-                    <el-button type="primary" :loading="Loading" @click="searchMag('searchMag')" icon="el-icon-search"  round size="small">搜索</el-button>
+                    <el-input size="small"  clearable v-model="searchMag.parcelId" class="tag"></el-input>
+                    <el-button type="primary" :loading="Loading" @click="search('searchMag')" icon="el-icon-search"  round size="small">搜索</el-button>
                     <el-tooltip class="item" effect="light" content="重置表格内容" placement="top-start">
                     <el-button type="primary" icon="el-icon-refresh-right" @click="initialParcel" plain  circle style="padding:5px;"></el-button>
                     </el-tooltip>
@@ -146,23 +146,23 @@
             :header-cell-style="{background:'#ebf3fc',padding:'0px',textAlign: 'center'}"
             :row-style="{height:'40px'}" :cell-style="{padding:'0px', textAlign: 'center' }"
             highlight-current-row
-            :default-sort = "{prop: 'parcelID', order: 'increasing'}">
+            :default-sort = "{prop: 'parcelId', order: 'increasing'}">
             <el-table-column
             type="selection">
             </el-table-column>
-            <el-table-column  prop="parcelID" sortable label="包裹ID" >
+            <el-table-column  prop="parcelId" sortable label="包裹ID" >
             </el-table-column>
-            <el-table-column  prop="fromPeople" label="发货人" >
+            <el-table-column  prop="shipperName" label="发货人" >
             </el-table-column>
-            <el-table-column prop="fromPhone" label="发货人电话" >
+            <el-table-column prop="shipperPhone" label="发货人电话" >
             </el-table-column>
-            <el-table-column prop="fromAddr" label="发货地址" >
+            <el-table-column prop="shipperAddress" label="发货地址" >
             </el-table-column>
-            <el-table-column prop="toPeople"  label="收货人" >
+            <el-table-column prop="consigneeName"  label="收货人" >
             </el-table-column>
-            <el-table-column prop="toPhone" label="收货人电话" >
+            <el-table-column prop="consigneePhone" label="收货人电话" >
             </el-table-column>
-            <el-table-column prop="toAddr"  label="收货地址" >
+            <el-table-column prop="consigneeAddress"  label="收货地址" >
             </el-table-column>
             <!-- <el-table-column label="操作">
             <template slot-scope="scope">
@@ -190,6 +190,7 @@
 
 <script>
 import outAndIn from '@/api/outAndIn'
+import parcel from '@/api/parcel'
 /**
  * 编辑状态：与新增一样界面（但是一些数据从请求得来），保存则发送请求（与新增一样），修改对应订单
  * 查看状态：不可编辑
@@ -223,44 +224,44 @@ export default {
         var parcelID = (rule, value, callback) => {
             if (!value) {
                 return callback(new Error('不可为空'))
-            }else if (!/^[0-9]{5,20}$/.test(value)){
+            }else if (!/^[0-9]{1,20}$/.test(value)){
                 return callback(new Error('只能由数字组成,5-20位'))
             }else {
                 callback()
             }
         }
-        var phone = ( rule, value, callback) => {
-            if (!value) {
-                return callback(new Error('请输入电话号码'))
-            }else if (!/^[1][3,4,5,6,7,8,9][0-9]{9}$/.test(value)){
-                return callback(new Error('手机号不合法'))
-            }else {
-                callback()
-            }
-        }
-        var outPeople = ( rule, value, callback) => {
-            if (!value) {
-                return callback(new Error('请选择入库交接人'))
-            }else {
-                callback()
-            }
-        }
-        var name = (rule, value, callback) => {
-            if (!value) {
-            return callback(new Error('请输入姓名'))
-            } else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]{2,20}$/.test(value)) {
-            return callback(new Error('只含汉字、数字、字母,2-20位'))
-            } else {
-            callback()
-            }
-       }
-       var addrDetail = (rule, value, callback) => {
-            if (!value) {
-              return callback(new Error('请输入详细地址'))
-            } else {
-              callback()
-            }
-       }
+    //     var phone = ( rule, value, callback) => {
+    //         if (!value) {
+    //             return callback(new Error('请输入电话号码'))
+    //         }else if (!/^[1][3,4,5,6,7,8,9][0-9]{9}$/.test(value)){
+    //             return callback(new Error('手机号不合法'))
+    //         }else {
+    //             callback()
+    //         }
+    //     }
+    //     var outPeople = ( rule, value, callback) => {
+    //         if (!value) {
+    //             return callback(new Error('请选择入库交接人'))
+    //         }else {
+    //             callback()
+    //         }
+    //     }
+    //     var name = (rule, value, callback) => {
+    //         if (!value) {
+    //         return callback(new Error('请输入姓名'))
+    //         } else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]{2,20}$/.test(value)) {
+    //         return callback(new Error('只含汉字、数字、字母,2-20位'))
+    //         } else {
+    //         callback()
+    //         }
+    //    }
+    //    var addrDetail = (rule, value, callback) => {
+    //         if (!value) {
+    //           return callback(new Error('请输入详细地址'))
+    //         } else {
+    //           callback()
+    //         }
+    //    }
         return{
             Loading:false,
             isEdit:true,//控制内容修改
@@ -273,189 +274,75 @@ export default {
             outPeopleNameList:['王小龙','李小虎'],
             searchMag:{
                 parcelId: "",
-                parcelState: "",
-                shelfID: "",
-                regionName: ""
+                // parcelState: "",
+                // shelfID: "",
+                // regionName: ""
             },
             newOutOrder:{
-                outID: "20974567382",
-                orderID: "287392052",
-                outPeopleName: "小王",
+                outID: "",
+                orderID: "",
+                outPeopleName: "",
                 visible: false,
                 //以下为编辑查看特有
                 outStatus:"待审核",
                 outTime:"249752",
-                userName:"小王",
-                managerName:"王总",
+                userName:"",
+                managerName:"",
                 parcelList: [
-                    {
-                    parcelID: "234567890343",
-                    fromPeople: "小王李",
-                    fromPhone: "12345678911",
-                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    toPeople: "胡晓",
-                    toPhone: "12345678911",
-                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    },
-                    {
-                    parcelID: "234567890344",
-                    fromPeople: "小王李",
-                    fromPhone: "12345678911",
-                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    toPeople: "胡晓",
-                    toPhone: "12345678911",
-                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    },
-                    {
-                    parcelID: "234567890345",
-                    fromPeople: "小王李",
-                    fromPhone: "12345678911",
-                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    toPeople: "胡晓",
-                    toPhone: "12345678911",
-                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    }
+                    // {
+                    // parcelID: "234567890343",
+                    // fromPeople: "小王李",
+                    // fromPhone: "12345678911",
+                    // fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
+                    // //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
+                    // toPeople: "胡晓",
+                    // toPhone: "12345678911",
+                    // toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
+                    // },
+                    // {
+                    // parcelID: "234567890344",
+                    // fromPeople: "小王李",
+                    // fromPhone: "12345678911",
+                    // fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
+                    // //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
+                    // toPeople: "胡晓",
+                    // toPhone: "12345678911",
+                    // toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
+                    // },
+                    // {
+                    // parcelID: "234567890345",
+                    // fromPeople: "小王李",
+                    // fromPhone: "12345678911",
+                    // fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
+                    // //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
+                    // toPeople: "胡晓",
+                    // toPhone: "12345678911",
+                    // toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
+                    // }
                 ]
             },
             parcelList: [
-                    {
-                    parcelID: "234567890343",
-                    fromPeople: "小王李",
-                    fromPhone: "12345678911",
-                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    toPeople: "胡晓",
-                    toPhone: "12345678911",
-                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    },
-                    {
-                    parcelID: "234567890344",
-                    fromPeople: "小王李",
-                    fromPhone: "12345678911",
-                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    toPeople: "胡晓",
-                    toPhone: "12345678911",
-                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    },
-                    {
-                    parcelID: "234567890345",
-                    fromPeople: "小王李",
-                    fromPhone: "12345678911",
-                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    toPeople: "胡晓",
-                    toPhone: "12345678911",
-                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    },
-                    {
-                    parcelID: "234567890345",
-                    fromPeople: "小王李",
-                    fromPhone: "12345678911",
-                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    toPeople: "胡晓",
-                    toPhone: "12345678911",
-                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    },
-                    {
-                    parcelID: "234567890345",
-                    fromPeople: "小王李",
-                    fromPhone: "12345678911",
-                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    toPeople: "胡晓",
-                    toPhone: "12345678911",
-                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    },
-                    {
-                    parcelID: "234567890345",
-                    fromPeople: "小王李",
-                    fromPhone: "12345678911",
-                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    toPeople: "胡晓",
-                    toPhone: "12345678911",
-                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    },
-                    {
-                    parcelID: "234567890345",
-                    fromPeople: "小王李",
-                    fromPhone: "12345678911",
-                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    toPeople: "胡晓",
-                    toPhone: "12345678911",
-                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    },
-                    {
-                    parcelID: "234567890345",
-                    fromPeople: "小王李",
-                    fromPhone: "12345678911",
-                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    toPeople: "胡晓",
-                    toPhone: "12345678911",
-                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    },
-                    {
-                    parcelID: "234567890345",
-                    fromPeople: "小王李",
-                    fromPhone: "12345678911",
-                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    toPeople: "胡晓",
-                    toPhone: "12345678911",
-                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    },
-                    {
-                    parcelID: "234567890345",
-                    fromPeople: "小王李",
-                    fromPhone: "12345678911",
-                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    toPeople: "胡晓",
-                    toPhone: "12345678911",
-                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    },
-                    {
-                    parcelID: "234567890345",
-                    fromPeople: "小王李",
-                    fromPhone: "12345678911",
-                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    toPeople: "胡晓",
-                    toPhone: "12345678911",
-                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    },
-                    {
-                    parcelID: "234567890345",
-                    fromPeople: "小王李",
-                    fromPhone: "12345678911",
-                    fromAddr:'北京市海淀区北下关街道上园村3号北京交通大学主校区南门',
-                    //详细地址+省市区+一个【】用于联级选择器，选好后，再将【】赋值给省市区字符串
-                    toPeople: "胡晓",
-                    toPhone: "12345678911",
-                    toAddr: "北京市海淀区北下关街道上园村3号北京交通大学主校区南门"
-                    }
+                   {}
             ],
             rules:{
                 outID:[{}],
-                orderID:[{validator: parcelID, trigger: 'blur'}],
-                outPeopleName:[{validator: outPeople, trigger: 'blur'}],
+                orderID:[
+                { required: true,  message: "不能为空", trigger: "blur"},    
+                {validator: parcelID, trigger: 'blur'}],
+                outPeopleName:[
+                { required: true,  message: "不能为空", trigger: "blur"}],
                 //对话框
-                parcelID:[{validator: parcelID, trigger: 'blur'}],
-                fromPeople:[{validator: name, trigger: 'blur'}],
-                fromPhone:[{validator: phone, trigger: 'blur'}],
-                fromAddrSelect: [{required: true, message: '请选择', trigger: 'blur'}],
-                fromAddrDetail:[{validator: addrDetail, trigger: 'blur'}],
-                toPeople:[{validator: name, trigger: 'blur'}],
-                toPhone:[{validator: phone, trigger: 'blur'}],
-                toAddrSelect: [{required: true, message: '请选择', trigger: 'blur'}],
-                toAddrDetail:[{validator: addrDetail, trigger: 'blur'}]
+                parcelID:[ { required: true,  message: "不能为空", trigger: "blur"},
+                {validator: parcelID, trigger: 'blur'}],
+                parcelId:[ { required: true,  message: "不能为空", trigger: "blur"}],
+                // fromPeople:[{validator: name, trigger: 'blur'}],
+                // fromPhone:[{validator: phone, trigger: 'blur'}],
+                // fromAddrSelect: [{required: true, message: '请选择', trigger: 'blur'}],
+                // fromAddrDetail:[{validator: addrDetail, trigger: 'blur'}],
+                // toPeople:[{validator: name, trigger: 'blur'}],
+                // toPhone:[{validator: phone, trigger: 'blur'}],
+                // toAddrSelect: [{required: true, message: '请选择', trigger: 'blur'}],
+                // toAddrDetail:[{validator: addrDetail, trigger: 'blur'}]
             },
             //表格分页
             multipleSelection: [],//选中的信息
@@ -468,6 +355,8 @@ export default {
         }
     },
     created(){
+        const _this = this
+        console.log(this)
            this.isNew_out = window.sessionStorage.getItem('isNew_out')
            console.log(this.isNew_out)
             //判断是新增还是编辑查看
@@ -480,9 +369,44 @@ export default {
                 this.isEdit = false
                 //获取数据
                 outAndIn.singleOutOrderDetail(window.sessionStorage.getItem('row_out')).then(res=>{
+                    console.log(res)
                     if (res.data.status_code == true){
+                        console.log(this)
+                        console.log(_this)
+                        console.log(_this.newOutOrder)
                         //保存数据
                         this.newOutOrder.outID = res.data.outID
+                        this.newOutOrder.outPeopleName = res.data.outPeopleName
+                        this.newOutOrder.outStatus = res.data.outStatus
+                        this.newOutOrder.managerName = res.data.managerName
+                        this.newOutOrder.orderID = res.data.orderID
+                        this.newOutOrder.userName =res.data.userName
+                        this.newOutOrder.outTime =res.data.outTime
+                        this.newOutOrder.parcelList =res.data.parcelList
+                       // console.log(_this.newOutOrder)
+                         //判断该订单状态，若为已入库则状态和内容皆不可修改
+                        if (this.newOutOrder.outStatus === "已出库"){
+                            this.switch_disable = true
+                        }else if (this.newOutOrder.outStatus === "待出库"){//只能进行入库操作
+                            this.enterOp = true
+                        }else {//待审核和已拒绝
+                            //获取身份
+                            //this.authority=window.sessionStorage.getItem('authority')
+                            //若为普通用户，判断该订单本用户是否可编辑
+                            if(this.authority != 'manager'){
+                                //若为本用户所申请的订单
+                                if(this.newOutOrder.userName === window.sessionStorage.getItem('userName')){
+                                    this.switch_disable = false
+                                    this.initialPeople()
+                                }else {
+                                    this.switch_disable = true
+                                }
+                            }else {
+                                this.switch_disable = false
+                                this.initialPeople()
+                            }
+
+                        }
                     }else {
                         this.$message({
                             message:"获取包裹详情异常",
@@ -490,42 +414,31 @@ export default {
                         })
                     }
                 })
-                //判断该订单状态，若为已入库则状态和内容皆不可修改
-                if (this.newOutOrder.outStatus === "已出库"){
-                    this.switch_disable = true
-                }else if (this.newOutOrder.outStatus === "待出库"){//只能进行入库操作
-                    this.enterOp = true
-                }else {//待审核和已拒绝
-                    //获取身份
-                    //this.authority=window.sessionStorage.getItem('authority')
-                    //若为普通用户，判断该订单本用户是否可编辑
-                    if(this.authority != 'manager'){
-                        //若为本用户所申请的订单
-                        if(this.newOutOrder.userName === window.sessionStorage.getItem('userName')){
-                            this.switch_disable = false
-                            this.initialPeople()
-                        }else {
-                            this.switch_disable = true
-                        }
-                    }else {
-                        this.switch_disable = false
-                        this.initialPeople()
-                    }
-
-                }
+               
 
         }
     },
     methods:{
     /**----------------------------------------普通操作方法------------------------------------------------- */
     //搜索包裹
-    searchMag(formName){
+    search(formName){
         this.$refs[formName].validate(valid=>{
             if (valid){
-                outAndIn.searchParcel(this.searchMag).then(res=>{
+                let temp = {
+                    parcelId:this.searchMag.parcelId,
+                    parcelState: "待出库",
+                    shelfID: "",
+                    regionName: ""
+                }
+                outAndIn.searchParcel(temp).then(res=>{
                     console.log(res)
                     if (res.data.status_code){
                         this.parcelList = res.data.parcelList
+                    } else {
+                        this.$message({
+                            message:"库中没有该包裹",
+                            type:'error'
+                        })
                     }
                 })
             }
@@ -539,6 +452,7 @@ export default {
     //入库交接人获取
     initialPeople(){
         outAndIn.fetchOutPeopleNameList().then(res=>{
+            console.log(res)
             if (res.data.status_code == true){
                 this.outPeopleNameList = res.data.outPeopleNameList
             }
@@ -547,16 +461,31 @@ export default {
      },
      //包裹列表获取
      initialParcel(){
-        outAndIn.showParcel().then(res=>{
+        parcel.allParcel().then(res=>{
+            console.log(res)
             if(res.data.status_code == true){
-                this.parcelList = res.data.parcelList
+                this.parcelList = res.data.parcelInformation
             }
         })
      },
     //确定添加
      sureAdd(){
         console.log(this.multipleSelection_dia)
-        this.newOutOrder.parcelList = this.newOutOrder.parcelList.concat(this.multipleSelection_dia)
+        let tempParcel = []
+        //修改参数名
+        for(let i=0;i<this.multipleSelection_dia.length;i++){
+            let temp = {
+                parcelID: this.multipleSelection_dia[i].parcelId,
+                fromPeople: this.multipleSelection_dia[i].shipperName,
+                fromPhone: this.multipleSelection_dia[i].shipperPhone,
+                fromAddr:this.multipleSelection_dia[i].shipperAddress,
+                toPeople: this.multipleSelection_dia[i].consigneeName,
+                toPhone: this.multipleSelection_dia[i].consigneePhone,
+                toAddr:  this.multipleSelection_dia[i].consigneeAddress
+            }
+            tempParcel.push(temp)
+        }
+        this.newOutOrder.parcelList = this.newOutOrder.parcelList.concat(tempParcel)
         this.dialogFormVisible=false
     },
     //返回入库界面
@@ -578,8 +507,9 @@ export default {
     //保存新订单或者保存修改
     saveOrder(formName){
         if(this.newOutOrder.parcelList.length>0){
-            this.$refs[formName].validate(valid=>{
-            if(valid){
+            // this.$refs[formName].validate(valid=>{
+            // if(valid){
+                console.log("ppppppppp")
                 if (this.isNew_out == 'true'){
                     this.Loading =true
                     outAndIn.addOutOrder(this.newOutOrder).then(res=>{
@@ -592,14 +522,14 @@ export default {
                         this.$router.push('/outStock')
                     }else {
                         this.$message({
-                            message:"申请异常",
+                            message:res.message,
                             type:'error'
                         })
                     }
-                }).finally(res=>{
-                    this.Loading =false
-                })
-                }else {
+                    }).finally(res=>{
+                        this.Loading =false
+                    })
+                }else {//修改
                     this.$refs[formName].validate(valid=>{
                     if(valid){
                         this.Loading =true
@@ -623,8 +553,8 @@ export default {
                 })
                 }
 
-            }
-        })
+        //     }
+        // })
         }else {
             this.$message({
                 message:"包裹数量必须大于0，请添加包裹",

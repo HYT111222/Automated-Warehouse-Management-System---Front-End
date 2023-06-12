@@ -52,7 +52,7 @@
       <!-- 新增客户相关 -->
       <el-dialog title="添加客户" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
         <!-- 信息区域 -->
-        <el-form :inline="true" :model="customFormNew" ref="customRef" :rules="rules" label-width="120px" class="custom-form">
+        <el-form :inline="true" :model="customFormNew" ref="customRef" :rules="rulesNew" label-width="120px" class="custom-form">
 <!--          <el-form-item prop="inBoundPersId" label-position="left" class="input-el-form-item">-->
 <!--            <span slot="label"  style="color: #403b3b">入库人编号:</span>-->
 <!--            <el-input v-model="inputFormNew.inBoundPersonId" placeholder="请输入编号" size="small" clearable style="width: 165px;"></el-input>-->
@@ -113,7 +113,7 @@
                     :visible.sync="dialogVisible_incAccounts"
                     width="30%"
                     :before-close="handleClose">
-                  <el-form :inline="true" :model="incAccountsDia" ref="incAccountsDia" :rules="rules" label-width="48px" class="custom-form">
+                  <el-form :inline="true" :model="incAccountsDia" ref="incAccountsDia" :rules="rulesInc" label-width="48px" class="custom-form">
                     <el-form-item prop="notes" label-position="left" class="input-el-form-item">
                       <el-input-number v-model="incAccountsDia.incAccounts" :precision="2" :step="0.1" size="medium" min="0"></el-input-number>
                     </el-form-item>
@@ -134,7 +134,7 @@
                     :visible.sync="dialogVisible_balAccounts"
                     width="30%"
                     :before-close="handleClose">
-                  <el-form :inline="true" :model="balAccountsDia" ref="balAccountsDia" :rules="rules" label-width="48px" class="custom-form">
+                  <el-form :inline="true" :model="balAccountsDia" ref="balAccountsDia" :rules="rulesBal" label-width="48px" class="custom-form">
                     <el-form-item prop="notes" label-position="left" class="input-el-form-item">
                       <el-input-number v-model="balAccountsDia.balAccounts" :precision="2" :step="0.1" size="medium" min="0"></el-input-number>
                     </el-form-item>
@@ -183,7 +183,7 @@
 </template>
 
 <script>
-import peopleManger from "@/api/peopleManger";
+import peopleManger from "@/api/peopleManage";
 
 export default {
   data() {
@@ -194,6 +194,8 @@ export default {
         callback()
       } else if (!req.test(value)) {
         return callback(new Error('仅由数字和字母构成'))
+      } else {
+        return callback()
       }
     }
     var phone = (rule, value, callback) => {
@@ -202,6 +204,8 @@ export default {
         callback()
       } else if (!reg.test(value)) {
         return callback(new Error('请输入手机号码'))
+      } else {
+        return callback()
       }
     }
     var email = (rule, value, callback) => {
@@ -210,6 +214,8 @@ export default {
         callback()
       } else if (!reg.test(value)) {
         return callback(new Error('请输入正确邮箱,例如10203022@bjtu.edu.cn'))
+      } else {
+        return callback()
       }
     }
 
@@ -217,7 +223,7 @@ export default {
       Loading: false, // 加载中动画
       // 上方查找返回
       customForm: {
-        customId: 'sss',
+        customId: '',
         userName: '',
         // 应付款
         phone:'',
@@ -252,75 +258,97 @@ export default {
         notes:''
       },
       tableData: [
-        {
-          customId: '111',
-          companyName: '北京交通大学',
-          payableAmount:'111.23',
-          contactPersonName:'yyz',
-          phone: '15302938395',
-          address: '北京交通大学',
-          email: '20301029@bjtu.edu.cn',
-          remark:''
-        },
-        {
-          customId: '112',
-          companyName: '北京交通大学',
-          payableAmount:'111.23',
-          contactPersonName:'yyz',
-          phone: '15302938395',
-          address: '北京交通大学',
-          email: '20301029@bjtu.edu.cn',
-          remark:''
-        },
-        {
-          customId: '113',
-          companyName: '北京交通大学',
-          payableAmount:'111.23',
-          contactPersonName:'yyz',
-          phone: '15302938395',
-          address: '北京交通大学',
-          email: '20301029@bjtu.edu.cn',
-          remark:''
-        },
-        {
-          customId: '114'
-        },
-        {
-          customId: '115'
-        },
-        {
-          customId: '116'
-        },
-        {
-          customId: '117'
-        },
-        {
-          customId: '118'
-        },
-        {
-          customId: '119'
-        },
-        {
-          customId: '120'
-        },
-        {
-          customId: '121'
-        },
-        {
-          customId: '122'
-        },
-        {
-          customId: '123'
-        },
-        {
-          customId: '124'
-        }
+        // {
+        //   customId: '111',
+        //   companyName: '北京交通大学',
+        //   payableAmount:'111.23',
+        //   contactPersonName:'yyz',
+        //   phone: '15302938395',
+        //   address: '北京交通大学',
+        //   email: '20301029@bjtu.edu.cn',
+        //   remark:''
+        // },
+        // {
+        //   customId: '112',
+        //   companyName: '北京交通大学',
+        //   payableAmount:'111.23',
+        //   contactPersonName:'yyz',
+        //   phone: '15302938395',
+        //   address: '北京交通大学',
+        //   email: '20301029@bjtu.edu.cn',
+        //   remark:''
+        // },
+        // {
+        //   customId: '113',
+        //   companyName: '北京交通大学',
+        //   payableAmount:'111.23',
+        //   contactPersonName:'yyz',
+        //   phone: '15302938395',
+        //   address: '北京交通大学',
+        //   email: '20301029@bjtu.edu.cn',
+        //   remark:''
+        // },
+        // {
+        //   customId: '114'
+        // },
+        // {
+        //   customId: '115'
+        // },
+        // {
+        //   customId: '116'
+        // },
+        // {
+        //   customId: '117'
+        // },
+        // {
+        //   customId: '118'
+        // },
+        // {
+        //   customId: '119'
+        // },
+        // {
+        //   customId: '120'
+        // },
+        // {
+        //   customId: '121'
+        // },
+        // {
+        //   customId: '122'
+        // },
+        // {
+        //   customId: '123'
+        // },
+        // {
+        //   customId: '124'
+        // }
       ],
       customNameList: ["小李", "小猪"],
       rules: {
         customId: [{validator: customId, trigger: 'blur'}],
+        userName:[],
         phone: [{validator: phone, trigger: 'blur'}],
+        companyName:[],
+        name:[],
+        address:[],
         email: [{validator: email, trigger: 'blur'}]
+      },
+      rulesNew: {
+        userName:[],
+        phone: [{validator: phone, trigger: 'blur'}],
+        companyName:[],
+        name:[],
+        address:[],
+        email: [{validator: email, trigger: 'blur'}]
+      },
+      rulesInc: {
+        customId: [],
+        incAccounts:[],
+        notes:[]
+      },
+      rulesBal: {
+        customId:[],
+        balAccounts:[],
+        notes:[]
       },
       currentPage: 1, // 当前页码
       total: 20, // 总条数
@@ -335,6 +363,7 @@ export default {
     // 该方法用于刷新表格
     fetchNewTable() {
       peopleManger.getCustomInformationAll().then(res => {
+        console.log("刷新表格")
         if (res.data.status_code === true) {
           this.tableData = res.data.customList
         }
@@ -343,7 +372,9 @@ export default {
     // 该方法用于获取客户列表
     getPeopleList(){
       peopleManger.getCustomNameList().then(res =>{
+        console.log("刷新客户列表")
         if (res.data.status_code === true) {
+          console.log("断点1")
           this.customNameList = res.data.customNameList
         }
       })
@@ -484,9 +515,9 @@ export default {
     // 该方法用于删除信息
     deleteOne(row){
       console.log("触发删除信息")
-      var temp = []
-      temp.push(row.customId)
-      peopleManger.delCustomInformation(temp).then(res=>{
+      // var temp = []
+      // temp.push(row.customId)
+      peopleManger.delCustomInformation(row.customId).then(res=>{
         if(res.data.status_code ==true){
           this.fetchNewTable()
           this.getPeopleList()
