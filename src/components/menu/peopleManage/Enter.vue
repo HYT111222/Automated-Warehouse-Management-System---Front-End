@@ -107,8 +107,13 @@
         <el-table-column prop="remark" label="备注"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <div style=" display: flex;">
-              <el-button @click="deleteOne(scope.row)" type="text" style="flex: auto" size="small" >删除</el-button>
+            <div>
+              <div v-if="isManager" style=" display: flex;">
+                <el-button @click="deleteOne(scope.row)" type="text" style="flex: auto" size="small" >删除</el-button>
+              </div>
+              <div v-else style=" display: flex;">
+                <el-button @click="deleteOne(scope.row)" type="text" disabled style="flex: auto" size="small" >删除</el-button>
+              </div>
             </div>
           </template>
         </el-table-column>
@@ -270,12 +275,19 @@ export default {
       },
       currentPage: 1, // 当前页码
       total: 20, // 总条数
-      pageSize: 5 // 每页的数据条数
+      pageSize: 5, // 每页的数据条数
+      isManager:false// 权限控制
     }
   },
   created() {
     this.fetchNewTable()
     this.getPeopleList()
+    // 权限管理
+    if (window.sessionStorage.getItem('authority') == "manager"){
+      this.isManager=true
+    }else{
+      this.isManager=false
+    }
   },
   methods: {
     // 该方法用于刷新表格
