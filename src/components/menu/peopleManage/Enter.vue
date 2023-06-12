@@ -20,7 +20,7 @@
 <!--          <span slot="label"  style="color: #403b3b">入库人姓名:</span>-->
 <!--          <el-input v-model="inputForm.name" placeholder="请输入姓名" size="small" clearable style="width: 220px;"></el-input>-->
 <!--        </el-form-item>-->
-        <el-form-item prop="" class="textInput el-form-item">
+        <el-form-item prop="name" class="textInput el-form-item">
           <span slot="label"  style="color: #403b3b;">   入库人姓名:</span>
           <el-select  v-model="inputForm.name" size="small" clearable placeholder="请选择" style="width: 220px;">
             <el-option
@@ -52,7 +52,7 @@
       <!-- 新增入库人相关 -->
       <el-dialog title="添加入库人" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
         <!-- 信息区域 -->
-        <el-form :inline="true" :model="inputFormNew" ref="inputRef" :rules="rules" label-width="120px" class="input-form">
+        <el-form :inline="true" :model="inputFormNew" ref="inputFormNew" :rules="rulesNew" label-width="120px" class="input-form">
           <el-form-item prop="inBoundPersonId" label-position="left" class="input-el-form-item">
             <span slot="label"  style="color: #403b3b">入库人编号:</span>
             <el-input v-model="inputFormNew.inBoundPersonId" placeholder="请输入编号" size="small" clearable style="width: 165px;"></el-input>
@@ -77,7 +77,7 @@
             <span slot="label"  style="color: #403b3b">入库人邮箱:</span>
             <el-input v-model="inputFormNew.email" placeholder="请输入邮箱" size="small" clearable style="width: 165px;"></el-input>
           </el-form-item>
-          <el-form-item prop="email" label-position="left" class="input-el-form-item">
+          <el-form-item prop="remark" label-position="left" class="input-el-form-item">
             <span slot="label"  style="color: #403b3b">备注:</span>
             <el-input v-model="inputFormNew.remark" placeholder="" size="small" clearable style="width: 165px;"></el-input>
           </el-form-item>
@@ -139,25 +139,31 @@ export default {
     var inBoundPersonId = (rule, value, callback) => {
       var req = /^[A-Za-z0-9]*$/
       if (!value) {
-        callback()
+        return callback()
       } else if (!req.test(value)) {
         return callback(new Error('仅由数字和字母构成'))
+      }else {
+        return callback()
       }
     }
     var phone = (rule, value, callback) => {
       const reg = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/
       if (!value) {
-        callback()
+        return callback()
       } else if (!reg.test(value)) {
         return callback(new Error('请输入手机号码'))
+      } else {
+        return callback()
       }
     }
     var email = (rule, value, callback) => {
       const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
       if (!value) {
-        callback()
+        return callback()
       } else if (!reg.test(value)) {
         return callback(new Error('请输入正确邮箱,例如10203022@bjtu.edu.cn'))
+      } else {
+        return callback()
       }
     }
 
@@ -183,72 +189,84 @@ export default {
         remark: ''
       },
       tableData: [
-        {
-          inBoundPersonId: '111',
-          userName: '顺丰快递员1',
-          name: 'yyz',
-          phone: '15302938395',
-          address: '北京交通大学',
-          email: '20301029@bjtu.edu.cn',
-          remark: '开发测试'
-        },
-        {
-          inBoundPersonId: '112',
-          userName: '顺丰快递员2',
-          name: 'yyz',
-          phone: '15302938395',
-          address: '北京交通大学',
-          email: '20301029@bjtu.edu.cn',
-          remark: '开发测试'
-        },
-        {
-          inBoundPersonId: '113',
-          userName: '顺丰快递员3',
-          name: 'yyz',
-          phone: '15302938395',
-          address: '北京交通大学',
-          email: '20301029@bjtu.edu.cn',
-          remark: '开发测试'
-        },
-        {
-          inBoundPersonId: '114'
-        },
-        {
-          inBoundPersonId: '115'
-        },
-        {
-          inBoundPersonId: '116'
-        },
-        {
-          inBoundPersonId: '117'
-        },
-        {
-          inBoundPersonId: '118'
-        },
-        {
-          inBoundPersonId: '119'
-        },
-        {
-          inBoundPersonId: '120'
-        },
-        {
-          inBoundPersonId: '121'
-        },
-        {
-          inBoundPersonId: '122'
-        },
-        {
-          inBoundPersonId: '123'
-        },
-        {
-          inBoundPersonId: '124'
-        }
+        // {
+        //   inBoundPersonId: '111',
+        //   userName: '顺丰快递员1',
+        //   name: 'yyz',
+        //   phone: '15302938395',
+        //   address: '北京交通大学',
+        //   email: '20301029@bjtu.edu.cn',
+        //   remark: '开发测试'
+        // },
+        // {
+        //   inBoundPersonId: '112',
+        //   userName: '顺丰快递员2',
+        //   name: 'yyz',
+        //   phone: '15302938395',
+        //   address: '北京交通大学',
+        //   email: '20301029@bjtu.edu.cn',
+        //   remark: '开发测试'
+        // },
+        // {
+        //   inBoundPersonId: '113',
+        //   userName: '顺丰快递员3',
+        //   name: 'yyz',
+        //   phone: '15302938395',
+        //   address: '北京交通大学',
+        //   email: '20301029@bjtu.edu.cn',
+        //   remark: '开发测试'
+        // },
+        // {
+        //   inBoundPersonId: '114'
+        // },
+        // {
+        //   inBoundPersonId: '115'
+        // },
+        // {
+        //   inBoundPersonId: '116'
+        // },
+        // {
+        //   inBoundPersonId: '117'
+        // },
+        // {
+        //   inBoundPersonId: '118'
+        // },
+        // {
+        //   inBoundPersonId: '119'
+        // },
+        // {
+        //   inBoundPersonId: '120'
+        // },
+        // {
+        //   inBoundPersonId: '121'
+        // },
+        // {
+        //   inBoundPersonId: '122'
+        // },
+        // {
+        //   inBoundPersonId: '123'
+        // },
+        // {
+        //   inBoundPersonId: '124'
+        // }
       ],
       inPeopleNameList: ["小李", "小猪"],
       rules: {
         inBoundPersonId: [{validator: inBoundPersonId, trigger: 'blur'}],
+        userName:[],
         phone: [{validator: phone, trigger: 'blur'}],
+        name:[],
+        address:[],
         email: [{validator: email, trigger: 'blur'}]
+      },
+      rulesNew:{
+        inBoundPersonId: [{validator: inBoundPersonId, trigger: 'blur'}],
+        userName:[],
+        phone: [{validator: phone, trigger: 'blur'}],
+        name:[],
+        address:[],
+        email: [{validator: email, trigger: 'blur'}],
+        remark: []
       },
       currentPage: 1, // 当前页码
       total: 20, // 总条数
@@ -263,7 +281,8 @@ export default {
     // 该方法用于刷新表格
     fetchNewTable() {
       peopleManger.getInBoundPeopleInformationAll().then(res => {
-        if (res.data.status_code === true) {
+        console.log("刷新表格")
+        if (res.data.status_code == true) {
           this.tableData = res.data.inBoundPeopleList
         }
       })
@@ -271,19 +290,28 @@ export default {
     // 该方法用于获取入库人列表
     getPeopleList(){
       outAndIn.fetchInPeopleNameList().then(res =>{
-        if (res.data.status_code === true) {
+        console.log("刷新入库人列表")
+        if (res.data.status_code == true) {
+          console.log("断点1")
           this.inPeopleNameList = res.data.inPeopleNameList
         }
+        console.log("inPeopleNameList: " + res.data.inPeopleNameList)
       })
     },
     // 该方法用于搜索
     searchMag(formName) {
+      console.log("开始搜索")
       this.$refs[formName].validate((valid) => {
+        console.log("通过表单验证")
         if (valid) {
           this.Loading = true
           peopleManger.checkInBoundPeorsonInformation(this.inputForm).then(res => {
-            if (res.data.status_code === true) {
+            if (res.data.status_code == true) {
               this.tableData = res.data.inBoundPeopleList
+              this.$message({
+                message: "搜索成功",
+                type: "success"
+              })
               console.log("搜索成功")
             } else {
               this.$message({
@@ -294,7 +322,10 @@ export default {
           }).finally(res => {
             this.Loading = false
           })
+        }else {
+          console.log("没有通过表单验证")
         }
+        console.log("搜索完毕")
       })
     },
     // 该方法用于清除填入的信息
@@ -310,11 +341,15 @@ export default {
     // 提交dialog信息
     submitDialog(formName){
       this.dialogVisible = false
+      console.log("开始提交")
       this.$refs[formName].validate((valid) => {
+        console.log("提交通过表单验证")
         if (valid) {
           this.Loading = true
           peopleManger.addInBoundPeople(this.inputFormNew).then(res => {
-            if(res.data.status_code === true) {
+            if(res.data.status_code == true) {
+              //清空dialog内表格
+              this.$refs['inputFormNew'].clearFilter()
               this.fetchNewTable()
               this.getPeopleList()
               this.$message({
@@ -323,6 +358,7 @@ export default {
               })
               console.log("提交成功")
             }else{
+              console.log("提交异常")
               this.$message({
                 message:"提交异常",
                 type:"error"
@@ -333,6 +369,7 @@ export default {
           })
         }
       })
+      console.log("提交完毕")
     },
     // 关闭对话框
     handleClose(done) {
@@ -357,12 +394,18 @@ export default {
     // 该方法用于删除信息
     deleteOne(row){
       console.log("触发删除信息，id: " +row.inBoundPersonId)
-      var temp = []
-      temp.push(row.inBoundPersonId)
-      peopleManger.delFetchInPeopleInformation(temp).then(res=>{
-        if(res.data.status_code ==true){
+      // var temp = []
+      // console.log("temp: " + temp)
+      // console.log("断点1")
+      // temp.push(row.inBoundPersonId)
+      console.log("断点2")
+      // console.log("2temp:" + temp)
+      peopleManger.delFetchInPeopleInformation(row.inBoundPersonId).then(res=>{
+        console.log("断点3")
+        if(res.data.status_code == true){
           this.fetchNewTable()
           this.getPeopleList()
+          console.log("断点4")
           this.$message({
             message:"删除成功",
             type:"success"
