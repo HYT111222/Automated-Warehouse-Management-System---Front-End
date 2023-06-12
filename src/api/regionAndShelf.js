@@ -3,26 +3,28 @@ import request from '@/requestAndSecurity/request'
 export default {
     /**
      * 1.查询对应库区信息
-     * @param {*} data
      * @returns 
      */
-    searchRegion(data) {
+    searchRegion(param) {
       return request({
         url: '/regionAndShelf/searchRegion',
-        method: 'post',
-        data:data
+        method: 'get',
+        params: {
+          regionName:param
+        }
       })
     },
     /**
    * 2、查询货架信息
-   * @param {*} data 
    * @returns 
    */
     searchShelf(param) {
     return request({
       url: '/regionAndShelf/searchShelf',
       method: 'get',
-      param: param
+      params: {
+        regionId:param
+      }
     })
   },
   
@@ -47,7 +49,9 @@ export default {
     return request({
       url: '/regionAndShelf/allShelf',
       method: 'get',
-      param: param
+      params: {
+        regionId:param
+      }
     })
   },
   

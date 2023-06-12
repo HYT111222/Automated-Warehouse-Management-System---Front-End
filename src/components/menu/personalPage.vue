@@ -164,14 +164,13 @@ export default{
         //获取用户信息
         getPersonalInfo(){
             center.personInformation().then(res=> {
-                if (res.data.status_code==true) {
                     console.log(res)
                     this.userName = res.data.userName
                     this.phone = res.data.userPhone
                     this.stationName = res.data.stationName
                     this.startTime = res.data.startTime
                     this.userEmail = res.data.userEmail
-                }
+                
             }).finally(res=>{
                 
             })

@@ -63,33 +63,33 @@ const router = new VueRouter({
   routes
 })
 
-// // 路由守卫（加别的页面跳转判断，如添加等）
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.length === 0) {
-//     next('/404')
-//   }else {
-//     if(to.path == '/login' || to.path == '/' || to.path == '/404'){
-//         next()
-//     }else {
-//       let role = localStorage.getItem('authority')
-//       // if(to.meta.roles.includes(role)){
-//       //   next() //放行
-//       // }
-//       // let token = JSON.parse(window.localStorage.getItem("Token"))
-//       let token = localStorage.getItem('token')
-//       console.log(token)
-//       if (  token == null || token === '' ){
-//         alert("请先进行登录操作")
-//         next('/login')
-//       }else {
-//         if(to.meta.roles.includes(role)){
-//           next() //放行
-//         }else{
-//           alert("没有权限查看")
-//         }
-//       }
-//     }
-//   }
+// 路由守卫（加别的页面跳转判断，如添加等）
+router.beforeEach((to, from, next) => {
+  if (to.matched.length === 0) {
+    next('/404')
+  }else {
+    if(to.path == '/login' || to.path == '/' || to.path == '/404'){
+        next()
+    }else {
+      let role = localStorage.getItem('authority')
+      // if(to.meta.roles.includes(role)){
+      //   next() //放行
+      // }
+      // let token = JSON.parse(window.localStorage.getItem("Token"))
+      let token = localStorage.getItem('token')
+      console.log(token)
+      if (  token == null || token === '' ){
+        alert("请先进行登录操作")
+        next('/login')
+      }else {
+        if(to.meta.roles.includes(role)){
+          next() //放行
+        }else{
+          alert("没有权限查看")
+        }
+      }
+    }
+  }
  
-// })
+})
 export default router
