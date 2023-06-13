@@ -37,7 +37,7 @@ export default {
     return request({
       url: '/regionAndShelf/addShelf',
       method: 'post',
-      data:data
+      data:{regionId:data}
     })
   },
    /**

@@ -259,7 +259,7 @@
     
     methods:{
     confirm(){
-        console.log(this.parcelName)
+        console.log(this.regionInformation.regionId)
         regionAndShelf.addShelf(this.regionInformation.regionId).then(res=>{
             if(res.data.status_code === true){
                     this.$message({
