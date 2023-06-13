@@ -3,7 +3,13 @@
     <!-- 展示客户信息区 -->
     <el-card class="input-card">
       <div :inline="true">
-        <h3>客户id: {{ customId }}</h3>
+        <el-form :inline="true" :model="checkForm" ref="checkForm">
+<!--          <h3>客户id: {{ customId }}</h3>-->
+          <el-form-item prop="customId" label-position="left" >
+            <span slot="label">客户id:</span>
+            <el-tag size="small" >{{ checkForm.customId }}</el-tag>
+          </el-form-item>
+        </el-form>
       </div>
       <el-divider></el-divider>
     </el-card>
@@ -22,10 +28,11 @@
         <el-table-column prop="transactionId" label="交易id"></el-table-column>
         <el-table-column prop="transactionAmount" label="交易金额"></el-table-column>
         <el-table-column prop="time" label="交易时间"></el-table-column>
-        <el-table-column prop="contactName" label="客户联系姓名"></el-table-column>
+        <el-table-column prop="contactName" label="客户联系人姓名"></el-table-column>
         <el-table-column prop="phone" label="客户电话"></el-table-column>
         <el-table-column prop="bankName" label="开户行"></el-table-column>
         <el-table-column prop="bankCardNum" label="银行卡号"></el-table-column>
+        <el-table-column prop="remark" label="备注"></el-table-column>
 <!--        <el-table-column label="操作">-->
 <!--          <template slot-scope="scope">-->
 <!--            <div style=" display: flex;">-->
@@ -57,8 +64,9 @@ export default {
   data() {
     return {
       Loading: false, // 加载中动画
-      checkFrom:{
-        customId:''
+      checkForm:{
+        customId:'',
+        // userName:''
       },
       tableData: [
         // {
@@ -128,15 +136,22 @@ export default {
     }
   },
   created() {
-    this.customId = window.sessionStorage.getItem('customId')
+    this.checkForm.customId = window.sessionStorage.getItem('customId')
+    // this.userName = window.sessionStorage.getItem('userNameCustom')
     console.log('获取的customId：' + this.customId)
+    // console.log('获取到的userName：' + this.userName)
     this.fetchNewTable()
   },
   methods: {
     // 该方法用于刷新表格
     fetchNewTable() {
-      peopleManger.checkCustomTransaction(this.checkFrom).then(res => {
-        if (res.data.status_code === true) {
+      console.log("刷新表格")
+      console.log("checkForm里面的东西：" + this.checkForm.customId)
+      console.log("传给后端的Form：" + this.checkForm)
+
+      peopleManger.checkCustomTransaction(this.checkForm).then(res => {
+        console.log("checkForm:" + this.checkForm)
+        if (res.data.status_code == true) {
           this.tableData = res.data.transactionList
         }
       })

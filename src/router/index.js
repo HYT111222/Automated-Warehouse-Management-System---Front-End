@@ -13,13 +13,14 @@ import outStock from '@/components/menu/outAndIn/outStock.vue'
 import Area from '@/components/menu/StockManage/Area.vue'
 import data from '@/components/menu/data.vue'
 import Parcel from '@/components/menu/parcelManage.vue'
-// import inNeedToCheck from '@/components/menu/outAndIn/managerCheck.vue'
+import inNeedToCheck from '@/components/menu/outAndIn/managerCheck.vue'
 import addNewOUt from '@/components/menu/outAndIn/addOutOrder.vue'
 //https://registry.npm.taobao.org
 import User from '@/components/menu/personalPage.vue'
 import Transaction from '@/components/menu/peopleManage/Transaction.vue'
 import error from '@/components/other/404.vue'
-const inNeedToCheck = () => import('@/components/menu/outAndIn/managerCheck.vue')
+//const inNeedToCheck = () => import('@/components/menu/outAndIn/managerCheck.vue')
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -37,6 +38,7 @@ const routes = [
       // 写子路由  显示在主区域
       { path: '/enter', component: Enter ,meta: {roles: ['manager','user']}},
       { path: '/outer', component: Outer ,meta: {roles: ['manager','user']}},
+      //员工管理
       { path: '/staff', component: Staff ,meta: {roles: ['manager']}},//
       { path: '/personalPage', component: User ,meta: {roles: ['manager','user']}},
       { path: '/company', component: Company ,meta: {roles: ['manager']}},//
@@ -52,7 +54,7 @@ const routes = [
         meta: {
           roles: ['manager']
         }, 
-        component: inNeedToCheck},//路由懒加载
+        component: inNeedToCheck},
       { path: '/addNewOut', component: addNewOUt ,meta: {roles: ['manager','user']}},
     ]
   }
@@ -72,10 +74,6 @@ router.beforeEach((to, from, next) => {
         next()
     }else {
       let role = localStorage.getItem('authority')
-      // if(to.meta.roles.includes(role)){
-      //   next() //放行
-      // }
-      // let token = JSON.parse(window.localStorage.getItem("Token"))
       let token = localStorage.getItem('token')
       console.log(token)
       if (  token == null || token === '' ){

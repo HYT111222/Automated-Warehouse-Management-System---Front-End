@@ -127,7 +127,7 @@
             </el-popover>
         </div>
         </el-card>
-        <el-dialog title="请选择包裹（以下包裹正在库中）"  :visible.sync="dialogFormVisible" style="padding: 0px;" :width="'1000px'" class="dialogue-add">
+        <el-dialog title="请选择包裹（以下包裹正在库中）"  :visible.sync="dialogFormVisible" :before-close="handleClose" style="padding: 0px;" :width="'1000px'" class="dialogue-add">
             <div style="text-align:center;">
                 <el-form :model="searchMag" :rules="rules" ref="searchMag" style="width: 450px; text-align:center;display: inline-block;">
                     <el-form-item style="display:flex" prop="parcelId">
@@ -623,6 +623,14 @@ export default {
         this.$refs[formName].resetFields()
         this.dialogFormVisible=false
     },
+    handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      }
+    
 
 
     }

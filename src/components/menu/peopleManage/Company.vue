@@ -159,9 +159,13 @@
         <el-table-column prop="remark" label="备注"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <div style=" display: flex;">
-              <el-button @click="checkDetail(scope.row)" type="text" style="flex: auto" size="small" >查看流水</el-button>
-              <el-button @click="deleteOne(scope.row)" type="text" style="flex: auto" size="small" >删除</el-button>
+            <div>
+              <div v-if="isManager" style=" display: flex;">
+                <el-button @click="deleteOne(scope.row)" type="text" style="flex: auto" size="small" >删除</el-button>
+              </div>
+              <div v-else style=" display: flex;">
+                <el-button @click="deleteOne(scope.row)" type="text" disabled style="flex: auto" size="small" >删除</el-button>
+              </div>
             </div>
           </template>
         </el-table-column>
@@ -235,7 +239,6 @@ export default {
       dialogVisible: false, // 添加用户对话框是否可见
       // 封装dialog提交的信息
       customFormNew: {
-        // customerId: '',
         userName: '',
         phone: '',
         companyName:'',
@@ -352,12 +355,19 @@ export default {
       },
       currentPage: 1, // 当前页码
       total: 20, // 总条数
-      pageSize: 5 // 每页的数据条数
+      pageSize: 5, // 每页的数据条数
+      isManager:false// 权限控制
     }
   },
   created() {
     this.fetchNewTable()
     this.getPeopleList()
+    // 权限管理
+    if (window.sessionStorage.getItem('authority') == "manager"){
+      this.isManager=true
+    }else{
+      this.isManager=false
+    }
   },
   methods: {
     // 该方法用于刷新表格
@@ -454,7 +464,7 @@ export default {
     // 保存客户id
     inc(row){
       this.dialogVisible_incAccounts = true
-      incAccountsDia.customId = row.customId
+      this.incAccountsDia.customId = row.customId
     },
     // 该方法用于增加客户应付款
     incAccounts(formName){
@@ -462,6 +472,10 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.Loading = true
+          console.log("incAccountsDia" + this.incAccountsDia)
+          console.log("id: " + this.incAccountsDia.customId)
+          console.log("amount: " +this.incAccountsDia.incAccounts)
+          console.log("notes" + this.incAccountsDia.notes)
           peopleManger.incAccountsPayment(this.incAccountsDia).then(res => {
             if(res.data.status_code === true) {
               // 更新该行应付
@@ -481,7 +495,7 @@ export default {
     // 保存客户id
     bal(row){
       this.dialogVisible_balAccounts = true
-      balAccountsDia.customId = row.customId
+      this.balAccountsDia.customId = row.customId
     },
     // 该方法用于客户结款
     balAccounts(formName){
@@ -489,6 +503,10 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.Loading = true
+          console.log("balAccountsDia" + this.balAccountsDia)
+          console.log("id: " + this.balAccountsDia.customId)
+          console.log("amount: " +this.balAccountsDia.balAccounts)
+          console.log("notes" + this.balAccountsDia.notes)
           peopleManger.balanceAccountsPayment(this.balAccountsDia).then(res => {
             if(res.data.status_code === true) {
               // 更新该行应付款
@@ -509,7 +527,9 @@ export default {
     checkDetail(row){
       window.sessionStorage.setItem('transaction','true')
       window.sessionStorage.setItem('customId',row.customId)
+      // window.sessionStorage.setItem('userNameCustom',row.userName)
       console.log("customId: " + row.customId)
+      // console.log("userName: " + row.userName)
       this.$router.push({path:'/transaction'})
     },
     // 该方法用于删除信息

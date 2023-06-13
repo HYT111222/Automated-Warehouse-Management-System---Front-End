@@ -126,20 +126,20 @@
             <span>  货架编号:</span>
             <el-input v-model="shelfId" placeholder="请输入货架编号" size="small" style="width:200px"></el-input>
             <el-button type="primary"  @click="searchShelfID(shelfId)" icon="el-icon-search"  round size="mini">搜索</el-button>
-            
+
             <template>
             <el-popconfirm @confirm="confirm()" title="确定添加货架吗？" >
                 <el-button slot="reference" type="primary" icon="el-icon-circle-plus-outline" size="small" plain style="float:right;padding: 6px; margin-bottom: 10px;">添加货架</el-button>
             </el-popconfirm>
             </template>
             <!--表头等操作-->
-            <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" height="250px" style="width: 100%" @selection-change="handleSelectionChange" 
-            :header-row-style="{height:'30px'}" 
+            <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" height="250px" style="width: 100%" @selection-change="handleSelectionChange"
+            :header-row-style="{height:'30px'}"
             :header-cell-style="{background:'#f5f7fa',padding:'0px',textAlign: 'center'}"
-            :row-style="{height:'40px'}" :cell-style="{padding:'0px', textAlign: 'center' }" 
+            :row-style="{height:'40px'}" :cell-style="{padding:'0px', textAlign: 'center' }"
             size='small' >
-            
-            
+
+
             <el-table-column  prop="regionId"  label="库区编号"  >
             </el-table-column>
             <el-table-column  prop="shelfId"  label="货架编号">
@@ -151,18 +151,18 @@
             label="操作">
         <template slot-scope="scope">
             <div style=" display: flex;">
-                <el-button @click="deleteshelf(scope.row)" type="text"  size="small" > 删除</el-button>
+                <el-button @click="deleteshelf(scope.row)" type="text" style="flex: auto" size="small" > 删除货架</el-button>
             </div>
         </template>
         </el-table-column>
         </el-table>
-        <el-pagination align='center' 
-        @size-change="handleSizeChange" 
+        <el-pagination align='center'
+        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage" 
-        :page-sizes="[5,10,20]" 
-        :page-size="pageSize" 
-        layout="total, sizes, prev, pager, next, jumper" 
+        :current-page="currentPage"
+        :page-sizes="[5,10,20]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
         :total="tableData.length"
         style="margin-top: 7px;">
         </el-pagination>
@@ -174,7 +174,7 @@
     </el-container>
     </div>
   </template>
-  
+
   <script>
   import regionAndShelf from '@/api/regionAndShelf';
    //判断待删除的货架的状态，空的才能删除
@@ -256,7 +256,7 @@
         pageSize: 5 // 每页的数据条数
       }
     },
-    
+
     methods:{
     confirm(){
         console.log(this.regionInformation.regionId)
@@ -274,7 +274,7 @@
                     })
                 }
             })
-        
+
     },
     // regionselected(e){
     //     console.log(e)
@@ -300,7 +300,7 @@
     //                 }
     //             })
     //         })
-            
+
     // },
     //选择库区
       menuselected(e){
@@ -327,7 +327,7 @@
                     }
                 })
             })
-            
+
       },
     //按照货架编号搜索货架
     searchShelfID(id){
@@ -421,13 +421,13 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      
+
     }
     }
-      
-  
+
+
   </script>
-  
+
 <style lang="less" scoped>
 .box-card {
     position: relative;
@@ -435,7 +435,7 @@
     // margin-top: 0%;
 }
   .menu {
-  
+
   background-color: transparent !important;
   }
   .menu{
