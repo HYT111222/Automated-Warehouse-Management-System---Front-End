@@ -2,13 +2,15 @@
 <div style="width:100%;height:100%">
     <el-card style="float: left;width: 18%;height: 100%;">
         <div class="">
-            <div>
-                <span >入库申请单已处理</span>
-            <el-progress type="circle" :percentage="percentage" style="margin-top: 10px;"  :color="customColorMethod"></el-progress>
+            <div style="text-align: center;">
+                <span >入库申请单待处理</span>
+                <span style="font-weight: 700;font-size: 30px;margin-left: 5px;">{{ listLen }}</span>
+            <!-- <el-progress type="circle" :percentage="percentage" style="margin-top: 10px;"  :color="customColorMethod"></el-progress> -->
             </div>
            <div style="margin-top: 30px;">
-            <span>出库申请单已处理</span>
-            <el-progress type="circle" :percentage="percentage_out" style="margin-top: 10px;"  :color="customColorMethod"></el-progress>
+            <span>出库申请单待处理</span>
+            <span style="font-weight: 700;font-size: 30px;margin-left: 5px;">{{ listLen_out }}</span>
+            <!-- <el-progress type="circle" :percentage="percentage_out" style="margin-top: 10px;"  :color="customColorMethod"></el-progress> -->
            </div>
            
         </div>
@@ -503,13 +505,15 @@ export default{
             outAndIn.ExamineIn(this.dialogue).then(res=>{
                 console.log(res)
                 if(res.data.status_code){
+                   // calPercentage(this.percentage,this.listLen)
+                   
+                    this.dialogFormVisible =false
+                    refetchTable()
                     this.$message({
                         message:"处理结果成功保存",
                         type:'success'
                     })
-                    calPercentage(this.percentage,this.listLen)
-                    this.dialogFormVisible =false
-                    refetchTable()
+                    
                 }else{
                     this.$message({
                         message:"处理异常",
@@ -530,13 +534,14 @@ export default{
             }
             outAndIn.ExamineOut(dialogue_out).then(res=>{
                 if(res.data.status_code){
+                  //  calPercentage(this.percentage,this.listLen_out)
+                    this.dialogFormVisible =false
+                    refetchTable()
                     this.$message({
                         message:"处理结果成功保存",
                         type:'success'
                     })
-                    calPercentage(this.percentage,this.listLen_out)
-                    this.dialogFormVisible =false
-                    refetchTable()
+                    
                 }else{
                     this.$message({
                         message:"处理异常",
@@ -555,13 +560,14 @@ export default{
             this.dialogue.inStatus = '已拒绝'
             outAndIn.ExamineIn(this.dialogue).then(res=>{
                 if(res.data.status_code){
+                   // calPercentage(this.percentage,this.listLen_out)
+                    this.dialogFormVisible =false
+                    refetchTable()
                     this.$message({
                         message:"处理结果成功保存",
                         type:'success'
                     })
-                    calPercentage(this.percentage,this.listLen_out)
-                    this.dialogFormVisible =false
-                    refetchTable()
+                    
                 }else{
                     this.$message({
                         message:"处理异常",
@@ -582,13 +588,14 @@ export default{
             }
             outAndIn.ExamineOut(dialogue_out).then(res=>{
                 if(res.data.status_code){
+                  //  calPercentage(this.percentage,this.listLen_out)
+                    this.dialogFormVisible =false
+                    refetchTable()
                     this.$message({
                         message:"处理结果成功保存",
                         type:'success'
                     })
-                    calPercentage(this.percentage,this.listLen_out)
-                    this.dialogFormVisible =false
-                    refetchTable()
+                   
                 }else{
                     this.$message({
                         message:"处理异常",

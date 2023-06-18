@@ -162,6 +162,7 @@
             <div>
               <div v-if="isManager" style=" display: flex;">
                 <el-button @click="deleteOne(scope.row)" type="text" style="flex: auto" size="small" >删除</el-button>
+                <el-button @click="checkDetail(scope.row)" type="text" style="flex: auto" size="small" >查看流水</el-button>
               </div>
               <div v-else style=" display: flex;">
                 <el-button @click="deleteOne(scope.row)" type="text" disabled style="flex: auto" size="small" >删除</el-button>
