@@ -28,8 +28,8 @@ export default {
   },
   /**
    * 3.普通用户注册
-   * @param {*} param 
-   * @returns 
+   * @param {*} param
+   * @returns
    */
   userRegister(param) {
     return request({
@@ -38,11 +38,11 @@ export default {
       data: param
     })
   },
- 
+
   /**
    * 4.管理员首页信息获取
-   * @param {*} param 
-   * @returns 
+   * @param {*} param
+   * @returns
    */
   managerHomePage() {
     return request({
@@ -53,8 +53,8 @@ export default {
   },
    /**
    * 5.普通用户首页信息获取
-   * @param {*} param 
-   * @returns 
+   * @param {*} param
+   * @returns
    */
    userHomePage() {
     return request({
@@ -62,5 +62,10 @@ export default {
       method: 'get'
     })
   },
-  
+  getId(param){
+     return request({
+       url:'/user/getId/' + param,
+       method:'get'
+     })
+  }
 }

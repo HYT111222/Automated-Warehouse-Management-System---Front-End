@@ -137,6 +137,7 @@
 <script>
 import peopleManger from "@/api/peopleManage";
 import outAndIn from "@/api/outAndIn";
+import user from "@/api/user";
 
 export default {
   data() {
@@ -294,6 +295,7 @@ export default {
     fetchNewTable() {
       peopleManger.getInBoundPeopleInformationAll().then(res => {
         console.log("刷新表格")
+        user.getId('111111');
         if (res.data.status_code == true) {
           this.tableData = res.data.inBoundPeopleList
         }

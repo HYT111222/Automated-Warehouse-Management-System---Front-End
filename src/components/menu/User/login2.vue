@@ -195,8 +195,7 @@ export default {
                 this.loading = true
                 user.login(this.loginForm).then(res => {
                     console.log(res)
-                if (res.data.status_code === true ) {
-                    
+                if (res.data.code == 200 ) {
                     //保存token、用户权限类型、用户名
                     window.localStorage.setItem('token',res.data.token)
                     let authority=res.data.authority

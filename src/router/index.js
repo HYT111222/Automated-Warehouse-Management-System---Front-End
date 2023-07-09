@@ -33,7 +33,7 @@ const routes = [
     redirect: '/HomePage',
     meta: {
       roles: ['manager','user']
-    }, 
+    },
     children: [
       // 写子路由  显示在主区域
       { path: '/enter', component: Enter ,meta: {roles: ['manager','user']}},
@@ -50,10 +50,10 @@ const routes = [
       { path: '/data', component: data ,meta: {roles: ['manager','user']}},
       { path: '/inStock', component: inStock ,meta: {roles: ['manager','user']} },
       { path: '/HomePage', component: HomePage ,meta: {roles: ['manager','user']}},
-      { path: '/managerCheck', 
+      { path: '/managerCheck',
         meta: {
           roles: ['manager']
-        }, 
+        },
         component: inNeedToCheck},
       { path: '/addNewOut', component: addNewOUt ,meta: {roles: ['manager','user']}},
     ]
@@ -66,28 +66,28 @@ const router = new VueRouter({
 })
 
 // 路由守卫（加别的页面跳转判断，如添加等）
-router.beforeEach((to, from, next) => {
-  if (to.matched.length === 0) {
-    next('/404')
-  }else {
-    if(to.path == '/login' || to.path == '/' || to.path == '/404'){
-        next()
-    }else {
-      let role = localStorage.getItem('authority')
-      let token = localStorage.getItem('token')
-      console.log(token)
-      if (  token == null || token === '' ){
-        alert("请先进行登录操作")
-        next('/login')
-      }else {
-        if(to.meta.roles.includes(role)){
-          next() //放行
-        }else{
-          alert("没有权限查看")
-        }
-      }
-    }
-  }
- 
-})
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.length === 0) {
+//     next('/404')
+//   }else {
+//     if(to.path == '/login' || to.path == '/' || to.path == '/404'){
+//         next()
+//     }else {
+//       let role = localStorage.getItem('authority')
+//       let token = localStorage.getItem('token')
+//       console.log(token)
+//       if (  token == null || token === '' ){
+//         alert("请先进行登录操作")
+//         next('/login')
+//       }else {
+//         if(to.meta.roles.includes(role)){
+//           next() //放行
+//         }else{
+//           alert("没有权限查看")
+//         }
+//       }
+//     }
+//   }
+//
+// })
 export default router
